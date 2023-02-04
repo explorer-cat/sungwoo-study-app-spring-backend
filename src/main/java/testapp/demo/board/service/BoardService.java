@@ -9,6 +9,8 @@ import java.util.Map;
 public interface BoardService {
     ResponseEntity<Board> createBoardItem(Map<String, Object> data);
 
+    ResponseEntity<Board> getBoardContent(long id);
+
     ResponseEntity<List<Board>> getBoardList(int categoryId);
 
 }

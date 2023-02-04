@@ -34,6 +34,12 @@ public class BoardController {
          return boardService.getBoardList(categoryId);
     }
 
+    @GetMapping("/api/v1/board/content")
+    //@RequestParam(value = "category",required = false, defaultValue = "0") category가 없어도 들어오게
+    public ResponseEntity<Board> getBoardContent(@RequestParam(value = "id") long id) {
+        return boardService.getBoardContent(id);
+    }
+
 
 
     @PostMapping("/api/v1/board")

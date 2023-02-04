@@ -10,6 +10,7 @@ import testapp.demo.board.repository.BoardRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -49,6 +50,16 @@ public class BoardServiceImpl implements BoardService {
                     return new ResponseEntity<>(board, HttpStatus.OK);
                 }
            }
+        } catch (RuntimeException e) {
+            return ResponseEntity.internalServerError().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    public ResponseEntity<Board> getBoardContent(long id) {
+        try{
+            return new ResponseEntity<>(boardRepository.findById(id).get(),HttpStatus.OK);
         } catch (RuntimeException e) {
             return ResponseEntity.internalServerError().build();
         } catch (Exception e) {
