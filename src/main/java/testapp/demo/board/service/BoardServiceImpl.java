@@ -8,6 +8,7 @@ import testapp.demo.board.entity.Board;
 import testapp.demo.board.repository.BoardRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -20,12 +21,12 @@ public class BoardServiceImpl implements BoardService {
 
 
     /**
-     * @title: 게시글 작성
      * @param data
      * @return
+     * @title: 게시글 작성
      */
     @Override
-    public ResponseEntity<Board> createBoardItem(Map<String,Object> data) {
+    public ResponseEntity<Board> createPost(Map<String, Object> data) {
         Board board = new Board();
         board.setCategoryId(2);
         board.setTitle("IOC의 대해서 설명하세요.");
@@ -34,32 +35,18 @@ public class BoardServiceImpl implements BoardService {
         board.setRegDt(LocalDateTime.now());
         boardRepository.save(board);
         return new ResponseEntity<>(boardRepository.save(board), HttpStatus.OK);
-
     }
 
-    public ResponseEntity<List<Board>> getBoardList(int categoryId) {
-        try{
-            if(categoryId == 0) {
-                return ResponseEntity.ok().body(boardRepository.findAll());
-            } else {
-                List<Board> board = boardRepository.findByCategoryId(categoryId);
-                if(board.size() > 0) {
-                    return new ResponseEntity<>(board,HttpStatus.OK);
-                } else {
-                    //요청한 카테고리에 게시글이 한개도 없을 경우
-                    return new ResponseEntity<>(board, HttpStatus.OK);
-                }
-           }
-        } catch (RuntimeException e) {
-            return ResponseEntity.internalServerError().build();
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
+
+    @Override
+    public ResponseEntity<Optional<Board>> getPost(int id) {
+        return new ResponseEntity<>(boardRepository.findById(id), HttpStatus.OK);
     }
 
-    public ResponseEntity<Board> getBoardContent(long id) {
-        try{
-            return new ResponseEntity<>(boardRepository.findById(id).get(),HttpStatus.OK);
+    @Override
+    public ResponseEntity<List<Board>> getCategoryPostList(int categoryId) {
+        try {
+            return new ResponseEntity<>(boardRepository.findByCategoryId(categoryId), HttpStatus.OK);
         } catch (RuntimeException e) {
             return ResponseEntity.internalServerError().build();
         } catch (Exception e) {

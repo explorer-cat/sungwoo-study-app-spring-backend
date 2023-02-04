@@ -5,12 +5,12 @@ import testapp.demo.board.entity.Board;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface BoardService {
-    ResponseEntity<Board> createBoardItem(Map<String, Object> data);
+    ResponseEntity<Board> createPost(Map<String, Object> data);
 
-    ResponseEntity<Board> getBoardContent(long id);
+    ResponseEntity<Optional<Board>> getPost(int id);
 
-    ResponseEntity<List<Board>> getBoardList(int categoryId);
-
+    ResponseEntity<List<Board>> getCategoryPostList(int categoryId);
 }

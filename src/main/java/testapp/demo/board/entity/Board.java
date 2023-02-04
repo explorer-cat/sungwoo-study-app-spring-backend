@@ -14,7 +14,7 @@ public class Board {
 
     @Id
     @GeneratedValue
-    private Long Id;
+    private int id;
     private int categoryId;
     private String title;
     private String content;
