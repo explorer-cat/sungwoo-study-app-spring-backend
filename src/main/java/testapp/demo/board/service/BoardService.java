@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface BoardService {
     ResponseEntity<Board> createPost(Map<String, Object> data);
 
-    ResponseEntity<Optional<Board>> getPost(int id);
+    ResponseEntity<List<Board>> getPost(int id);
 
     ResponseEntity<List<Board>> getCategoryPostList(int categoryId);
 }

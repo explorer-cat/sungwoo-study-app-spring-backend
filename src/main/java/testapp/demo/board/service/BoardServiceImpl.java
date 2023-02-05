@@ -39,8 +39,12 @@ public class BoardServiceImpl implements BoardService {
 
 
     @Override
-    public ResponseEntity<Optional<Board>> getPost(int id) {
-        return new ResponseEntity<>(boardRepository.findById(id), HttpStatus.OK);
+    public ResponseEntity<List<Board>> getPost(int id) {
+        //boardRepository.findById(id) optinal -> List
+        List<Board> board = new ArrayList<Board>();
+        Board board1 = boardRepository.findById(id).get();
+        board.add(board1);
+        return new ResponseEntity<>(board, HttpStatus.OK);
     }
 
     @Override

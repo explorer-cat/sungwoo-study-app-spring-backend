@@ -2,17 +2,12 @@ package testapp.demo.board.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import testapp.demo.board.entity.Board;
-import testapp.demo.board.repository.BoardRepository;
 import testapp.demo.board.service.BoardService;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -32,7 +27,7 @@ public class BoardController {
      */
     @GetMapping("/api/v1/board")
     //@RequestParam(value = "category",required = false, defaultValue = "0") category가 없어도 들어오게
-    public ResponseEntity<?> getCategoryPostInfo(
+    public ResponseEntity<List<Board>> getCategoryPostInfo(
             @RequestParam(value = "category", required = false , defaultValue = "0") int categoryId,
             @RequestParam(value = "postId", required = false, defaultValue = "0") int postId) {
 
@@ -46,12 +41,17 @@ public class BoardController {
         if (categoryId == 0) { //카테고리와 게시글번호가 둘다 없는 경우
             System.out.println("category prams required");
         } else if(categoryId != 0 && postId == 0) { //카테고리 아이디만 왔을 경우 해당 카테고리 모든 게시글 정보 반환
-            return boardService.getCategoryPostList(categoryId);
+            return boardService.getCategoryPostList(categoryId); //여러개  List<Board>
         } else if(categoryId != 0 && postId != 0) {
             return boardService.getPost(postId);
         }
         return null;
     }
+
+
+//    public ResponseEntity<List<Board>> getTest() {
+//        return boardService.getPost();
+//    }
 
 //    /**
 //     * @title:특정 게시글 내용을 가져옵니다.
