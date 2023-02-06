@@ -8,7 +8,7 @@ import javax.persistence.Id;
 
 @Entity
 @Data
-public class Category {
+public class CategoryVo {
 
     @Id
     @GeneratedValue

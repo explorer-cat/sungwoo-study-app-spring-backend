@@ -2,17 +2,15 @@ package testapp.demo.category.service;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import testapp.demo.board.entity.Board;
-import testapp.demo.category.entity.Category;
+import testapp.demo.category.entity.CategoryVo;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public interface CategoryService {
-    ResponseEntity<Category> createCategoryList();
+    ResponseEntity<CategoryVo> createCategoryList();
 
-    ResponseEntity<List<Category>> getCategoryList(int categoryId);
+    ResponseEntity<List<CategoryVo>> getCategoryList(int categoryId);
 
 
 
