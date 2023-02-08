@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import testapp.demo.board.dto.BoardResponseDto;
+import testapp.demo.board.dto.CreatePostRequest;
 import testapp.demo.board.entity.BoardVo;
 import testapp.demo.board.service.BoardService;
 
@@ -29,7 +30,7 @@ public class BoardController {
     @GetMapping("/api/v1/board")
     //@RequestParam(value = "category",required = false, defaultValue = "0") category가 없어도 들어오게
     public ResponseEntity<List<BoardResponseDto>> getCategoryPostInfo(
-            @RequestParam(value = "category", required = false , defaultValue = "0") int categoryId,
+            @RequestParam(value = "category", required = false, defaultValue = "0") int categoryId,
             @RequestParam(value = "postId", required = false, defaultValue = "0") int postId) {
         /**
          * case 1 : 카테고리와 게시글번호가 둘다 없는 경우 요청자체가 잘못됨.
@@ -39,12 +40,25 @@ public class BoardController {
 
         if (categoryId == 0) { //카테고리와 게시글번호가 둘다 없는 경우
             System.out.println("category prams required");
-        } else if(categoryId != 0 && postId == 0) { //카테고리 아이디만 왔을 경우 해당 카테고리 모든 게시글 정보 반환
+        } else if (categoryId != 0 && postId == 0) { //카테고리 아이디만 왔을 경우 해당 카테고리 모든 게시글 정보 반환
             return boardService.getCategoryPostList(categoryId); //getByAll -> List<Board>
-        } else if(categoryId != 0 && postId != 0) {
+        } else if (categoryId != 0 && postId != 0) {
             return boardService.getPost(postId); //getById -> Optinal<Board>
         }
         return null;
+    }
+
+
+    @PostMapping("/api/v1/board/post")
+    @ResponseBody
+    public ResponseEntity<BoardVo> setPost(@RequestBody CreatePostRequest data) {
+        try {
+            return boardService.setPost(data);
+        } catch (RuntimeException re) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 
@@ -64,16 +78,4 @@ public class BoardController {
 //    }
 
 
-//    @PostMapping("/api/v1/board")
-//    @ResponseBody
-//    public ResponseEntity<Board> createBoard(@RequestBody Map<String, Object> data) {
-//        try {
-//            return boardService.createBoardItem(data);
-////            return new ResponseEntity<>(boardService.getBoardList(data), HttpStatus.OK);
-//        } catch (RuntimeException re) {
-//            return ResponseEntity.notFound().build();
-//        } catch (Exception e) {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
 }

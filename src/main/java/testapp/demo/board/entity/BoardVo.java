@@ -1,5 +1,6 @@
 package testapp.demo.board.entity;
 
+import jdk.nashorn.internal.runtime.Debug;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,4 +25,16 @@ public class BoardVo {
     private boolean approval;
     private String creator;
     private LocalDateTime regDt;
+
+
+    @Builder
+    public BoardVo(int id, int categoryId, String title, String content, boolean approval, String creator, LocalDateTime regDt) {
+        this.id = id;
+        this.categoryId = categoryId;
+        this.title = title;
+        this.content = content;
+        this.approval = approval;
+        this.creator = creator;
+        this.regDt = regDt;
+    }
 }

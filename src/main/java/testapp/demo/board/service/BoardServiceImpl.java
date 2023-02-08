@@ -5,13 +5,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import testapp.demo.board.dto.BoardResponseDto;
+import testapp.demo.board.dto.CreatePostRequest;
 import testapp.demo.board.entity.BoardVo;
 import testapp.demo.board.repository.BoardRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
@@ -25,17 +25,19 @@ public class BoardServiceImpl implements BoardService {
      * @return
      * @title: 게시글 작성
      */
-//    @Override
-//    public ResponseEntity<BoardVo> createPost(Map<String, Object> data) {
-//        BoardVo boardVo = new BoardVo();
-//        boardVo.setCategoryId(2);
-//        boardVo.setTitle("IOC의 대해서 설명하세요.");
-//        boardVo.setContent("뭔데");
-//        boardVo.setCreator("최성우");
-//        boardVo.setRegDt(LocalDateTime.now());
-//        boardRepository.save(boardVo);
-//        return new ResponseEntity<>(boardRepository.save(boardVo), HttpStatus.OK);
-//    }
+    @Override
+    public ResponseEntity<BoardVo> setPost(CreatePostRequest data) {
+        BoardVo boardVo = new BoardVo();
+
+        boardVo.setCategoryId(data.getCategoryId());
+        boardVo.setTitle(data.getTitle());
+        boardVo.setContent(data.getContent());
+        boardVo.setCreator(data.getCreator());
+        boardVo.setRegDt(LocalDateTime.now());
+
+        boardRepository.save(boardVo);
+        return new ResponseEntity<>(boardRepository.save(boardVo), HttpStatus.OK);
+    }
 
 
     /**
