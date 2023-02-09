@@ -12,7 +12,7 @@ public class BoardResponseDto {
     private int categoryId;
     private String title;
     private String content;
-    private String creator;
+    private Long creator;
     private LocalDateTime regDt;
 
     public BoardResponseDto(BoardVo boardVo) {

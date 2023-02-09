@@ -12,7 +12,7 @@ public class CreatePostRequest {
     private int categoryId;
     private String title;
     private String content;
-    private String creator;
+    private Long creator;
 
     public BoardVo toEntity(){
         return BoardVo.builder()

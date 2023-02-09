@@ -23,12 +23,12 @@ public class BoardVo {
     private String title;
     private String content;
     private boolean approval;
-    private String creator;
+    private Long creator;
     private LocalDateTime regDt;
 
 
     @Builder
-    public BoardVo(int id, int categoryId, String title, String content, boolean approval, String creator, LocalDateTime regDt) {
+    public BoardVo(int id, int categoryId, String title, String content, boolean approval, Long creator, LocalDateTime regDt) {
         this.id = id;
         this.categoryId = categoryId;
         this.title = title;
