@@ -13,12 +13,13 @@ import java.util.*;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/api/v1/board")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-public class BoardController {
+public class BoardControllerV1 {
     private BoardService boardService;
 
     @Autowired
-    public BoardController(BoardService boardService) {
+    public BoardControllerV1(BoardService boardService) {
         this.boardService = boardService;
     }
 
@@ -27,7 +28,7 @@ public class BoardController {
      * @return
      * @title 해당 카테고리의 작성된 게시글들을 가져옴.
      */
-    @GetMapping("/api/v1/board")
+    @GetMapping
     //@RequestParam(value = "category",required = false, defaultValue = "0") category가 없어도 들어오게
     public ResponseEntity<List<BoardResponseDto>> getCategoryPostInfo(
             @RequestParam(value = "category", required = false, defaultValue = "0") int categoryId,
@@ -49,8 +50,7 @@ public class BoardController {
     }
 
 
-    @PostMapping("/api/v1/board/post")
-    @ResponseBody
+    @PostMapping("/post")
     public ResponseEntity<BoardVo> setPost(@RequestBody CreatePostRequest data) {
         try {
             return boardService.setPost(data);
