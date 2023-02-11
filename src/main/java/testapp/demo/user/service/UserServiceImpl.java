@@ -1,19 +1,56 @@
 package testapp.demo.user.service;
 
+import lombok.RequiredArgsConstructor;
+import org.json.JSONObject;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import testapp.demo.board.entity.BoardVo;
+import testapp.demo.user.repository.UserRepository;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.HashMap;
 
+@RequiredArgsConstructor
 @Service
-public class KakaoAuthService {
+public class UserServiceImpl implements UserService {
+
+    private final UserRepository userRepository;
+    private final String HTTP_REQUEST = "https://kapi.kakao.com/v2/user/me";
     private final String GRANT_TYPE= "authorization_code";
     private final String CLIENT_ID = "ad874f9a277a8d0b35591cbf40f5bd82";
     private final String REDIRECT_URI= "http://localhost:8080/api/v1/users/login/kakao";
     private final String CLIENT_SECRET= "L9M7Xxh5XayyOM22BcMlllmzVe61wPzw";
     private final String TOKEN_URL = "https://kauth.kakao.com/oauth/token";
 
+    @Override
+    public JSONObject getKakaoUserInfo(String accessToken){
+        JSONObject userInfoJson = null;
+
+        try {
+            // URI를 URL객체로 저장
+            URL url = new URL(HTTP_REQUEST + "?access_token=" + accessToken);
+
+            // 버퍼 데이터(응답 메세지)를 한 줄씩 읽어서 jsonData에 저장
+            BufferedReader bf;
+            bf = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
+
+            String line;
+
+            while((line = bf.readLine()) != null){
+                userInfoJson = new JSONObject(line);
+            }
+
+            return userInfoJson;
+        } catch(Exception e) {
+            return userInfoJson;
+        }
+    }
+
+    @Override
     public String getAccessTokenJsonData(String code){
         RestTemplate restTemplate = new RestTemplate();
 
@@ -42,5 +79,12 @@ public class KakaoAuthService {
             return responseEntity.getBody();
         }
         return "error";
+    }
+
+    @Override
+    public BoardVo getUserEmail(String email) {
+        HashMap<String,Object> users = new HashMap<>();//HashMap생성
+        BoardVo userInfo = userRepository.findByEmail(email);
+        return userInfo;
     }
 }
