@@ -1,23 +1,36 @@
 package testapp.demo.user.controller;
 
 
-import org.json.JSONException;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.json.JSONObject;
 import testapp.demo.board.entity.BoardVo;
+import testapp.demo.user.dto.LoginTokenResponseDto;
+import testapp.demo.user.dto.SignUpRequestDto;
 import testapp.demo.user.dto.UserInfoResponseDto;
 import testapp.demo.user.repository.UserRepository;
 import testapp.demo.user.service.UserService;
 
-import java.util.HashMap;
-import java.util.Iterator;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.net.URI;
 import java.util.Map;
+
 
 @RestController
 @RequestMapping("/api/v1/users")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserControllerV1 {
 
     private UserService userService;
@@ -28,19 +41,17 @@ public class UserControllerV1 {
     }
 
 
-    @GetMapping
-    public String user() {
-        return null;
-    }
 
     @PostMapping
     public String addUser() {
         return null;
     }
 
-    @GetMapping("/{userId}")
-    public String findUser() {
-        return null;
+    @GetMapping
+    public UserInfoResponseDto findUserEmail(@RequestParam String email) {
+        UserInfoResponseDto res = userService.getUserEmail(email);
+        System.out.println("res = " + res);
+        return res;
     }
 
     @PatchMapping("/{userId}")
@@ -57,38 +68,36 @@ public class UserControllerV1 {
 
     //로그인 시도.
     @GetMapping("/login/kakao")
-    public Map<?,?> loginKakao(@RequestParam String code) throws JSONException {
+    public ResponseEntity<?> loginKakao(@RequestParam String code) throws ParseException {
+        LoginTokenResponseDto userResponse;
+        JSONParser jsonParse = new JSONParser();
 
         String accessTokenJsonData = userService.getAccessTokenJsonData(code);
+
         if (accessTokenJsonData == "error") {
             return null;
         }
-        //JSON String -> JSON Object
-        JSONObject accessTokenJsonObject = new JSONObject(accessTokenJsonData);
+        JSONObject tokenData = (JSONObject) jsonParse.parse(accessTokenJsonData);
 
-        //access_token 추출
-        String accessToken = accessTokenJsonObject.get("access_token").toString();
+        String accessToken = tokenData.get("access_token").toString();
+        String refreshToken = tokenData.get("refresh_token").toString();
 
-        //로그인 시도한 사용자의 정보를 가져와서 가입된 정보인지, 미가입자인지 확인한다.
-        JSONObject kakao_users = userService.getKakaoUserInfo(accessToken).getJSONObject("kakao_account");
-        //사용자 이메일
-        String users_email = kakao_users.getString("email");
+        JSONObject users_kakao_data = (JSONObject) userService.getKakaoUserInfo(accessToken).get("kakao_account");
+        Boolean MemberStatus = userService.isMember(users_kakao_data.get("email").toString());
 
-        BoardVo userInfo = userService.getUserEmail(users_email);
-
-
-        //사용자 정보 없음 가입으로 진행
-        if(userInfo == null) {
-            System.out.println("kakao_users" + kakao_users);
-            Map<String, JSONObject> loginInfo = new HashMap<>();
-            loginInfo.put("data", kakao_users);
-            return loginInfo;
+        //이미 가입되어있는 경ㅖ
+        if(MemberStatus) {
+            userResponse = new LoginTokenResponseDto(1000,users_kakao_data,refreshToken,accessToken);
         }
-        //사용자 정보있음. 로그인 시켜주기
         else {
-            Map<String, BoardVo> loginInfo = new HashMap<>();
-            loginInfo.put("data", userInfo);
-            return loginInfo;
+            userResponse = new LoginTokenResponseDto(1001,users_kakao_data,refreshToken,accessToken);
         }
+        return new ResponseEntity<>(userResponse,HttpStatus.OK);
+    }
+
+    @PostMapping("/login/signup")
+    public ResponseEntity<UserInfoResponseDto> SignUp(@RequestBody SignUpRequestDto data) {
+        userService.signUpUser(data);
+        return null;
     }
 }

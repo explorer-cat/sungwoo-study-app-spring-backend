@@ -11,7 +11,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @ToString
 public class UserInfoResponseDto {
-    private int id;
+    private long id;
+    private String uid;
     private String email;
     private String nickname;
     private String thumbnailImage;
@@ -19,6 +20,7 @@ public class UserInfoResponseDto {
 
     public UserInfoResponseDto(UserVo userVo) {
         this.id = userVo.getId();
+        this.uid = userVo.getUid();
         this.email = userVo.getEmail();
         this.admin = userVo.isAdmin();
         this.nickname = userVo.getNickname();

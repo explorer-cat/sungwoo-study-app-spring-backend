@@ -1,11 +1,15 @@
 package testapp.demo.user.service;
 
-import org.json.JSONObject;
+import org.json.simple.JSONObject;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import testapp.demo.board.entity.BoardVo;
+import testapp.demo.user.dto.SignUpRequestDto;
 import testapp.demo.user.dto.UserInfoResponseDto;
+import testapp.demo.user.entity.UserVo;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public interface UserService {
@@ -13,6 +17,10 @@ public interface UserService {
 
     JSONObject getKakaoUserInfo(String accessToken);
 
-    BoardVo getUserEmail(String email);
+    UserInfoResponseDto getUserEmail(String email);
+
+    Boolean isMember(String email);
+
+    ResponseEntity<UserVo> signUpUser(SignUpRequestDto data);
 
 }

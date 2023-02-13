@@ -1,17 +1,24 @@
 package testapp.demo.user.service;
 
 import lombok.RequiredArgsConstructor;
-import org.json.JSONObject;
+import org.apache.catalina.User;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import testapp.demo.board.entity.BoardVo;
+import testapp.demo.user.dto.SignUpRequestDto;
+import testapp.demo.user.dto.UserInfoResponseDto;
+import testapp.demo.user.entity.UserVo;
 import testapp.demo.user.repository.UserRepository;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 
 @RequiredArgsConstructor
@@ -21,9 +28,9 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final String HTTP_REQUEST = "https://kapi.kakao.com/v2/user/me";
     private final String GRANT_TYPE= "authorization_code";
-    private final String CLIENT_ID = "";
-    private final String REDIRECT_URI= "http://localhost:8080/api/v1/users/login/kakao";
-    private final String CLIENT_SECRET= "";
+    private final String CLIENT_ID = "ad874f9a277a8d0b35591cbf40f5bd82";
+    private final String REDIRECT_URI= "http://sungwoo-net.p-e.kr:3000/login/auth/code";
+    private final String CLIENT_SECRET= "L9M7Xxh5XayyOM22BcMlllmzVe61wPzw";
     private final String TOKEN_URL = "https://kauth.kakao.com/oauth/token";
 
     @Override
@@ -41,7 +48,9 @@ public class UserServiceImpl implements UserService {
             String line;
 
             while((line = bf.readLine()) != null){
-                userInfoJson = new JSONObject(line);
+                System.out.println("line = " + line);
+                JSONParser jsonParse = new JSONParser();
+                userInfoJson = (JSONObject) jsonParse.parse(line);
             }
 
             return userInfoJson;
@@ -49,7 +58,6 @@ public class UserServiceImpl implements UserService {
             return userInfoJson;
         }
     }
-
     @Override
     public String getAccessTokenJsonData(String code){
         RestTemplate restTemplate = new RestTemplate();
@@ -80,11 +88,28 @@ public class UserServiceImpl implements UserService {
         }
         return "error";
     }
-
     @Override
-    public BoardVo getUserEmail(String email) {
+    public UserInfoResponseDto getUserEmail(String email) {
         HashMap<String,Object> users = new HashMap<>();//HashMap생성
-        BoardVo userInfo = userRepository.findByEmail(email);
+        UserInfoResponseDto userInfo = userRepository.findByEmail(email);
         return userInfo;
+    }
+    @Override
+    public Boolean isMember(String email) {
+        return false;
+    }
+
+
+    //사용자 가입
+    @Override
+    public ResponseEntity<UserVo> signUpUser(SignUpRequestDto req)  {
+        UserVo userVo = new UserVo();
+        userVo.setUid(req.getUid());
+        userVo.setEmail(req.getEmail());
+        userVo.setNickname(req.getNickname());
+        userVo.setThumbnailImage(req.getProfileImage());
+        userVo.setBan(false);
+        userVo.setAdmin(false);
+        return new ResponseEntity<>(userRepository.save(userVo), HttpStatus.OK);
     }
 }
