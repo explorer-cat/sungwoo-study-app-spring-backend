@@ -21,9 +21,9 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final String HTTP_REQUEST = "https://kapi.kakao.com/v2/user/me";
     private final String GRANT_TYPE= "authorization_code";
-    private final String CLIENT_ID = "ad874f9a277a8d0b35591cbf40f5bd82";
+    private final String CLIENT_ID = "";
     private final String REDIRECT_URI= "http://localhost:8080/api/v1/users/login/kakao";
-    private final String CLIENT_SECRET= "L9M7Xxh5XayyOM22BcMlllmzVe61wPzw";
+    private final String CLIENT_SECRET= "";
     private final String TOKEN_URL = "https://kauth.kakao.com/oauth/token";
 
     @Override
