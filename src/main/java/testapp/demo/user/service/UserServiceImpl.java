@@ -90,7 +90,6 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public UserInfoResponseDto getUserEmail(String email) {
-        HashMap<String,Object> users = new HashMap<>();//HashMap생성
         UserInfoResponseDto userInfo = userRepository.findByEmail(email);
         return userInfo;
     }

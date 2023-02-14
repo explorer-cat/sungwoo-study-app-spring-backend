@@ -20,6 +20,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import testapp.demo.utils.ErrorResponse;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -68,22 +69,41 @@ public class UserControllerV1 {
 
     //로그인 시도.
     @GetMapping("/login/kakao")
-    public ResponseEntity<?> loginKakao(@RequestParam String code) throws ParseException {
+    public ResponseEntity<?> loginKakao(@RequestParam(required = false) String code) throws ParseException {
         LoginTokenResponseDto userResponse;
         JSONParser jsonParse = new JSONParser();
+        String accessTokenJsonData = null;
 
-        String accessTokenJsonData = userService.getAccessTokenJsonData(code);
-
-        if (accessTokenJsonData == "error") {
-            return null;
+        if (code == null) {
+            return new ResponseEntity<>(new ErrorResponse(400, "Parameter 'code' is missing"), HttpStatus.BAD_REQUEST);
+        } else {
+            accessTokenJsonData = userService.getAccessTokenJsonData(code);
         }
+
+        if (accessTokenJsonData == null) {
+            return new ResponseEntity<>(new ErrorResponse(500, "Failed to retrieve access token data"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        if (accessTokenJsonData.equals("error")) {
+            return new ResponseEntity<>(new ErrorResponse(400, "Invalid authorization code"), HttpStatus.BAD_REQUEST);
+        }
+
         JSONObject tokenData = (JSONObject) jsonParse.parse(accessTokenJsonData);
 
         String accessToken = tokenData.get("access_token").toString();
         String refreshToken = tokenData.get("refresh_token").toString();
 
         JSONObject users_kakao_data = (JSONObject) userService.getKakaoUserInfo(accessToken).get("kakao_account");
-        Boolean MemberStatus = userService.isMember(users_kakao_data.get("email").toString());
+
+        if (users_kakao_data == null || users_kakao_data.isEmpty()) {
+            return new ResponseEntity<>(new ErrorResponse(404, "The requested user data was not found"), HttpStatus.NOT_FOUND);
+        }
+
+        Boolean MemberStatus = false;
+
+        if(users_kakao_data.get("email") != null) {
+            MemberStatus = userService.isMember(users_kakao_data.get("email").toString());
+        }
 
         //이미 가입되어있는 경ㅖ
         if(MemberStatus) {
