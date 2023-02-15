@@ -1,15 +1,12 @@
 package testapp.demo.user.service;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import testapp.demo.board.entity.BoardVo;
 import testapp.demo.user.dto.SignUpRequestDto;
 import testapp.demo.user.dto.UserInfoResponseDto;
 import testapp.demo.user.entity.UserVo;
@@ -18,8 +15,7 @@ import testapp.demo.user.repository.UserRepository;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.time.LocalDateTime;
-import java.util.HashMap;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -90,18 +86,49 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public UserInfoResponseDto getUserEmail(String email) {
-        UserInfoResponseDto userInfo = userRepository.findByEmail(email);
+        System.out.println("");
+        UserInfoResponseDto userInfo = userRepository.findByEmail(email.toString());
         return userInfo;
     }
+
+    /**
+     * @title 사용자 게정 탈퇴
+     * @param email
+     * @return
+     */
+    @Override
+    public ResponseEntity<UserInfoResponseDto> deleteUserById(String email) {
+        UserInfoResponseDto userOptional = userRepository.findByEmail(email);
+        System.out.printf("userOptional" + userOptional);
+        if(userOptional == null) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+        Optional<UserVo> user = userRepository.findById(userOptional.getId());
+        if(user.isPresent()){
+            userRepository.delete(user.get());
+            UserInfoResponseDto deletedUser = new UserInfoResponseDto(user.get());
+            return new ResponseEntity<>(deletedUser, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
     @Override
     public Boolean isMember(String email) {
         return false;
     }
-
-
     //사용자 가입
     @Override
-    public ResponseEntity<UserVo> signUpUser(SignUpRequestDto req)  {
+    public ResponseEntity<UserInfoResponseDto> signUpUser(SignUpRequestDto req)  {
+        // Check if email is already registered
+        UserInfoResponseDto existingUser = userRepository.findByEmail(req.getEmail());
+
+        //해당 이메일은 이미 가입되어있음.
+        if(existingUser != null) {
+            return new ResponseEntity<>(new UserInfoResponseDto(null), HttpStatus.CONFLICT);
+        }
+
+        // Create a new user
         UserVo userVo = new UserVo();
         userVo.setUid(req.getUid());
         userVo.setEmail(req.getEmail());
@@ -109,6 +136,8 @@ public class UserServiceImpl implements UserService {
         userVo.setThumbnailImage(req.getProfileImage());
         userVo.setBan(false);
         userVo.setAdmin(false);
-        return new ResponseEntity<>(userRepository.save(userVo), HttpStatus.OK);
+        userRepository.save(userVo);
+
+        return new ResponseEntity<>(new UserInfoResponseDto(userVo), HttpStatus.OK);
     }
 }

@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @ToString
 public class UserInfoResponseDto {
-    private long id;
+    private int id;
     private String uid;
     private String email;
     private String nickname;

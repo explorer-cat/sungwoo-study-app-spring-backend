@@ -41,13 +41,15 @@ public class UserControllerV1 {
         this.userService = userService;
     }
 
-
-
-    @PostMapping
-    public String addUser() {
-        return null;
+    /**
+     * @title : addUser kakaoUser SignUp
+     * @param data
+     * @return
+     */
+    @PostMapping("/login/signup")
+    public ResponseEntity<UserInfoResponseDto> addUser(@RequestBody SignUpRequestDto data) {
+        return userService.signUpUser(data);
     }
-
     @GetMapping
     public UserInfoResponseDto findUserEmail(@RequestParam String email) {
         UserInfoResponseDto res = userService.getUserEmail(email);
@@ -56,14 +58,14 @@ public class UserControllerV1 {
     }
 
     @PatchMapping("/{userId}")
-    public String updateUser(@PathVariable Long userId) {
+    public String updateUser(@PathVariable String email) {
         return null;
     }
 
 
-    @DeleteMapping("/{userId}")
-    public String deleteUser(@PathVariable Long userId) {
-        return null;
+    @PostMapping("/delete")
+    public ResponseEntity<UserInfoResponseDto> deleteUser(@RequestBody Map<String,String> deleteUserData) {
+        return userService.deleteUserById(deleteUserData.get("email"));
     }
 
 
@@ -115,9 +117,4 @@ public class UserControllerV1 {
         return new ResponseEntity<>(userResponse,HttpStatus.OK);
     }
 
-    @PostMapping("/login/signup")
-    public ResponseEntity<UserInfoResponseDto> SignUp(@RequestBody SignUpRequestDto data) {
-        userService.signUpUser(data);
-        return null;
-    }
 }
