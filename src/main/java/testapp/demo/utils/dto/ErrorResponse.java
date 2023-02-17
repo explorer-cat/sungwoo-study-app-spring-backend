@@ -1,4 +1,4 @@
-package testapp.demo.utils;
+package testapp.demo.utils.dto;
 
 public class ErrorResponse {
     private int errorCode;

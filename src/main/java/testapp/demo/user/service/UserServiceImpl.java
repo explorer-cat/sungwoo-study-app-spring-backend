@@ -11,28 +11,32 @@ import testapp.demo.user.dto.SignUpRequestDto;
 import testapp.demo.user.dto.UserInfoResponseDto;
 import testapp.demo.user.entity.UserVo;
 import testapp.demo.user.repository.UserRepository;
+import testapp.demo.utils.TokenUtils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Optional;
 
-@RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final TokenUtils tokenUtils;
+
+    public UserServiceImpl(UserRepository userRepository, TokenUtils tokenUtils) {
+        this.userRepository = userRepository;
+        this.tokenUtils = tokenUtils;
+    }
+
     private final String HTTP_REQUEST = "https://kapi.kakao.com/v2/user/me";
     private final String GRANT_TYPE= "authorization_code";
-    private final String CLIENT_ID = "ad874f9a277a8d0b35591cbf40f5bd82";
     private final String REDIRECT_URI= "http://sungwoo-net.p-e.kr:3000/login/auth/code";
-    private final String CLIENT_SECRET= "L9M7Xxh5XayyOM22BcMlllmzVe61wPzw";
     private final String TOKEN_URL = "https://kauth.kakao.com/oauth/token";
 
     @Override
     public JSONObject getKakaoUserInfo(String accessToken){
         JSONObject userInfoJson = null;
-
         try {
             // URI를 URL객체로 저장
             URL url = new URL(HTTP_REQUEST + "?access_token=" + accessToken);
@@ -90,16 +94,9 @@ public class UserServiceImpl implements UserService {
         UserInfoResponseDto userInfo = userRepository.findByEmail(email.toString());
         return userInfo;
     }
-
-    /**
-     * @title 사용자 게정 탈퇴
-     * @param email
-     * @return
-     */
     @Override
     public ResponseEntity<UserInfoResponseDto> deleteUserById(String email) {
         UserInfoResponseDto userOptional = userRepository.findByEmail(email);
-        System.out.printf("userOptional" + userOptional);
         if(userOptional == null) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
@@ -112,7 +109,6 @@ public class UserServiceImpl implements UserService {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
-
     @Override
     public Boolean isMember(String email) {
         return false;

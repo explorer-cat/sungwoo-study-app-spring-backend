@@ -1,31 +1,22 @@
 package testapp.demo.user.controller;
 
 
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import testapp.demo.board.entity.BoardVo;
 import testapp.demo.user.dto.LoginTokenResponseDto;
 import testapp.demo.user.dto.SignUpRequestDto;
 import testapp.demo.user.dto.UserInfoResponseDto;
-import testapp.demo.user.repository.UserRepository;
 import testapp.demo.user.service.UserService;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import testapp.demo.utils.ErrorResponse;
+import testapp.demo.utils.dto.ErrorResponse;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.net.URI;
 import java.util.Map;
 
 
@@ -62,12 +53,10 @@ public class UserControllerV1 {
         return null;
     }
 
-
     @PostMapping("/delete")
     public ResponseEntity<UserInfoResponseDto> deleteUser(@RequestBody Map<String,String> deleteUserData) {
         return userService.deleteUserById(deleteUserData.get("email"));
     }
-
 
     //로그인 시도.
     @GetMapping("/login/kakao")
