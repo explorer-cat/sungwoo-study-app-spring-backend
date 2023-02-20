@@ -1,13 +1,13 @@
-package testapp.demo.user.service;
+package testapp.demo.member.service;
 
 import org.json.simple.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import testapp.demo.user.dto.SignUpRequestDto;
-import testapp.demo.user.dto.UserInfoResponseDto;
+import testapp.demo.member.dto.SignUpRequestDto;
+import testapp.demo.member.dto.UserInfoResponseDto;
 
 @Service
-public interface UserService {
+public interface MemberService {
     String getAccessTokenJsonData(String code);
 
     JSONObject getKakaoUserInfo(String accessToken);

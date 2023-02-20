@@ -3,7 +3,7 @@ package testapp.demo.board.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import testapp.demo.board.entity.BoardVo;
+import testapp.demo.board.entity.Board;
 
 @Data
 @NoArgsConstructor
@@ -14,8 +14,8 @@ public class CreatePostRequest {
     private String content;
     private Long creator;
 
-    public BoardVo toEntity(){
-        return BoardVo.builder()
+    public Board toEntity(){
+        return Board.builder()
                 .categoryId(categoryId)
                 .title(title)
                 .content(content)

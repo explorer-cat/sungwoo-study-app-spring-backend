@@ -1,11 +1,10 @@
-package testapp.demo.user.dto;
+package testapp.demo.member.dto;
 
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.json.simple.JSONObject;
-import testapp.demo.user.entity.UserVo;
 
 @Data
 @NoArgsConstructor

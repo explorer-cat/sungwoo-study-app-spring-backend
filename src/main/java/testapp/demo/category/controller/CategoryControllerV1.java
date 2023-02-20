@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import testapp.demo.category.entity.CategoryVo;
+import testapp.demo.category.dto.CreateCategoryRequest;
+import testapp.demo.category.entity.Category;
 import testapp.demo.category.service.CategoryService;
-
-import java.util.List;
+import testapp.demo.utils.ResDto;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/category")
@@ -22,15 +22,23 @@ public class CategoryControllerV1 {
         this.categoryService = categoryService;
     }
 
+    /**
+     * @title 카테고리 정보 조회
+     * @param categoryId
+     * @return
+     */
     @GetMapping()
-    //@RequestParam(value = "category",required = false, defaultValue = "0") category가 없어도 들어오게
-    public ResponseEntity<List<CategoryVo>> getCategoryList(@RequestParam(value = "category",required = false, defaultValue = "0") int categoryId) {
+    public ResponseEntity<ResDto> category(@RequestParam(value = "category",required = false, defaultValue = "0") int categoryId) {
         return categoryService.getCategoryList(categoryId);
     }
 
-    @PostMapping("/api/v1/category")
-    public ResponseEntity<List<CategoryVo>> createCategoryList() {
-        return null;
+    /**
+     * @title 카테고리 생성
+     * @return
+     */
+    @PostMapping
+    public ResponseEntity<Category> createCategory(@RequestBody CreateCategoryRequest request) {
+        return categoryService.createCategory(request);
     }
 
 }

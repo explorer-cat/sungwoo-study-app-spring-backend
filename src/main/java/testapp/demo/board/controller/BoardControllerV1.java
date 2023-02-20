@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import testapp.demo.board.dto.BoardResponseDto;
 import testapp.demo.board.dto.CreatePostRequest;
-import testapp.demo.board.entity.BoardVo;
+import testapp.demo.board.entity.Board;
 import testapp.demo.board.service.BoardService;
 
 import java.util.*;
@@ -51,7 +51,7 @@ public class BoardControllerV1 {
 
 
     @PostMapping("/post")
-    public ResponseEntity<BoardVo> setPost(@RequestBody CreatePostRequest data) {
+    public ResponseEntity<Board> setPost(@RequestBody CreatePostRequest data) {
         try {
             return boardService.setPost(data);
         } catch (RuntimeException re) {

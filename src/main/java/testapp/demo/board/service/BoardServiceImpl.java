@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import testapp.demo.board.dto.BoardResponseDto;
 import testapp.demo.board.dto.CreatePostRequest;
-import testapp.demo.board.entity.BoardVo;
+import testapp.demo.board.entity.Board;
 import testapp.demo.board.repository.BoardRepository;
 
 import java.time.LocalDateTime;
@@ -30,19 +30,19 @@ public class BoardServiceImpl implements BoardService {
      * @title: 게시글 작성
      */
     @Override
-    public ResponseEntity<BoardVo> setPost(CreatePostRequest data) {
+    public ResponseEntity<Board> setPost(CreatePostRequest data) {
         log.info("BoardServiceImpl class : setPost() start");
 
-        BoardVo boardVo = new BoardVo();
+        Board board = new Board();
 
-        boardVo.setCategoryId(data.getCategoryId());
-        boardVo.setTitle(data.getTitle());
-        boardVo.setContent(data.getContent());
-        boardVo.setCreator(data.getCreator());
-        boardVo.setRegDt(LocalDateTime.now());
+        board.setCategoryId(data.getCategoryId());
+        board.setTitle(data.getTitle());
+        board.setContent(data.getContent());
+        board.setCreator(data.getCreator());
+        board.setRegDt(LocalDateTime.now());
 
-        boardRepository.save(boardVo);
-        return new ResponseEntity<>(boardRepository.save(boardVo), HttpStatus.OK);
+        boardRepository.save(board);
+        return new ResponseEntity<>(boardRepository.save(board), HttpStatus.OK);
     }
 
 
@@ -56,7 +56,7 @@ public class BoardServiceImpl implements BoardService {
         log.info("BoardServiceImpl class : getPost() start");
 
         List<BoardResponseDto> boardList = new ArrayList<>();
-        Optional<BoardVo> board = boardRepository.findById(id);
+        Optional<Board> board = boardRepository.findById(id);
 
         //게시글을 못 찾을 경우
         if(!board.isPresent()) {

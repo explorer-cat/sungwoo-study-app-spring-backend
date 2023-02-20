@@ -1,16 +1,15 @@
-package testapp.demo.user.service;
+package testapp.demo.member.service;
 
-import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import testapp.demo.user.dto.SignUpRequestDto;
-import testapp.demo.user.dto.UserInfoResponseDto;
-import testapp.demo.user.entity.UserVo;
-import testapp.demo.user.repository.UserRepository;
+import testapp.demo.member.dto.SignUpRequestDto;
+import testapp.demo.member.dto.UserInfoResponseDto;
+import testapp.demo.member.entity.Member;
+import testapp.demo.member.repository.MemberRepository;
 import testapp.demo.utils.TokenUtils;
 
 import java.io.BufferedReader;
@@ -19,13 +18,13 @@ import java.net.URL;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class MemberServiceImpl implements MemberService {
 
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final TokenUtils tokenUtils;
 
-    public UserServiceImpl(UserRepository userRepository, TokenUtils tokenUtils) {
-        this.userRepository = userRepository;
+    public MemberServiceImpl(MemberRepository memberRepository, TokenUtils tokenUtils) {
+        this.memberRepository = memberRepository;
         this.tokenUtils = tokenUtils;
     }
 
@@ -33,6 +32,8 @@ public class UserServiceImpl implements UserService {
     private final String GRANT_TYPE= "authorization_code";
     private final String REDIRECT_URI= "http://sungwoo-net.p-e.kr:3000/login/auth/code";
     private final String TOKEN_URL = "https://kauth.kakao.com/oauth/token";
+    private final String CLIENT_ID = "ad874f9a277a8d0b35591cbf40f5bd82";
+    private final String CLIENT_SECRET= "L9M7Xxh5XayyOM22BcMlllmzVe61wPzw";
 
     @Override
     public JSONObject getKakaoUserInfo(String accessToken){
@@ -91,18 +92,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserInfoResponseDto getUserEmail(String email) {
         System.out.println("");
-        UserInfoResponseDto userInfo = userRepository.findByEmail(email.toString());
+        UserInfoResponseDto userInfo = memberRepository.findByEmail(email.toString());
         return userInfo;
     }
     @Override
     public ResponseEntity<UserInfoResponseDto> deleteUserById(String email) {
-        UserInfoResponseDto userOptional = userRepository.findByEmail(email);
+        UserInfoResponseDto userOptional = memberRepository.findByEmail(email);
         if(userOptional == null) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
-        Optional<UserVo> user = userRepository.findById(userOptional.getId());
+        Optional<Member> user = memberRepository.findById(userOptional.getId());
         if(user.isPresent()){
-            userRepository.delete(user.get());
+            memberRepository.delete(user.get());
             UserInfoResponseDto deletedUser = new UserInfoResponseDto(user.get());
             return new ResponseEntity<>(deletedUser, HttpStatus.OK);
         } else {
@@ -117,7 +118,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<UserInfoResponseDto> signUpUser(SignUpRequestDto req)  {
         // Check if email is already registered
-        UserInfoResponseDto existingUser = userRepository.findByEmail(req.getEmail());
+        UserInfoResponseDto existingUser = memberRepository.findByEmail(req.getEmail());
 
         //해당 이메일은 이미 가입되어있음.
         if(existingUser != null) {
@@ -125,15 +126,15 @@ public class UserServiceImpl implements UserService {
         }
 
         // Create a new user
-        UserVo userVo = new UserVo();
-        userVo.setUid(req.getUid());
-        userVo.setEmail(req.getEmail());
-        userVo.setNickname(req.getNickname());
-        userVo.setThumbnailImage(req.getProfileImage());
-        userVo.setBan(false);
-        userVo.setAdmin(false);
-        userRepository.save(userVo);
+        Member member = new Member();
+        member.setUid(req.getUid());
+        member.setEmail(req.getEmail());
+        member.setNickname(req.getNickname());
+        member.setThumbnailImage(req.getProfileImage());
+        member.setBan(false);
+        member.setAdmin(false);
+        memberRepository.save(member);
 
-        return new ResponseEntity<>(new UserInfoResponseDto(userVo), HttpStatus.OK);
+        return new ResponseEntity<>(new UserInfoResponseDto(member), HttpStatus.OK);
     }
 }

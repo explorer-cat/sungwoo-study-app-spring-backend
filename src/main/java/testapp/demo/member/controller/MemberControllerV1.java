@@ -1,4 +1,4 @@
-package testapp.demo.user.controller;
+package testapp.demo.member.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,10 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import testapp.demo.user.dto.LoginTokenResponseDto;
-import testapp.demo.user.dto.SignUpRequestDto;
-import testapp.demo.user.dto.UserInfoResponseDto;
-import testapp.demo.user.service.UserService;
+import testapp.demo.member.dto.LoginTokenResponseDto;
+import testapp.demo.member.dto.SignUpRequestDto;
+import testapp.demo.member.dto.UserInfoResponseDto;
+import testapp.demo.member.service.MemberService;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -23,12 +23,12 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/users")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-public class UserControllerV1 {
+public class MemberControllerV1 {
 
-    private UserService userService;
+    private MemberService userService;
 
     @Autowired
-    public UserControllerV1(UserService userService) {
+    public MemberControllerV1(MemberService userService) {
         this.userService = userService;
     }
 

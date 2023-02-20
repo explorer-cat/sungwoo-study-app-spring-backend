@@ -1,6 +1,6 @@
 package testapp.demo.board.dto;
 import lombok.*;
-import testapp.demo.board.entity.BoardVo;
+import testapp.demo.board.entity.Board;
 
 import java.time.LocalDateTime;
 
@@ -15,12 +15,12 @@ public class BoardResponseDto {
     private Long creator;
     private LocalDateTime regDt;
 
-    public BoardResponseDto(BoardVo boardVo) {
-        this.id = boardVo.getId();
-        this.categoryId = boardVo.getCategoryId();
-        this.title = boardVo.getTitle();
-        this.content = boardVo.getContent();
-        this.creator = boardVo.getCreator();
-        this.regDt = boardVo.getRegDt();
+    public BoardResponseDto(Board board) {
+        this.id = board.getId();
+        this.categoryId = board.getCategoryId();
+        this.title = board.getTitle();
+        this.content = board.getContent();
+        this.creator = board.getCreator();
+        this.regDt = board.getRegDt();
     }
 }

@@ -1,7 +1,5 @@
 package testapp.demo.board.entity;
 
-import jdk.nashorn.internal.runtime.Debug;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor    //첫번째 방법
 @Entity
-public class BoardVo {
+public class Board {
 
     @Id
     @GeneratedValue
@@ -28,7 +26,7 @@ public class BoardVo {
 
 
     @Builder
-    public BoardVo(int id, int categoryId, String title, String content, boolean approval, Long creator, LocalDateTime regDt) {
+    public Board(int id, int categoryId, String title, String content, boolean approval, Long creator, LocalDateTime regDt) {
         this.id = id;
         this.categoryId = categoryId;
         this.title = title;

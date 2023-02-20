@@ -1,4 +1,4 @@
-package testapp.demo.user.entity;
+package testapp.demo.member.entity;
 
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor    //첫번째 방법
 @Entity
-public class UserVo {
+public class Member {
 
     @Id
     @GeneratedValue
@@ -26,7 +26,7 @@ public class UserVo {
     private LocalDateTime regDt;
 
     @Builder
-    public UserVo(int id, String uid, String email, String nickname, String thumbnailImage, boolean ban, boolean admin, LocalDateTime regDt) {
+    public Member(int id, String uid, String email, String nickname, String thumbnailImage, boolean ban, boolean admin, LocalDateTime regDt) {
         this.id = id;
         this.uid = uid;
         this.email = email;
