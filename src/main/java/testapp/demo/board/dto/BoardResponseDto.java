@@ -15,12 +15,12 @@ public class BoardResponseDto {
     private Long creator;
     private LocalDateTime regDt;
 
-    public BoardResponseDto(Board board) {
-        this.id = board.getId();
-        this.categoryId = board.getCategoryId();
-        this.title = board.getTitle();
-        this.content = board.getContent();
-        this.creator = board.getCreator();
-        this.regDt = board.getRegDt();
-    }
+//    public BoardResponseDto(Board board) {
+//        this.id = board.getId();
+//        this.categoryId = board.getCategoryId();
+//        this.title = board.getTitle();
+//        this.content = board.getContent();
+//        this.creator = board.getCreator();
+//        this.regDt = board.getRegDt();
+//    }
 }

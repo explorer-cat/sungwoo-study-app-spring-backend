@@ -35,11 +35,11 @@ public class BoardServiceImpl implements BoardService {
 
         Board board = new Board();
 
-        board.setCategoryId(data.getCategoryId());
-        board.setTitle(data.getTitle());
-        board.setContent(data.getContent());
-        board.setCreator(data.getCreator());
-        board.setRegDt(LocalDateTime.now());
+//        board.setCategoryId(data.getCategoryId());
+//        board.setTitle(data.getTitle());
+//        board.setContent(data.getContent());
+//        board.setCreator(data.getCreator());
+//        board.setRegDt(LocalDateTime.now());
 
         boardRepository.save(board);
         return new ResponseEntity<>(boardRepository.save(board), HttpStatus.OK);
@@ -47,9 +47,9 @@ public class BoardServiceImpl implements BoardService {
 
 
     /**
-     * @Title : 카테고리 단건 게시글 조회.
      * @param id
      * @return List<Board>
+     * @Title : 카테고리 단건 게시글 조회.
      */
     @Override
     public ResponseEntity<List<BoardResponseDto>> getPost(int id) {
@@ -59,31 +59,31 @@ public class BoardServiceImpl implements BoardService {
         Optional<Board> board = boardRepository.findById(id);
 
         //게시글을 못 찾을 경우
-        if(!board.isPresent()) {
+        if (!board.isPresent()) {
             throw new IllegalArgumentException();
         } else {
-            boardList.add(new BoardResponseDto(board.get()));
+//            boardList.add(new BoardResponseDto(board.get()));
         }
 
         return new ResponseEntity<>(boardList, HttpStatus.OK);
     }
-
+}
     /**
      * @Title : 카테고리 모든 게시글 조회
      * @param categoryId
      * @return
      * save get update  return
      */
-    @Override
-    public ResponseEntity<List<BoardResponseDto>> getCategoryPostList(int categoryId) {
-        try {
-            log.info("BoardServiceImpl class : getCategoryPostList() start");
-
-            return new ResponseEntity<>(boardRepository.findByCategoryIdAndApproval(categoryId,true), HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return ResponseEntity.internalServerError().build();
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
-    }
-}
+//    @Override
+//    public ResponseEntity<List<BoardResponseDto>> getCategoryPostList(int categoryId) {
+//        try {
+//            log.info("BoardServiceImpl class : getCategoryPostList() start");
+//
+//            return new ResponseEntity<>(boardRepository.findBySubCategoryIdAndApproval(categoryId,true), HttpStatus.OK);
+//        } catch (RuntimeException e) {
+//            return ResponseEntity.internalServerError().build();
+//        } catch (Exception e) {
+//            return ResponseEntity.internalServerError().build();
+//        }
+//    }
+//}

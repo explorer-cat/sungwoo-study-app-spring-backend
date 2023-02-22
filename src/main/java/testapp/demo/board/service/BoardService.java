@@ -14,6 +14,6 @@ public interface BoardService {
 
     ResponseEntity<List<BoardResponseDto>> getPost(int id);
 
-    ResponseEntity<List<BoardResponseDto>> getCategoryPostList(int categoryId);
+//    ResponseEntity<List<BoardResponseDto>> getCategoryPostList(int categoryId);
 
 }

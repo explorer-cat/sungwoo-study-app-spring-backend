@@ -14,12 +14,12 @@ public class CreatePostRequest {
     private String content;
     private Long creator;
 
-    public Board toEntity(){
-        return Board.builder()
-                .categoryId(categoryId)
-                .title(title)
-                .content(content)
-                .creator(creator)
-                .build();
-    }
+//    public Board toEntity(){
+//        return Board.builder()
+//                .categoryId(categoryId)
+//                .title(title)
+//                .content(content)
+//                .creator(creator)
+//                .build();
+//    }
 }

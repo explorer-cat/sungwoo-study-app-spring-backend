@@ -27,22 +27,17 @@ public class BoardControllerV1 {
      * @param categoryId: 카테고리 아이디
      * @return
      * @title 해당 카테고리의 작성된 게시글들을 가져옴.
+     * case 1 : 카테고리와 게시글번호가 둘다 없는 경우 요청자체가 잘못됨.
+     * case 2 : 카테고리 아이디만 요청했을 경우 -> 해당 카테고리 모든 게시글 정보 반환
+     * case 3 : 카테고리 아이디와 게시글 아이디를 요청했을 경우 -> 해당 카테고리에 있는 게시글 정보만 반환
      */
-    @GetMapping
-    //@RequestParam(value = "category",required = false, defaultValue = "0") category가 없어도 들어오게
-    public ResponseEntity<List<BoardResponseDto>> getCategoryPostInfo(
-            @RequestParam(value = "category", required = false, defaultValue = "0") int categoryId,
-            @RequestParam(value = "postId", required = false, defaultValue = "0") int postId) {
-        /**
-         * case 1 : 카테고리와 게시글번호가 둘다 없는 경우 요청자체가 잘못됨.
-         * case 2 : 카테고리 아이디만 요청했을 경우 -> 해당 카테고리 모든 게시글 정보 반환
-         * case 3 : 카테고리 아이디와 게시글 아이디를 요청했을 경우 -> 해당 카테고리에 있는 게시글 정보만 반환
-         */
-
+    @GetMapping("/{subCategoryId}/post/{postId}")
+    public ResponseEntity<List<BoardResponseDto>> board(@PathVariable("subCategoryId") int categoryId,@PathVariable("postId") int postId) {
         if (categoryId == 0) { //카테고리와 게시글번호가 둘다 없는 경우
             System.out.println("category prams required");
-        } else if (categoryId != 0 && postId == 0) { //카테고리 아이디만 왔을 경우 해당 카테고리 모든 게시글 정보 반환
-            return boardService.getCategoryPostList(categoryId); //getByAll -> List<Board>
+            //카테고리 아이디만 왔을 경우 해당 카테고리 모든 게시글 정보 반환
+        } else if (categoryId != 0 && postId == 0) {
+//            return boardService.getCategoryPostList(categoryId); //getByAll -> List<Board>
         } else if (categoryId != 0 && postId != 0) {
             return boardService.getPost(postId); //getById -> Optinal<Board>
         }

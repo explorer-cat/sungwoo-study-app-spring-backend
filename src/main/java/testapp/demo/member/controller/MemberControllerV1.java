@@ -28,7 +28,7 @@ public class MemberControllerV1 {
     private MemberService userService;
 
     @Autowired
-    public MemberControllerV1(MemberService userService) {
+    public MemberControllerV1(MemberService memberService) {
         this.userService = userService;
     }
 
