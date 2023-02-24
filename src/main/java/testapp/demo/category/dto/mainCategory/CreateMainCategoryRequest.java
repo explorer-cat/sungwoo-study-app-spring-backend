@@ -1,24 +1,21 @@
-package testapp.demo.category.dto.subCategory;
+package testapp.demo.category.dto.mainCategory;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import testapp.demo.category.entity.MainCategory;
-import testapp.demo.category.entity.SubCategory;
 
 import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
-public class CreateSubCategoryRequest {
+public class CreateMainCategoryRequest {
 
     private String name;
-    private long mainCategoryId;
     private String description;
 
-    public SubCategory toEntity() {
-        return SubCategory.builder()
+    public MainCategory toEntity() {
+        return MainCategory.builder()
                 .name(name)
-                .mainCategoryId(mainCategoryId)
                 .description(description)
                 .approval(true)
                 .isRemove(false)

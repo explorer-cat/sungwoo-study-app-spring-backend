@@ -27,6 +27,7 @@ public class MainCategory {
     @LastModifiedDate
     private LocalDateTime updatedDate;
 
+    @Builder
     public MainCategory(Long id, String name, String description, Boolean approval, Boolean isRemove, LocalDateTime createDate, LocalDateTime updatedDate) {
         this.id = id;
         this.name = name;
@@ -36,6 +37,7 @@ public class MainCategory {
         this.createDate = createDate;
         this.updatedDate = updatedDate;
     }
+
 
     public MainCategory() {
 
