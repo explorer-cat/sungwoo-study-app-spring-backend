@@ -33,7 +33,7 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 
         if(existMainCategory.isPresent()) {
             //생성 request dto에 해당 메인카테고리 아이디 정보 세팅
-            request.setMainCategoryId(mainCategoryId);
+            request.setMainCategory(existMainCategory.get());
         } else {
             //존재하지 않는 메인카테고리에 서브카테고리 생성을 시도함.
             throw new IllegalStateException("notFound_Category");

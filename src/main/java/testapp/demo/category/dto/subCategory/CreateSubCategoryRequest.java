@@ -2,6 +2,7 @@ package testapp.demo.category.dto.subCategory;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.jboss.jandex.Main;
 import testapp.demo.category.entity.MainCategory;
 import testapp.demo.category.entity.SubCategory;
 
@@ -12,13 +13,13 @@ import java.time.LocalDateTime;
 public class CreateSubCategoryRequest {
 
     private String name;
-    private long mainCategoryId;
+    private MainCategory mainCategory;
     private String description;
 
     public SubCategory toEntity() {
         return SubCategory.builder()
                 .name(name)
-                .mainCategoryId(mainCategoryId)
+                .mainCategory(mainCategory)
                 .description(description)
                 .approval(true)
                 .isRemove(false)
