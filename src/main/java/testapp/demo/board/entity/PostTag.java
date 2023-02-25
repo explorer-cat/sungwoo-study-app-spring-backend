@@ -1,6 +1,5 @@
 package testapp.demo.board.entity;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,23 +12,16 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor    //첫번째 방법
 @Entity
-public class Board {
+public class PostTag {
 
     @Id
     @GeneratedValue
-    @Column(name="board_ID")
+    @Column(name="tag_ID")
     private long id;
-    @Column(name ="main_category_ID")
-    private long mainCategoryId;
-    @Column(name="sub_category_ID")
-    private long subCategoryId;
-    @Column(name ="member_ID")
-    private long memberId;
-    private String title;
-    private String content;
-    private boolean approval;
-    private Long creator;
-    private LocalDateTime regDt;
+    @Column(name ="post_ID")
+    private long postId;
+    private String tagName;
+
 
 
 //    @Builder

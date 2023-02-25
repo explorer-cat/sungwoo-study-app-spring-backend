@@ -19,6 +19,7 @@ public class SubCategoryResponseDTO {
     private long categoryId;
     private long mainCategoryId;
     private String name;
+    private String tag;
     private String description;
     private Boolean approval;
     private LocalDateTime createDateTime;
@@ -33,6 +34,7 @@ public class SubCategoryResponseDTO {
                 .categoryId(subCategory.getId())
                 .mainCategoryId(subCategory.getMainCategoryId())
                 .name(subCategory.getName())
+                .tag(subCategory.getTag())
                 .description(subCategory.getDescription())
                 .approval(subCategory.getApproval())
                 .createDateTime(subCategory.getCreateDate())

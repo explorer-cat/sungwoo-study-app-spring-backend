@@ -8,8 +8,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @ToString
 public class BoardResponseDto {
-    private int id;
-    private int categoryId;
+    private long id;
+    private long mainCategoryId;
+    private long subCategoryId;
     private String title;
     private String content;
     private Long creator;

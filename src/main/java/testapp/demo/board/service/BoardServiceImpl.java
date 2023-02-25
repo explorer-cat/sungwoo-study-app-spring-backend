@@ -47,26 +47,28 @@ public class BoardServiceImpl implements BoardService {
 
 
     /**
-     * @param id
      * @return List<Board>
      * @Title : 카테고리 단건 게시글 조회.
      */
     @Override
-    public ResponseEntity<List<BoardResponseDto>> getPost(int id) {
+    public Optional<Board> getPost(long subCategoryId, long postId) {
         log.info("BoardServiceImpl class : getPost() start");
-
-        List<BoardResponseDto> boardList = new ArrayList<>();
-        Optional<Board> board = boardRepository.findById(id);
-
+        Optional<Board> board = boardRepository.findBySubCategoryIdAndId(subCategoryId,postId);
         //게시글을 못 찾을 경우
         if (!board.isPresent()) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("empty");
         } else {
-//            boardList.add(new BoardResponseDto(board.get()));
+            return board;
         }
-
-        return new ResponseEntity<>(boardList, HttpStatus.OK);
     }
+
+    @Override
+    public List<Board> getAllPost(long subCategoryId) {
+        return boardRepository.findBySubCategoryId(subCategoryId);
+    }
+
+
+
 }
     /**
      * @Title : 카테고리 모든 게시글 조회
