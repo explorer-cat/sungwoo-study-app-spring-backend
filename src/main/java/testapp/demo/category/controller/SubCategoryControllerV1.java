@@ -6,10 +6,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import testapp.demo.category.dto.mainCategory.CreateMainCategoryRequest;
+import testapp.demo.category.dto.mainCategory.MainCategoryResponseDTO;
 import testapp.demo.category.dto.subCategory.CreateSubCategoryRequest;
 import testapp.demo.category.dto.subCategory.SubCategoryResponseDTO;
+import testapp.demo.category.entity.MainCategory;
+import testapp.demo.category.entity.SubCategory;
+import testapp.demo.category.repository.SubCategoryRepository;
 import testapp.demo.category.service.SubCategoryService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -21,6 +26,7 @@ public class SubCategoryControllerV1 {
 //
     @Autowired
     private SubCategoryService subCategoryService;
+    private final SubCategoryRepository subCategoryRepository;
 
     @GetMapping("/{mainCategoryId}")
     public ResponseEntity<List<SubCategoryResponseDTO>> getAllSubCategory(@PathVariable("mainCategoryId") long mainCategoryId) {
@@ -59,6 +65,27 @@ public class SubCategoryControllerV1 {
             return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/test")
+    public List<SubCategoryResponseDTO> test() {
+        SubCategoryResponseDTO main = new SubCategoryResponseDTO();
+        List<SubCategoryResponseDTO> result = new ArrayList<>();
+        List<SubCategory> subCategory = subCategoryRepository.findByMainCategoryId(1L);
+
+        for (SubCategory category : subCategory) {
+            result.add(main.fromEntity(category));
+        }
+
+
+
+        System.out.println(result);
+        return result;
+    }
+
+
+
+
+
 //
 //    @GetMapping("/all")
 //    public ResponseEntity<List<?>> allSubCategory() {

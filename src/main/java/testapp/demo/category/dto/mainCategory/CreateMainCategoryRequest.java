@@ -1,5 +1,7 @@
 package testapp.demo.category.dto.mainCategory;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import testapp.demo.category.entity.MainCategory;
@@ -7,7 +9,9 @@ import testapp.demo.category.entity.MainCategory;
 import java.time.LocalDateTime;
 
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class CreateMainCategoryRequest {
 
     private String name;

@@ -3,10 +3,7 @@ package testapp.demo.board.entity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
@@ -23,8 +20,7 @@ public class PostTag {
     private String tagName;
 
 
-
-//    @Builder
+    //    @Builder
 //    public Board(int id, int categoryId, String title, String content, boolean approval, Long creator, LocalDateTime regDt) {
 //        this.id = id;
 //        this.categoryId = categoryId;

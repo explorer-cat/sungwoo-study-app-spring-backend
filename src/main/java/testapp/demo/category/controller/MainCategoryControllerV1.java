@@ -7,9 +7,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import testapp.demo.category.dto.mainCategory.CreateMainCategoryRequest;
 import testapp.demo.category.dto.mainCategory.MainCategoryResponseDTO;
+import testapp.demo.category.repository.MainCategoryRepository;
 import testapp.demo.category.service.MainCategoryServiceImpl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+//import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/category/main")
@@ -17,8 +22,13 @@ import java.util.List;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class MainCategoryControllerV1 {
 
+    Map<String,Object> a = new HashMap<>();
+
+
+
     @Autowired
     private MainCategoryServiceImpl mainCategoryService;
+    private final MainCategoryRepository mainCategoryRepository;
 
 
     /**
@@ -28,7 +38,6 @@ public class MainCategoryControllerV1 {
     @GetMapping
     public ResponseEntity<List<MainCategoryResponseDTO>> getAllCategories() {
         List<MainCategoryResponseDTO> categoryList = mainCategoryService.findAllCategory();
-
        if (categoryList == null || categoryList.isEmpty()) {
            return ResponseEntity.notFound().build();
         }
@@ -69,7 +78,7 @@ public class MainCategoryControllerV1 {
         }
     }
 
-    @DeleteMapping("{mainCategoryId}")
+    @DeleteMapping("/{mainCategoryId}")
     public ResponseEntity removeCategory(@PathVariable ("mainCategoryId") long mainCategoryId) {
         try {
             mainCategoryService.removeCategory(mainCategoryId);

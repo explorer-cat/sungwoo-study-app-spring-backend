@@ -9,7 +9,6 @@ import testapp.demo.category.entity.MainCategory;
 import testapp.demo.category.entity.SubCategory;
 import testapp.demo.category.repository.MainCategoryRepository;
 import testapp.demo.category.repository.SubCategoryRepository;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -50,7 +49,8 @@ public class SubCategoryServiceImpl implements SubCategoryService {
         } else {
             //존재하지 않는 경우 데이터베이스 저장 시작
             SubCategory save = subCategoryRepository.save(subCategory);
-            return response.fromEntity(save);
+            return null;
+//            return response.fromEntity(save);
         }
     }
 
@@ -62,13 +62,18 @@ public class SubCategoryServiceImpl implements SubCategoryService {
     @Override
     public List<SubCategoryResponseDTO> getAllSubCategory(long mainCategoryId) {
         List<SubCategoryResponseDTO> result = new ArrayList<>();
-
+        //1번 서브카테고리 정보를 요청
         List<SubCategory> categories = subCategoryRepository.findByMainCategoryId(mainCategoryId);
 
         for (SubCategory v : categories) {
             SubCategoryResponseDTO dto = new SubCategoryResponseDTO();
+            v.getMainCategory();
+
             result.add(dto.fromEntity(v));
         }
+
+
+
         if (result.isEmpty()) {
             throw new IllegalStateException("Empty");
         } else {

@@ -24,10 +24,23 @@ public class BoardControllerV1 {
         this.boardService = boardService;
     }
 
+
     @GetMapping("/{subCategoryId}")
-    public ResponseEntity<List<Board>> getAllPostList(@PathVariable("subCategoryId") long subCategoryId) {
+    public ResponseEntity<List<BoardResponseDto>> getAllPostList(@PathVariable("subCategoryId") long subCategoryId) {
        try {
-           return new ResponseEntity<>(boardService.getAllPost(subCategoryId), HttpStatus.OK);
+
+           BoardResponseDto dto = new BoardResponseDto();
+           List<Board> allPost = boardService.getAllPost(subCategoryId);
+
+           System.out.println("allPost = " + allPost);
+
+           List result = new ArrayList();
+
+           for (Board v : allPost) {
+               result.add(dto.fromEntity(v));
+           }
+
+           return new ResponseEntity<>(result,HttpStatus.OK);
        } catch (Exception e) {
            System.err.println(e);
            return ResponseEntity.internalServerError().build();
@@ -35,10 +48,11 @@ public class BoardControllerV1 {
     }
 
     @GetMapping("/{subCategoryId}/{postId}")
-    public ResponseEntity<Board> getPost(@PathVariable("subCategoryId") long subCategoryId, @PathVariable("postId") long postId) {
+    public ResponseEntity<BoardResponseDto> getPost(@PathVariable("subCategoryId") long subCategoryId, @PathVariable("postId") long postId) {
         try {
+            BoardResponseDto dto = new BoardResponseDto();
             Optional<Board> post = boardService.getPost(subCategoryId, postId);
-            return new ResponseEntity<>(post.get(), HttpStatus.OK);
+            return new ResponseEntity<>(dto.fromEntity(post.get()), HttpStatus.OK);
         } catch (IllegalStateException e) {
             if(e.getMessage().equals("empty")) {
                 return ResponseEntity.notFound().build();
@@ -49,5 +63,18 @@ public class BoardControllerV1 {
             System.err.println(e);
             return ResponseEntity.internalServerError().build();
         }
+    }
+
+    @PostMapping("/{mainCategoryId}/{subCategoryId}")
+    public ResponseEntity createPost(@PathVariable("mainCategoryId") long mainCategoryId,
+                                     @PathVariable("subCategoryId") long subCagtegoryId,
+                                     @RequestBody CreatePostRequest request) {
+        try {
+            Board post = boardService.createPost(mainCategoryId, subCagtegoryId, request);
+            System.out.printf("post" + post);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+        return null;
     }
 }

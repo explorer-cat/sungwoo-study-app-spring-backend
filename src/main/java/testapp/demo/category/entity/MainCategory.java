@@ -1,17 +1,26 @@
 package testapp.demo.category.entity;
 
-import lombok.Builder;
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import testapp.demo.category.dto.subCategory.SubCategoryResponseDTO;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-@Data
-@Builder
+
 @Entity
 @Table(name = "mainCategory")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
+@Setter
 public class MainCategory {
 
     @Id
@@ -27,19 +36,4 @@ public class MainCategory {
     @LastModifiedDate
     private LocalDateTime updatedDate;
 
-    @Builder
-    public MainCategory(Long id, String name, String description, Boolean approval, Boolean isRemove, LocalDateTime createDate, LocalDateTime updatedDate) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.approval = approval;
-        this.isRemove = isRemove;
-        this.createDate = createDate;
-        this.updatedDate = updatedDate;
-    }
-
-
-    public MainCategory() {
-
-    }
 }

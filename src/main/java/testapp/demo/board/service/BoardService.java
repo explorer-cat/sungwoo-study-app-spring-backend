@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface BoardService {
 //    ResponseEntity<BoardResponseDto> createPost(Map<String, Object> data);
 
-    ResponseEntity<Board> setPost(CreatePostRequest data);
+    Board createPost(long mainCategoryId, long subCategoryId, CreatePostRequest data) throws Exception;
     Optional<Board> getPost(long subCategoryId, long postId);
 
     List<Board> getAllPost(long subCategoryId);

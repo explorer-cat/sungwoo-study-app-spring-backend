@@ -3,6 +3,7 @@ package testapp.demo.category.dto.subCategory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import testapp.demo.category.dto.mainCategory.MainCategoryResponseDTO;
 import testapp.demo.category.entity.MainCategory;
 import testapp.demo.category.entity.SubCategory;
@@ -14,11 +15,12 @@ import java.time.LocalDateTime;
 
 //@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Data
 public class SubCategoryResponseDTO {
     private long categoryId;
-    private MainCategoryResponseDTO mainCategory;
+    private MainCategory mainCategory;
     private String name;
     private String tag;
     private String description;
@@ -26,11 +28,13 @@ public class SubCategoryResponseDTO {
     private LocalDateTime createDateTime;
     private LocalDateTime updatedDatedTime;
 
-    public SubCategoryResponseDTO() {
-
-    }
+//    public SubCategoryResponseDTO() {
+//
+//    }
 
     public SubCategoryResponseDTO fromEntity(SubCategory subCategory){
+//        MainCategoryResponseDTO mainCategory1 = subCategory.getMainCategory();
+//        System.out.println("mainCategory1 = " + mainCategory1);
         return SubCategoryResponseDTO.builder()
                 .categoryId(subCategory.getId())
                 .mainCategory(subCategory.getMainCategory())

@@ -1,20 +1,41 @@
 package testapp.demo.board.dto;
 import lombok.*;
 import testapp.demo.board.entity.Board;
+import testapp.demo.category.dto.mainCategory.MainCategoryResponseDTO;
+import testapp.demo.category.dto.subCategory.SubCategoryResponseDTO;
+import testapp.demo.category.entity.MainCategory;
 
 import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor
+@Builder
 @ToString
+@AllArgsConstructor
+
 public class BoardResponseDto {
     private long id;
-    private long mainCategoryId;
-    private long subCategoryId;
     private String title;
+//    private SubCategoryResponseDTO subCategory;
+    private long subCategoryId;
     private String content;
     private Long creator;
     private LocalDateTime regDt;
+
+
+    public BoardResponseDto() {
+    }
+
+
+    public BoardResponseDto fromEntity(Board board){
+        return BoardResponseDto.builder()
+                .id(board.getId())
+                .subCategoryId(board.getSubCategoryId())
+                .title(board.getTitle())
+                .content(board.getContent())
+                .creator(board.getCreator())
+                .regDt(board.getRegDt()).build();
+    }
+
 
 //    public BoardResponseDto(Board board) {
 //        this.id = board.getId();

@@ -3,16 +3,15 @@ package testapp.demo.board.service;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import testapp.demo.board.dto.BoardResponseDto;
 import testapp.demo.board.dto.CreatePostRequest;
 import testapp.demo.board.entity.Board;
 import testapp.demo.board.repository.BoardRepository;
+import testapp.demo.category.repository.MainCategoryRepository;
+import testapp.demo.category.repository.SubCategoryRepository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,25 +23,29 @@ public class BoardServiceImpl implements BoardService {
     private final BoardRepository boardRepository;
 
 
+
     /**
      * @param data
      * @return
      * @title: 게시글 작성
      */
     @Override
-    public ResponseEntity<Board> setPost(CreatePostRequest data) {
-        log.info("BoardServiceImpl class : setPost() start");
+    public Board createPost(long mainCategoryId, long subCategoryId, CreatePostRequest data) throws Exception {
+        try {
+            Board board = Board.builder()
+                    .mainCategoryId(mainCategoryId)
+                    .subCategoryId(subCategoryId)
+                    .title(data.getTitle())
+                    .content(data.getContent())
+                    .approval(true)
+                    .regDt(LocalDateTime.now())
+                    .memberId(data.getCreator()).build();
 
-        Board board = new Board();
-
-//        board.setCategoryId(data.getCategoryId());
-//        board.setTitle(data.getTitle());
-//        board.setContent(data.getContent());
-//        board.setCreator(data.getCreator());
-//        board.setRegDt(LocalDateTime.now());
-
-        boardRepository.save(board);
-        return new ResponseEntity<>(boardRepository.save(board), HttpStatus.OK);
+            Board save = boardRepository.save(board);
+            return save;
+        } catch (Exception ex) {
+            throw new Exception(ex);
+        }
     }
 
 
@@ -52,8 +55,8 @@ public class BoardServiceImpl implements BoardService {
      */
     @Override
     public Optional<Board> getPost(long subCategoryId, long postId) {
-        log.info("BoardServiceImpl class : getPost() start");
         Optional<Board> board = boardRepository.findBySubCategoryIdAndId(subCategoryId,postId);
+
         //게시글을 못 찾을 경우
         if (!board.isPresent()) {
             throw new IllegalArgumentException("empty");
@@ -70,22 +73,4 @@ public class BoardServiceImpl implements BoardService {
 
 
 }
-    /**
-     * @Title : 카테고리 모든 게시글 조회
-     * @param categoryId
-     * @return
-     * save get update  return
-     */
-//    @Override
-//    public ResponseEntity<List<BoardResponseDto>> getCategoryPostList(int categoryId) {
-//        try {
-//            log.info("BoardServiceImpl class : getCategoryPostList() start");
-//
-//            return new ResponseEntity<>(boardRepository.findBySubCategoryIdAndApproval(categoryId,true), HttpStatus.OK);
-//        } catch (RuntimeException e) {
-//            return ResponseEntity.internalServerError().build();
-//        } catch (Exception e) {
-//            return ResponseEntity.internalServerError().build();
-//        }
-//    }
-//}
+

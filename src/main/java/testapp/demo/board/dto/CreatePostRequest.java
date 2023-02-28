@@ -1,5 +1,6 @@
 package testapp.demo.board.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -8,9 +9,11 @@ import testapp.demo.board.entity.Board;
 @Data
 @NoArgsConstructor
 @ToString
+@AllArgsConstructor
+
 public class CreatePostRequest {
-    private int categoryId;
     private String title;
+    private String tag;
     private String content;
     private Long creator;
 
