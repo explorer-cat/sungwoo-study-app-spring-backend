@@ -5,7 +5,12 @@ import org.springframework.stereotype.Repository;
 import testapp.demo.member.dto.UserInfoResponseDto;
 import testapp.demo.member.entity.Member;
 
+import java.util.Optional;
+
 @Repository
 public interface MemberRepository extends JpaRepository<Member,Integer> {
     UserInfoResponseDto findByEmail(String email);
+
+
+
 }

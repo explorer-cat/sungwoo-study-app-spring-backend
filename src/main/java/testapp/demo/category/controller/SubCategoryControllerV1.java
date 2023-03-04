@@ -66,23 +66,6 @@ public class SubCategoryControllerV1 {
         }
     }
 
-    @GetMapping("/test")
-    public List<SubCategoryResponseDTO> test() {
-        SubCategoryResponseDTO main = new SubCategoryResponseDTO();
-        List<SubCategoryResponseDTO> result = new ArrayList<>();
-        List<SubCategory> subCategory = subCategoryRepository.findByMainCategoryId(1L);
-
-        for (SubCategory category : subCategory) {
-            result.add(main.fromEntity(category));
-        }
-
-
-
-        System.out.println(result);
-        return result;
-    }
-
-
 
 
 

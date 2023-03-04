@@ -15,11 +15,13 @@ import java.time.LocalDateTime;
 public class BoardResponseDto {
     private long id;
     private String title;
-//    private SubCategoryResponseDTO subCategory;
-    private long subCategoryId;
+    private long mainCategory_id;
+    private String mainCategory_name;
+    private long subCategory_id;
+    private String subCategory_name;
     private String content;
     private Long creator;
-    private LocalDateTime regDt;
+    private LocalDateTime createTime;
 
 
     public BoardResponseDto() {
@@ -27,13 +29,15 @@ public class BoardResponseDto {
 
 
     public BoardResponseDto fromEntity(Board board){
-        return BoardResponseDto.builder()
+       return BoardResponseDto.builder()
                 .id(board.getId())
-                .subCategoryId(board.getSubCategoryId())
+                .mainCategory_id(board.getMainCategory().getId())
+                .mainCategory_name(board.getMainCategory().getName())
+                .subCategory_id(board.getSubCategory().getId())
+                .subCategory_name(board.getSubCategory().getName())
                 .title(board.getTitle())
                 .content(board.getContent())
-                .creator(board.getCreator())
-                .regDt(board.getRegDt()).build();
+               .createTime(board.getCreateTime()).build();
     }
 
 

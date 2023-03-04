@@ -5,6 +5,7 @@ import testapp.demo.category.dto.mainCategory.CreateMainCategoryRequest;
 import testapp.demo.category.dto.mainCategory.MainCategoryResponseDTO;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public interface MainCategoryService {
@@ -21,6 +22,8 @@ public interface MainCategoryService {
     List<MainCategoryResponseDTO> findAllCategory();
 
     MainCategoryResponseDTO findCategory(long categoryId);
+
+    List<Map<String,Object>> getSubCategories(long mainCategoryId);
 
 
 

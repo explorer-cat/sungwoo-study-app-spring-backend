@@ -9,9 +9,7 @@ import testapp.demo.category.entity.SubCategory;
 import testapp.demo.category.repository.MainCategoryRepository;
 import testapp.demo.category.repository.SubCategoryRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class MainCategoryServiceImpl implements MainCategoryService {
@@ -26,36 +24,36 @@ public class MainCategoryServiceImpl implements MainCategoryService {
 
 
     /**
-     * @title 카테고리 단건 생성합니다.
      * @param request CreateMainCategoryRequest 카테고리 생성을 위한 DTO
      * @return MainCategoryResponseDTO
+     * @title 카테고리 단건 생성합니다.
      * @Created 2023.02
      */
     @Override
     public MainCategoryResponseDTO createCategory(CreateMainCategoryRequest request) {
-            //CreateMainCategoryRequest DTO를 엔티티객체로 변환
-            MainCategory mainCategory = request.toEntity();
-            MainCategoryResponseDTO response = new MainCategoryResponseDTO();
+        //CreateMainCategoryRequest DTO를 엔티티객체로 변환
+        MainCategory mainCategory = request.toEntity();
+        MainCategoryResponseDTO response = new MainCategoryResponseDTO();
 
-            //동일한 메인 카테고리 이름이 존재하는지 확인
-            Optional<MainCategory> existMainCategory = mainCategoryRepository.findByName(request.getName());
+        //동일한 메인 카테고리 이름이 존재하는지 확인
+        Optional<MainCategory> existMainCategory = mainCategoryRepository.findByName(request.getName());
 
-            //이미 동일한 카테고리 이름이 존재 할 경우
-            if (existMainCategory.isPresent()) {
-                //예외 발생
-                throw new IllegalStateException("exist category: "+request.getName());
-            } else {
-                //존재하지 않는 경우 데이터베이스 저장 시작
-                MainCategory save = mainCategoryRepository.save(mainCategory);
+        //이미 동일한 카테고리 이름이 존재 할 경우
+        if (existMainCategory.isPresent()) {
+            //예외 발생
+            throw new IllegalStateException("exist category: " + request.getName());
+        } else {
+            //존재하지 않는 경우 데이터베이스 저장 시작
+            MainCategory save = mainCategoryRepository.save(mainCategory);
 //                return response.fromEntity(save);
-                return null;
-            }
+            return null;
+        }
     }
 
 
     /**
-     * @title 전체 메인 카테고리 정보를 찾습니다.
      * @return
+     * @title 전체 메인 카테고리 정보를 찾습니다.
      * @created 2023.02
      */
     @Override
@@ -67,13 +65,8 @@ public class MainCategoryServiceImpl implements MainCategoryService {
         //DB에서 받은 값들이 없다면 반복문을 돌지않고 빈 리스트만 리턴.
         for (MainCategory v : categories) {
             MainCategoryResponseDTO dto = new MainCategoryResponseDTO();
-            MainCategoryResponseDTO mainCategoryResponseDTO = dto.fromEntity(v);
-
-            result.add(mainCategoryResponseDTO);
+            result.add(dto.fromEntity(v, getSubCategories(v.getId())));
         }
-
-        System.out.println("result  : " + result);
-
         return result;
     }
 
@@ -84,21 +77,41 @@ public class MainCategoryServiceImpl implements MainCategoryService {
 
         //카테고리가 존재할 경우
         if (category.isPresent()) {
-            return dto.fromEntity(category.get());
+            return dto.fromEntity(category.get(), getSubCategories(categoryId));
         } else {
             throw new NullPointerException("Null MainCategory");
         }
     }
 
+    /**
+     * @param mainCategoryId
+     * @return
+     * @title 메인 카테고리 ID로 해당 서브카테고리 정보를 반환하는 메서드
+     */
+    @Override
+    public List<Map<String, Object>> getSubCategories(long mainCategoryId) {
+        List<Map<String, Object>> subCategories = new ArrayList<>();
+        List<SubCategory> byMainCategoryId = subCategoryRepository.findByMainCategoryId(mainCategoryId);
 
+        for (SubCategory subCategory : byMainCategoryId) {
+            Map<String, Object> info = new HashMap<>();
+            info.put("id", subCategory.getId());
+            info.put("name", subCategory.getName());
+            info.put("description", subCategory.getDescription());
+            subCategories.add(info);
+        }
+        return subCategories;
+    }
 
 
     @Override
     public void removeCategory(long mainCategoryId) throws Exception {
-        try{
+        try {
             mainCategoryRepository.deleteById(mainCategoryId);
         } catch (Exception ex) {
             throw new Exception("error");
         }
     }
+
+
 }

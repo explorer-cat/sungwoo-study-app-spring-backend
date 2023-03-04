@@ -35,5 +35,4 @@ public class MainCategory {
     private LocalDateTime createDate;
     @LastModifiedDate
     private LocalDateTime updatedDate;
-
 }

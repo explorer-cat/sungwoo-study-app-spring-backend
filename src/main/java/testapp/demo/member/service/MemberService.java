@@ -4,6 +4,8 @@ import org.json.simple.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import testapp.demo.member.dto.SignUpRequestDto;
+import testapp.demo.member.dto.TokenResponse;
+import testapp.demo.member.dto.TokenResponseNoData;
 import testapp.demo.member.dto.UserInfoResponseDto;
 
 @Service
@@ -20,4 +22,7 @@ public interface MemberService {
 
     ResponseEntity<UserInfoResponseDto> deleteUserById(String email);
 
+    TokenResponse createToken(String userEmail);
+
+    TokenResponseNoData checkToken(String jwt_token);
 }

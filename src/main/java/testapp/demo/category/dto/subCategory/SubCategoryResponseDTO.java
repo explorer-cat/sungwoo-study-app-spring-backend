@@ -28,13 +28,8 @@ public class SubCategoryResponseDTO {
     private LocalDateTime createDateTime;
     private LocalDateTime updatedDatedTime;
 
-//    public SubCategoryResponseDTO() {
-//
-//    }
 
     public SubCategoryResponseDTO fromEntity(SubCategory subCategory){
-//        MainCategoryResponseDTO mainCategory1 = subCategory.getMainCategory();
-//        System.out.println("mainCategory1 = " + mainCategory1);
         return SubCategoryResponseDTO.builder()
                 .categoryId(subCategory.getId())
                 .mainCategory(subCategory.getMainCategory())

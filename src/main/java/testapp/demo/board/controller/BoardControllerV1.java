@@ -10,6 +10,7 @@ import testapp.demo.board.dto.CreatePostRequest;
 import testapp.demo.board.entity.Board;
 import testapp.demo.board.service.BoardService;
 
+import java.net.InetAddress;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -25,6 +26,12 @@ public class BoardControllerV1 {
     }
 
 
+
+    /**
+     * @title 해당 전체 카테고리 게시글 모두 조회
+     * @param subCategoryId
+     * @return
+     */
     @GetMapping("/{subCategoryId}")
     public ResponseEntity<List<BoardResponseDto>> getAllPostList(@PathVariable("subCategoryId") long subCategoryId) {
        try {
@@ -47,6 +54,12 @@ public class BoardControllerV1 {
        }
     }
 
+    /**
+     * @title 특정 게시물 단건 조회
+     * @param subCategoryId
+     * @param postId
+     * @return
+     */
     @GetMapping("/{subCategoryId}/{postId}")
     public ResponseEntity<BoardResponseDto> getPost(@PathVariable("subCategoryId") long subCategoryId, @PathVariable("postId") long postId) {
         try {
@@ -70,11 +83,10 @@ public class BoardControllerV1 {
                                      @PathVariable("subCategoryId") long subCagtegoryId,
                                      @RequestBody CreatePostRequest request) {
         try {
-            Board post = boardService.createPost(mainCategoryId, subCagtegoryId, request);
-            System.out.printf("post" + post);
+            boardService.createPost(mainCategoryId, subCagtegoryId, request);
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }
-        return null;
     }
 }

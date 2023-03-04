@@ -11,6 +11,7 @@ import testapp.demo.category.entity.SubCategory;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 //@Getter
 //@Setter
@@ -21,14 +22,13 @@ import java.util.List;
 public class MainCategoryResponseDTO {
     private long categoryId;
     private String mainCategoryName;
-    private List<SubCategory> subCategories = new ArrayList<>();
-
+    private List<Map<String,Object>> subCategories = new ArrayList<>();
     private String categoryDescription;
     private Boolean approval;
     private LocalDateTime createDateTime;
     private LocalDateTime updatedDatedTime;
 
-    public MainCategoryResponseDTO(long categoryId, String mainCategoryName, List<SubCategory> subCategories, String categoryDescription, Boolean approval, LocalDateTime createDateTime, LocalDateTime updatedDatedTime) {
+    public MainCategoryResponseDTO(long categoryId, String mainCategoryName, List<Map<String, Object>> subCategories, String categoryDescription, Boolean approval, LocalDateTime createDateTime, LocalDateTime updatedDatedTime) {
         this.categoryId = categoryId;
         this.mainCategoryName = mainCategoryName;
         this.subCategories = subCategories;
@@ -41,10 +41,10 @@ public class MainCategoryResponseDTO {
     public MainCategoryResponseDTO() {
     }
 
-    public MainCategoryResponseDTO fromEntity(MainCategory mainCategory){
+    public MainCategoryResponseDTO fromEntity(MainCategory mainCategory,List<Map<String,Object>> subCategories){
         return  MainCategoryResponseDTO.builder()
                 .categoryId(mainCategory.getId())
-//                .subCategories(mainCategory.getSubCategories())
+                .subCategories(subCategories)
                 .mainCategoryName(mainCategory.getName())
                 .categoryDescription(mainCategory.getDescription())
                 .approval(mainCategory.getApproval())

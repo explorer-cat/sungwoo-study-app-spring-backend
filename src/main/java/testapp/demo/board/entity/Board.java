@@ -24,51 +24,40 @@ public class Board {
     @Column(name="board_ID")
     private long id;
     @ManyToOne(targetEntity = MainCategory.class)
-    @JoinColumn(name = "main_category_ID",insertable=false, updatable=false)
+    @JoinColumn(name = "main_category_ID")
     private MainCategory mainCategory;
-    @Column(name="main_category_ID")
-    private Long mainCategoryId;
 
     @ManyToOne(targetEntity = SubCategory.class)
-    @JoinColumn(name = "sub_category_ID", insertable=false, updatable=false)
+    @JoinColumn(name = "sub_category_ID")
     private SubCategory subCategory;
 
-    @Column(name="sub_category_ID")
-    private Long subCategoryId;
-
-//    @OneToMany
-//    @JoinColumn("name")
-//    private Member member;
-    @Column(name ="member_ID")
-    private long memberId;
+    @ManyToOne(targetEntity = Member.class)
+    @JoinColumn(name = "user_email")
+    private Member member;
     private String title;
     private String content;
     private boolean approval;
-    private Long creator;
-    private LocalDateTime regDt;
+    private LocalDateTime createTime;
 
-    public Board(long id, MainCategory mainCategory, Long mainCategoryId, SubCategory subCategory, Long subCategoryId, long memberId, String title, String content, boolean approval, Long creator, LocalDateTime regDt) {
+    public Board(long id, MainCategory mainCategory, SubCategory subCategory, Member member, String title, String content, boolean approval, LocalDateTime createTime) {
         this.id = id;
         this.mainCategory = mainCategory;
-        this.mainCategoryId = mainCategoryId;
         this.subCategory = subCategory;
-        this.subCategoryId = subCategoryId;
-        this.memberId = memberId;
+        this.member = member;
         this.title = title;
         this.content = content;
         this.approval = approval;
-        this.creator = creator;
-        this.regDt = regDt;
+        this.createTime = createTime;
     }
 
-    public MainCategoryResponseDTO getMainCategory() {
-        MainCategoryResponseDTO dto = new MainCategoryResponseDTO();
-        return null;//dto.fromEntity(mainCategory);
-    }
+//    public MainCategoryResponseDTO getMainCategory() {
+//        MainCategoryResponseDTO dto = new MainCategoryResponseDTO();
+//        return dto.fromEntity(mainCategory);
+//    }
 
-    public SubCategoryResponseDTO getSubCategory() {
-        SubCategoryResponseDTO dto = new SubCategoryResponseDTO();
-        return null;
-//        return dto.fromEntity(subCategory);
-    }
+//    public SubCategoryResponseDTO getSubCategory() {
+//        SubCategoryResponseDTO dto = new SubCategoryResponseDTO();
+//        return null;
+////        return dto.fromEntity(subCategory);
+//    }
 }

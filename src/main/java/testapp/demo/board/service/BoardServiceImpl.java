@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import testapp.demo.board.dto.BoardResponseDto;
 import testapp.demo.board.dto.CreatePostRequest;
 import testapp.demo.board.entity.Board;
 import testapp.demo.board.repository.BoardRepository;
@@ -21,7 +20,8 @@ public class BoardServiceImpl implements BoardService {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private final BoardRepository boardRepository;
-
+    private final MainCategoryRepository mainCategoryRepository;
+    private final SubCategoryRepository subCategoryRepository;
 
 
     /**
@@ -33,20 +33,24 @@ public class BoardServiceImpl implements BoardService {
     public Board createPost(long mainCategoryId, long subCategoryId, CreatePostRequest data) throws Exception {
         try {
             Board board = Board.builder()
-                    .mainCategoryId(mainCategoryId)
-                    .subCategoryId(subCategoryId)
                     .title(data.getTitle())
                     .content(data.getContent())
                     .approval(true)
-                    .regDt(LocalDateTime.now())
-                    .memberId(data.getCreator()).build();
+                    .createTime(LocalDateTime.now()).build();
+
+            board.setMainCategory(mainCategoryRepository.findById(mainCategoryId).get());
+            board.setSubCategory(subCategoryRepository.findById(subCategoryId).get());
+
+            System.out.println("board = " + board);
 
             Board save = boardRepository.save(board);
+//            Board save = null;
             return save;
         } catch (Exception ex) {
             throw new Exception(ex);
         }
     }
+
 
 
     /**
@@ -65,12 +69,10 @@ public class BoardServiceImpl implements BoardService {
         }
     }
 
+
     @Override
     public List<Board> getAllPost(long subCategoryId) {
         return boardRepository.findBySubCategoryId(subCategoryId);
     }
-
-
-
 }
 

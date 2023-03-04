@@ -13,14 +13,12 @@ import org.json.simple.JSONObject;
 public class LoginTokenResponseDto {
     private int code;
     private JSONObject data;
-    private String rtoken;
-    private String atoken;
+    private TokenResponse token;
 
-    public LoginTokenResponseDto(int code, JSONObject data, String rtoken,String atoken) {
+    public LoginTokenResponseDto(int code, JSONObject data, TokenResponse token) {
         this.code = code;
         this.data = data;
-        this.rtoken = rtoken;
-        this.atoken = atoken;
+        this.token = token;
     }
 }
 

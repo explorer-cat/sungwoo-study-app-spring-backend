@@ -13,7 +13,6 @@ import testapp.demo.board.entity.Board;
 
 public class CreatePostRequest {
     private String title;
-    private String tag;
     private String content;
     private Long creator;
 

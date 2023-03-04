@@ -67,12 +67,8 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 
         for (SubCategory v : categories) {
             SubCategoryResponseDTO dto = new SubCategoryResponseDTO();
-            v.getMainCategory();
-
             result.add(dto.fromEntity(v));
         }
-
-
 
         if (result.isEmpty()) {
             throw new IllegalStateException("Empty");

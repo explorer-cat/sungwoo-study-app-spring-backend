@@ -1,13 +1,19 @@
 package testapp.demo.member.service;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import testapp.demo.member.dto.SignUpRequestDto;
-import testapp.demo.member.dto.UserInfoResponseDto;
+import testapp.demo.auth.JwtProvider;
+import testapp.demo.member.dto.*;
 import testapp.demo.member.entity.Member;
 import testapp.demo.member.repository.MemberRepository;
 import testapp.demo.utils.TokenUtils;
@@ -20,13 +26,11 @@ import java.util.Optional;
 @Service
 public class MemberServiceImpl implements MemberService {
 
-    private final MemberRepository memberRepository;
-    private final TokenUtils tokenUtils;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private JwtProvider jwtProvider;
 
-    public MemberServiceImpl(MemberRepository memberRepository, TokenUtils tokenUtils) {
-        this.memberRepository = memberRepository;
-        this.tokenUtils = tokenUtils;
-    }
 
     private final String HTTP_REQUEST = "https://kapi.kakao.com/v2/user/me";
     private final String GRANT_TYPE= "authorization_code";
@@ -49,7 +53,6 @@ public class MemberServiceImpl implements MemberService {
             String line;
 
             while((line = bf.readLine()) != null){
-                System.out.println("line = " + line);
                 JSONParser jsonParse = new JSONParser();
                 userInfoJson = (JSONObject) jsonParse.parse(line);
             }
@@ -61,6 +64,7 @@ public class MemberServiceImpl implements MemberService {
     }
     @Override
     public String getAccessTokenJsonData(String code){
+        System.out.println("code = " + code);
         RestTemplate restTemplate = new RestTemplate();
 
         // 헤더 설정
@@ -89,30 +93,59 @@ public class MemberServiceImpl implements MemberService {
         }
         return "error";
     }
+
+    public TokenResponse createToken(String userEmail)  {
+        String token = jwtProvider.createToken(userEmail); // 토큰 생성
+        Claims claims = jwtProvider.parseJwtToken("Bearer "+ token); // 토큰 검증
+
+        TokenDataResponse tokenDataResponse = new TokenDataResponse(token, claims.getSubject(), claims.getIssuedAt().toString(), claims.getExpiration().toString());
+        TokenResponse tokenResponse = new TokenResponse("200", "OK", tokenDataResponse);
+
+        return tokenResponse;
+    }
+
+    public TokenResponseNoData checkToken(String token) {
+        try{
+            Claims claims = jwtProvider.parseJwtToken(token);
+            TokenResponseNoData tokenResponseNoData = new TokenResponseNoData("200", "success",claims.getSubject());
+            return tokenResponseNoData;
+        } catch (ExpiredJwtException ex) {
+            return new TokenResponseNoData("406", ex.toString(), null);
+        }
+    }
+
     @Override
     public UserInfoResponseDto getUserEmail(String email) {
-        System.out.println("");
         UserInfoResponseDto userInfo = memberRepository.findByEmail(email.toString());
         return userInfo;
     }
-    @Override
-    public ResponseEntity<UserInfoResponseDto> deleteUserById(String email) {
-        UserInfoResponseDto userOptional = memberRepository.findByEmail(email);
-        if(userOptional == null) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
-        Optional<Member> user = memberRepository.findById(userOptional.getId());
-        if(user.isPresent()){
-            memberRepository.delete(user.get());
-            UserInfoResponseDto deletedUser = new UserInfoResponseDto(user.get());
-            return new ResponseEntity<>(deletedUser, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
-    }
+
+//    @Override
+//    public ResponseEntity<UserInfoResponseDto> deleteUserById(String email) {
+//        UserInfoResponseDto userOptional = memberRepository.findByEmail(email);
+//
+//        if(userOptional == null) {
+//            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+//        }
+//
+//        UserInfoResponseDto user = memberRepository.findByEmail(userOptional.getEmail());
+//
+//        if(user.isPresent()){
+//            memberRepository.delete(user.get());
+//            UserInfoResponseDto deletedUser = new UserInfoResponseDto(user.get());
+//            return new ResponseEntity<>(deletedUser, HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+//        }
+//    }
     @Override
     public Boolean isMember(String email) {
-        return false;
+        UserInfoResponseDto User = memberRepository.findByEmail(email.toString());
+        if(User != null) {
+            return true;
+        } else {
+            return false;
+        }
     }
     //사용자 가입
     @Override
@@ -127,14 +160,18 @@ public class MemberServiceImpl implements MemberService {
 
         // Create a new user
         Member member = new Member();
-        member.setUid(req.getUid());
         member.setEmail(req.getEmail());
         member.setNickname(req.getNickname());
         member.setThumbnailImage(req.getProfileImage());
         member.setBan(false);
-        member.setAdmin(false);
+        member.setLevel((byte) 0);
         memberRepository.save(member);
 
         return new ResponseEntity<>(new UserInfoResponseDto(member), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<UserInfoResponseDto> deleteUserById(String email) {
+        return null;
     }
 }

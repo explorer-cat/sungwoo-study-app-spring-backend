@@ -9,18 +9,14 @@ import testapp.demo.member.entity.Member;
 @NoArgsConstructor
 @ToString
 public class UserInfoResponseDto {
-    private int id;
-    private String uid;
     private String email;
     private String nickname;
     private String thumbnailImage;
-    private boolean admin;
+    private byte admin_level;
 
     public UserInfoResponseDto(Member member) {
-        this.id = member.getId();
-        this.uid = member.getUid();
         this.email = member.getEmail();
-        this.admin = member.isAdmin();
+        this.admin_level = member.getLevel();
         this.nickname = member.getNickname();
         this.thumbnailImage = member.getThumbnailImage();
     }
