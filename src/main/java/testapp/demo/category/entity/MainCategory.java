@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import testapp.demo.bookmark.entity.MainCategoryBookMark;
 import testapp.demo.category.dto.subCategory.SubCategoryResponseDTO;
 
 import javax.persistence.*;
@@ -30,6 +31,8 @@ public class MainCategory {
     private String name;
     private String description;
     private Boolean approval;
+    @OneToMany(mappedBy = "mainCategory", fetch = FetchType.LAZY)
+    private List<MainCategoryBookMark> mainCategoryBookMarkList = new ArrayList<>();
     private Boolean isRemove;
     @CreatedDate
     private LocalDateTime createDate;

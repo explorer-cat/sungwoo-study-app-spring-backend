@@ -1,26 +1,28 @@
 package testapp.demo.category.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import testapp.demo.category.dto.mainCategory.CreateMainCategoryRequest;
 import testapp.demo.category.dto.mainCategory.MainCategoryResponseDTO;
-import testapp.demo.category.dto.subCategory.SubCategoryResponseDTO;
 import testapp.demo.category.entity.MainCategory;
+import testapp.demo.bookmark.entity.MainCategoryBookMark;
 import testapp.demo.category.entity.SubCategory;
+import testapp.demo.bookmark.repository.MainCategoryBookMarkRepository;
 import testapp.demo.category.repository.MainCategoryRepository;
 import testapp.demo.category.repository.SubCategoryRepository;
+import testapp.demo.member.entity.Member;
+import testapp.demo.member.repository.MemberRepository;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
 public class MainCategoryServiceImpl implements MainCategoryService {
-    private final MainCategoryRepository mainCategoryRepository;
-    private final SubCategoryRepository subCategoryRepository;
-
-    public MainCategoryServiceImpl(MainCategoryRepository mainCategoryRepository,
-                                   SubCategoryRepository subCategoryRepository) {
-        this.mainCategoryRepository = mainCategoryRepository;
-        this.subCategoryRepository = subCategoryRepository;
-    }
+    @Autowired private MainCategoryRepository mainCategoryRepository;
+    @Autowired private SubCategoryRepository subCategoryRepository;
+    @Autowired private MainCategoryBookMarkRepository bookMarkRepository;
+    @Autowired private MemberRepository memberRepository;
 
 
     /**
@@ -104,6 +106,7 @@ public class MainCategoryServiceImpl implements MainCategoryService {
     }
 
 
+
     @Override
     public void removeCategory(long mainCategoryId) throws Exception {
         try {
@@ -112,6 +115,25 @@ public class MainCategoryServiceImpl implements MainCategoryService {
             throw new Exception("error");
         }
     }
+
+
+//
+//    @Override
+//    public ResponseEntity addBookMark(String userEmail, long mainCategory) {
+//        //컨트롤러에서 넘어온 사용자 이메일로 멤버 엔티티 객체 찾기.
+//        Member member = memberRepository.findByEmail(userEmail);
+//        //컨트롤러에서 넘어온 메인 카테고리 아이디로 메인카테고리 엔티티 객체 찾기.
+//        MainCategory category = mainCategoryRepository.findById(mainCategory).get();
+//
+//        //북마크 저장
+//        MainCategoryBookMark mainCategoryBookMark = new MainCategoryBookMark();
+//        mainCategoryBookMark.setMember(member);
+//        mainCategoryBookMark.setMainCategory(category);
+//        mainCategoryBookMark.setCreateDate(LocalDateTime.now());
+//
+//        bookMarkRepository.save(mainCategoryBookMark);
+//        return null;
+//    }
 
 
 }

@@ -116,8 +116,9 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public UserInfoResponseDto getUserEmail(String email) {
-        UserInfoResponseDto userInfo = memberRepository.findByEmail(email.toString());
-        return userInfo;
+        Member userInfo = memberRepository.findByEmail(email.toString());
+        UserInfoResponseDto dto = new UserInfoResponseDto(userInfo);
+        return dto;
     }
 
 //    @Override
@@ -140,8 +141,8 @@ public class MemberServiceImpl implements MemberService {
 //    }
     @Override
     public Boolean isMember(String email) {
-        UserInfoResponseDto User = memberRepository.findByEmail(email.toString());
-        if(User != null) {
+        Member member = memberRepository.findByEmail(email.toString());
+        if(member != null) {
             return true;
         } else {
             return false;
@@ -151,7 +152,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public ResponseEntity<UserInfoResponseDto> signUpUser(SignUpRequestDto req)  {
         // Check if email is already registered
-        UserInfoResponseDto existingUser = memberRepository.findByEmail(req.getEmail());
+        Member existingUser = memberRepository.findByEmail(req.getEmail());
 
         //해당 이메일은 이미 가입되어있음.
         if(existingUser != null) {

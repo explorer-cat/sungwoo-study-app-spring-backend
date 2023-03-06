@@ -9,6 +9,9 @@ import testapp.demo.category.dto.mainCategory.CreateMainCategoryRequest;
 import testapp.demo.category.dto.mainCategory.MainCategoryResponseDTO;
 import testapp.demo.category.repository.MainCategoryRepository;
 import testapp.demo.category.service.MainCategoryServiceImpl;
+import testapp.demo.member.dto.TokenResponseNoData;
+import testapp.demo.member.dto.UserInfoResponseDto;
+import testapp.demo.member.service.MemberService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,11 +27,8 @@ public class MainCategoryControllerV1 {
 
     Map<String,Object> a = new HashMap<>();
 
-
-
     @Autowired
     private MainCategoryServiceImpl mainCategoryService;
-    private final MainCategoryRepository mainCategoryRepository;
 
 
     /**
@@ -87,4 +87,6 @@ public class MainCategoryControllerV1 {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
+
+
 }

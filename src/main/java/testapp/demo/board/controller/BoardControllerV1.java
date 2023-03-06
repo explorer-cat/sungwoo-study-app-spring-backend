@@ -39,8 +39,6 @@ public class BoardControllerV1 {
            BoardResponseDto dto = new BoardResponseDto();
            List<Board> allPost = boardService.getAllPost(subCategoryId);
 
-           System.out.println("allPost = " + allPost);
-
            List result = new ArrayList();
 
            for (Board v : allPost) {

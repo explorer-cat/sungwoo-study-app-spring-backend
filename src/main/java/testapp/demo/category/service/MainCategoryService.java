@@ -1,8 +1,10 @@
 package testapp.demo.category.service;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import testapp.demo.category.dto.mainCategory.CreateMainCategoryRequest;
 import testapp.demo.category.dto.mainCategory.MainCategoryResponseDTO;
+import testapp.demo.category.entity.MainCategory;
 
 import java.util.List;
 import java.util.Map;
@@ -26,6 +28,7 @@ public interface MainCategoryService {
     List<Map<String,Object>> getSubCategories(long mainCategoryId);
 
 
+//    ResponseEntity addBookMark(String userEmail, long mainCategory);
 
 
 

@@ -51,9 +51,6 @@ public class MemberControllerV1 {
         }
     }
 
-
-
-
     @PatchMapping("/{userId}")
     public String updateUser(@PathVariable String email) {
         return null;
@@ -114,4 +111,6 @@ public class MemberControllerV1 {
         //토큰 발급
         return new ResponseEntity<>(userResponse,HttpStatus.OK);
     }
+
+
 }

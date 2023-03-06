@@ -44,7 +44,7 @@ public class BoardServiceImpl implements BoardService {
             System.out.println("board = " + board);
 
             Board save = boardRepository.save(board);
-//            Board save = null;
+
             return save;
         } catch (Exception ex) {
             throw new Exception(ex);
