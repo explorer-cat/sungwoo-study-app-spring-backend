@@ -20,6 +20,9 @@
 ## 3월 7일 기준 와이어 프레임
 > ![스크린샷 2023-03-07 오후 5 14 23](https://user-images.githubusercontent.com/55500077/223363292-e2c46d5c-996f-4262-98e7-dde3bbdb70cc.png)
 
+# ERD
+> ![스크린샷 2023-03-07 오후 5 35 26](https://user-images.githubusercontent.com/55500077/223367907-0a5e057f-0fbf-4a87-9818-7cf1fa70ab0b.png)>
+
 # API Documnet
 > https://dantechoi.notion.site/API-Document-dc0a7832c36a46ab9499b0154585a988
 
