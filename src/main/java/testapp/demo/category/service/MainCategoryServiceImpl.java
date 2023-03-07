@@ -21,10 +21,6 @@ import java.util.*;
 public class MainCategoryServiceImpl implements MainCategoryService {
     @Autowired private MainCategoryRepository mainCategoryRepository;
     @Autowired private SubCategoryRepository subCategoryRepository;
-    @Autowired private MainCategoryBookMarkRepository bookMarkRepository;
-    @Autowired private MemberRepository memberRepository;
-
-
     /**
      * @param request CreateMainCategoryRequest 카테고리 생성을 위한 DTO
      * @return MainCategoryResponseDTO

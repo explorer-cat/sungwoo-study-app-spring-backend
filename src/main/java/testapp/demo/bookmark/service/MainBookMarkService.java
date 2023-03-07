@@ -11,5 +11,7 @@ public interface MainBookMarkService {
 
     void addBookMark(String userEmail,Long mainCategoryId) throws NotFound;
 
+    void removeBookMark(String userEmail,Long mainCategoryId) throws NotFound;
+
     List<MainCategoryBookMark> getMainBookMark(String userEmail) throws NotFound;
 }

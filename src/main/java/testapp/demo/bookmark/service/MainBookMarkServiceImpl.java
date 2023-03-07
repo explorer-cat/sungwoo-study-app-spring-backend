@@ -16,6 +16,7 @@ import testapp.demo.member.service.MemberServiceImpl;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -29,19 +30,30 @@ public class MainBookMarkServiceImpl implements MainBookMarkService {
     private MainCategoryBookMarkRepository mainCategoryBookMarkRepository;
 
 
-
     @Override
     @Transactional
     public void addBookMark(String userEmail, Long mainCategoryId) {
-        try {
-            Member member = memberRepository.findByEmail(userEmail);
+        Member member = memberRepository.findByEmail(userEmail);
 
-            MainCategory mainCategory = mainCategoryRepository.findById(mainCategoryId).get();
-            MainCategoryBookMark mainCategoryBookMark = MainCategoryBookMark.createMainBookMark(member, mainCategory);
+        MainCategory mainCategory = mainCategoryRepository.findById(mainCategoryId).get();
+        MainCategoryBookMark mainCategoryBookMark = MainCategoryBookMark.createMainBookMark(member, mainCategory);
 
-            mainCategoryBookMarkRepository.save(mainCategoryBookMark);
-        } catch (Exception ex) {
-            System.err.println(ex);
+        mainCategoryBookMarkRepository.save(mainCategoryBookMark);
+    }
+
+    @Override
+    @Transactional
+    public void removeBookMark(String userEmail, Long mainCategoryId) {
+        Member member = memberRepository.findByEmail(userEmail);
+        MainCategory mainCategory = mainCategoryRepository.findById(mainCategoryId).get();
+
+        Optional<MainCategoryBookMark> mainCategoryBookMark = mainCategoryBookMarkRepository.findByMemberAndMainCategory(member,mainCategory);
+
+        if(mainCategoryBookMark.isPresent()) {
+            mainCategoryBookMarkRepository.deleteByMemberAndMainCategory(member, mainCategory);
+        } else {
+            //해당 사용자가 북마크한 정보를 찾을 수 없음.
+            throw new NoSuchElementException();
         }
     }
 

@@ -43,15 +43,6 @@ public class MainCategoryBookMark {
         return member.getMainCategoryBookMark();
     }
 
-//    public static List<MainCategoryBookMark> getMember(Member member) {
-//        this.member = member;
-//        return member.getMainCategoryBookMark();
-//    }
-
-//    public static List<MainCategoryBookMark> getMainBookMark(Member member) {
-//        MainCategoryBookMark mainCategoryBookMark = new MainCategoryBookMark();
-////        mainCategoryBookMark.getMember().getMainCategoryBookMark();
-//    }
     private void setMainCategory(MainCategory mainCategory) {
         this.mainCategory = mainCategory;
         mainCategory.getMainCategoryBookMarkList().add(this);
