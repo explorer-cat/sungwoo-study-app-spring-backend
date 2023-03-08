@@ -7,16 +7,10 @@ import testapp.demo.board.entity.Board;
 import java.util.List;
 import java.util.Optional;
 
-public interface BoardRepository extends JpaRepository<Board,Integer> {
-//    List<Board> findByCategoryId(int id);
-//
+public interface BoardRepository extends JpaRepository<Board,Long> {
     List<Board> findBySubCategoryId(long subCategoryId);
 
     Optional<Board> findBySubCategoryIdAndId(long subCategoryId, long postId);
-//
-
-
-//    ArrayList<Board> findByCategoryIdAndId(int categoryId, int id);
 
 
 }

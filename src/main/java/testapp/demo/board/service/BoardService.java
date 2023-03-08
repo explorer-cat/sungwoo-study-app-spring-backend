@@ -16,6 +16,9 @@ public interface BoardService {
 
     List<Board> getAllPost(long subCategoryId);
 
+    void addPostLike(long postId);
+
+    void cancelPostLike(long postId);
 
 //    ResponseEntity<List<BoardResponseDto>> getCategoryPostList(int categoryId);
 

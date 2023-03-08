@@ -47,7 +47,6 @@ public class BoardLike {
         boardLike.setBoard(board);
         boardLike.setMember(member);
         boardLike.setCreatedDate(LocalDateTime.now());
-
         return boardLike;
     }
 

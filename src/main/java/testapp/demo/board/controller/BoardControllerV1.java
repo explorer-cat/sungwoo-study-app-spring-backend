@@ -1,7 +1,6 @@
 package testapp.demo.board.controller;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import lombok.Getter;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,10 +11,8 @@ import testapp.demo.board.dto.CreatePostRequest;
 import testapp.demo.board.entity.Board;
 import testapp.demo.board.service.BoardService;
 import testapp.demo.member.dto.TokenResponseNoData;
-import testapp.demo.member.dto.UserInfoResponseDto;
 import testapp.demo.member.service.MemberServiceImpl;
 
-import java.net.InetAddress;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -142,5 +139,18 @@ public class BoardControllerV1 {
             return ResponseEntity.internalServerError().build();
         }
     }
+
+    @PostMapping("/like/{postId}")
+    public ResponseEntity addPostLike(@PathVariable("postId") long postId) {
+        boardService.addPostLike(postId);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/like/{postId}")
+    public ResponseEntity cacelPostLike(@PathVariable("postId") long postId) {
+        boardService.cancelPostLike(postId);
+        return ResponseEntity.ok().build();
+    }
+
 
 }
