@@ -67,6 +67,7 @@ public class MainCategoryControllerV1 {
     @PostMapping
     public ResponseEntity<MainCategoryResponseDTO> createCategory(@RequestBody CreateMainCategoryRequest request) {
         try{
+            System.out.println("request = " + request);
             MainCategoryResponseDTO category = mainCategoryService.createCategory(request);
             return new ResponseEntity<>(category, HttpStatus.CREATED);
         } catch (IllegalStateException ex) {
@@ -74,6 +75,7 @@ public class MainCategoryControllerV1 {
             System.out.println("exception error 발생 = " + ex);
             return new ResponseEntity<>(null, HttpStatus.CONFLICT);
         } catch (Exception ex) {
+            System.out.println("ex = " + ex);
             return ResponseEntity.internalServerError().build();
         }
     }

@@ -6,9 +6,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import testapp.demo.board.dto.CreatePostRequest;
 import testapp.demo.board.entity.Board;
+import testapp.demo.board.entity.BoardLike;
+import testapp.demo.board.repository.BoardLikeRepository;
 import testapp.demo.board.repository.BoardRepository;
 import testapp.demo.category.repository.MainCategoryRepository;
 import testapp.demo.category.repository.SubCategoryRepository;
+import testapp.demo.member.repository.MemberRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,8 +23,10 @@ public class BoardServiceImpl implements BoardService {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private final BoardRepository boardRepository;
+    private final BoardLikeRepository boardLikeRepository;
     private final MainCategoryRepository mainCategoryRepository;
     private final SubCategoryRepository subCategoryRepository;
+    private final MemberRepository memberRepository;
 
 
     /**
@@ -52,15 +57,13 @@ public class BoardServiceImpl implements BoardService {
     }
 
 
-
     /**
      * @return List<Board>
      * @Title : 카테고리 단건 게시글 조회.
      */
     @Override
     public Optional<Board> getPost(long subCategoryId, long postId) {
-        Optional<Board> board = boardRepository.findBySubCategoryIdAndId(subCategoryId,postId);
-
+        Optional<Board> board = boardRepository.findBySubCategoryIdAndId(subCategoryId, postId);
         //게시글을 못 찾을 경우
         if (!board.isPresent()) {
             throw new IllegalArgumentException("empty");

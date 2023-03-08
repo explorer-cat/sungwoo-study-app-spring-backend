@@ -1,6 +1,7 @@
 package testapp.demo.member.entity;
 
 import lombok.*;
+import testapp.demo.board.entity.BoardLike;
 import testapp.demo.bookmark.entity.MainCategoryBookMark;
 
 import javax.persistence.*;
@@ -23,8 +24,8 @@ public class Member {
     private String thumbnailImage; //카카오톡 프로필 이미지
     @OneToMany(mappedBy = "member")
     private List<MainCategoryBookMark> mainCategoryBookMark = new ArrayList<>();
-
-
+    @OneToMany(mappedBy = "member")
+    private List<BoardLike> boardLikes = new ArrayList<>();
     private String refreshToken; //리프레쉬 토큰
     private boolean ban; //계정 정지 여부
     private byte level; //관리자 여부
