@@ -35,7 +35,7 @@ public class JwtProvider {
 
     //==Jwt 토큰의 유효성 체크 메소드==//
     public Claims parseJwtToken(String token) {
-        token = BearerRemove(token); // Bearer 제거
+//        token = BearerRemove(token); // Bearer 제거
 
         return Jwts.parser()
                 .setSigningKey(Base64.getEncoder().encodeToString(secretKey.getBytes()))
