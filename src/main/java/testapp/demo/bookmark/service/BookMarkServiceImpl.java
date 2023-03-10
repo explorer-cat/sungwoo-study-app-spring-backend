@@ -119,7 +119,7 @@ public class BookMarkServiceImpl implements BookMarkService {
         Set<Long> user_book_mark_list_key = new HashSet<>();
 
         for (BookMarkIdMapping bookMarkIdMapping : byMainCategoryAndMember_key_list) {
-            user_book_mark_list_key.add(bookMarkIdMapping.getId());
+            user_book_mark_list_key.add(bookMarkIdMapping.getSubCategoryId());
         }
 
         for (MainCategory mainCategory : all) {

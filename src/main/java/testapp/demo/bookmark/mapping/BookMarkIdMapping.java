@@ -5,5 +5,5 @@ import lombok.Data;
 
 
 public interface BookMarkIdMapping {
-    long getId();
+    long getSubCategoryId();
 }

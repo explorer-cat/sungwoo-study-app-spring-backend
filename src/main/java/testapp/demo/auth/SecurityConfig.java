@@ -29,13 +29,9 @@ public class SecurityConfig {
                 //메인 카테고리 조회
                 .antMatchers(HttpMethod.GET, "/api/v1/category/main/**").permitAll()
                 //서브 카테고리 조회
-                .antMatchers(HttpMethod.GET, "/api/v1/category/sub/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/v1/category/sub").permitAll()
                 //로그인 토큰 생성
-                .antMatchers(HttpMethod.GET, "/login/kakao/**").permitAll()
-
-
-
-//                .antMatchers(HttpMethod.GET, "/api/v1/users/login/kakao/*").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/v1/users/login/kakao/**").permitAll()
 
                 //위 허용사항 외에 모든 API 는 인증을 거친다.
                 .anyRequest().authenticated()
