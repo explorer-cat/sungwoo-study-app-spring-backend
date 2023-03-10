@@ -28,27 +28,27 @@ public class MemberControllerV1 {
     private MemberService memberService;
 
 
-
     /**
-     * @title : 카카오 가입 계정 생성
      * @param data
      * @return
+     * @title : 카카오 가입 계정 생성
      */
     @PostMapping("/login/signup")
     public ResponseEntity<UserInfoResponseDto> addUser(@RequestBody SignUpRequestDto data) {
         return memberService.signUpUser(data);
     }
-    @GetMapping
-    public ResponseEntity<UserInfoResponseDto> findUserEmail(@RequestHeader(value="Authorization") String jwt) {
-        TokenResponseNoData tokenResponseNoData = memberService.checkToken(jwt);
 
-        //사용자 토큰 검증에 성공했을 경우 사용자 정보를 반환합니다.
-        if(tokenResponseNoData.getCode() == "200") {
-            return new ResponseEntity<>(memberService.getUserEmail(tokenResponseNoData.getUserEmail()),HttpStatus.OK);
-        } else {
-            //사용자 토큰기간이 만료됐거나 토큰이 변조되었을 경우
-            return new ResponseEntity<>(null,HttpStatus.UNAUTHORIZED);
-        }
+    @GetMapping
+    public ResponseEntity<UserInfoResponseDto> findUserEmail(@RequestHeader(value = "Authorization") String jwt) {
+//        TokenResponseNoData tokenResponseNoData = memberService.checkToken(jwt);
+//        //사용자 토큰 검증에 성공했을 경우 사용자 정보를 반환합니다.
+//        if(tokenResponseNoData.getCode() == "200") {
+//            return new ResponseEntity<>(memberService.getUserEmail(tokenResponseNoData.getUserEmail()),HttpStatus.OK);
+//        } else {
+//            //사용자 토큰기간이 만료됐거나 토큰이 변조되었을 경우
+//            return new ResponseEntity<>(null,HttpStatus.UNAUTHORIZED);
+//        }
+        return null;
     }
 
     @PatchMapping("/{userId}")
@@ -57,7 +57,7 @@ public class MemberControllerV1 {
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<UserInfoResponseDto> deleteUser(@RequestBody Map<String,String> deleteUserData) {
+    public ResponseEntity<UserInfoResponseDto> deleteUser(@RequestBody Map<String, String> deleteUserData) {
         return memberService.deleteUserById(deleteUserData.get("email"));
     }
 
@@ -74,6 +74,7 @@ public class MemberControllerV1 {
             accessTokenJsonData = memberService.getAccessTokenJsonData(code);
         }
 
+
         if (accessTokenJsonData == null) {
             return new ResponseEntity<>(new ErrorResponse(500, "Failed to retrieve access token data"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -83,6 +84,7 @@ public class MemberControllerV1 {
         }
 
         JSONObject tokenData = (JSONObject) jsonParse.parse(accessTokenJsonData);
+
 
         String accessToken = tokenData.get("access_token").toString();
         String refreshToken = tokenData.get("refresh_token").toString();
@@ -95,22 +97,20 @@ public class MemberControllerV1 {
 
         Boolean MemberStatus = false;
 
-        System.out.println("users_kakao_data = " + users_kakao_data);
 
         //해당 이메일이 이미 가입되어있는지 조회함.
-        if(users_kakao_data.get("email") != null) {
+        if (users_kakao_data.get("email") != null) {
             MemberStatus = memberService.isMember(users_kakao_data.get("email").toString());
         }
+
         //이미 가입되어있는 경우
-        if(MemberStatus) {
-            userResponse = new LoginTokenResponseDto(1000,users_kakao_data,memberService.createToken(users_kakao_data.get("email").toString()));
-        }
-        else {
-            userResponse = new LoginTokenResponseDto(1001,users_kakao_data,null);
+        if (MemberStatus) {
+            userResponse = new LoginTokenResponseDto(1000, users_kakao_data, memberService.createToken(users_kakao_data.get("email").toString()));
+        } else {
+            userResponse = new LoginTokenResponseDto(1001, users_kakao_data, null);
         }
         //토큰 발급
-        return new ResponseEntity<>(userResponse,HttpStatus.OK);
+        System.out.println("userResponse = " + userResponse);
+        return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
-
-
 }

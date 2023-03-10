@@ -24,5 +24,5 @@ public interface MemberService {
 
     TokenResponse createToken(String userEmail);
 
-    TokenResponseNoData checkToken(String jwt_token);
+//    TokenResponseNoData checkToken(String jwt_token);
 }

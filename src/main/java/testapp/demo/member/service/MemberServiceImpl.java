@@ -18,6 +18,8 @@ import testapp.demo.member.entity.Member;
 import testapp.demo.member.repository.MemberRepository;
 import testapp.demo.utils.TokenUtils;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -87,31 +89,25 @@ public class MemberServiceImpl implements MemberService {
                 request,
                 String.class
         );
+        System.out.println("uriComponentsBuilder = " + uriComponentsBuilder);
+        System.out.println("responseEntity = " + responseEntity);
 
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
             return responseEntity.getBody();
         }
+
         return "error";
     }
 
     public TokenResponse createToken(String userEmail)  {
         String token = jwtProvider.createToken(userEmail); // 토큰 생성
-        Claims claims = jwtProvider.parseJwtToken("Bearer "+ token); // 토큰 검증
+        System.out.println("tokenzzz = " + token);
+        Claims claims = jwtProvider.parseJwtToken(token); // 토큰 검증
 
         TokenDataResponse tokenDataResponse = new TokenDataResponse(token, claims.getSubject(), claims.getIssuedAt().toString(), claims.getExpiration().toString());
+
         TokenResponse tokenResponse = new TokenResponse("200", "OK", tokenDataResponse);
-
         return tokenResponse;
-    }
-
-    public TokenResponseNoData checkToken(String token) {
-        try{
-            Claims claims = jwtProvider.parseJwtToken(token);
-            TokenResponseNoData tokenResponseNoData = new TokenResponseNoData("200", "success",claims.getSubject());
-            return tokenResponseNoData;
-        } catch (ExpiredJwtException ex) {
-            return new TokenResponseNoData("406", ex.toString(), null);
-        }
     }
 
     @Override

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import testapp.demo.auth.SecurityUtil;
 import testapp.demo.category.dto.mainCategory.CreateMainCategoryRequest;
 import testapp.demo.category.dto.mainCategory.MainCategoryResponseDTO;
 import testapp.demo.category.repository.MainCategoryRepository;
@@ -13,6 +14,8 @@ import testapp.demo.member.dto.TokenResponseNoData;
 import testapp.demo.member.dto.UserInfoResponseDto;
 import testapp.demo.member.service.MemberService;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,12 +34,15 @@ public class MainCategoryControllerV1 {
     private MainCategoryServiceImpl mainCategoryService;
 
 
+
     /**
      * @title : 전체 메인 카테고리 정보 요청
      * @return
      */
     @GetMapping
-    public ResponseEntity<List<MainCategoryResponseDTO>> getAllCategories() {
+    public ResponseEntity<List<MainCategoryResponseDTO>> getAllCategories(ServletRequest request, ServletResponse response) {
+        System.out.println("request = " + request);
+        System.out.println("response = " + response);
         List<MainCategoryResponseDTO> categoryList = mainCategoryService.findAllCategory();
        if (categoryList == null || categoryList.isEmpty()) {
            return ResponseEntity.notFound().build();
@@ -67,12 +73,13 @@ public class MainCategoryControllerV1 {
     @PostMapping
     public ResponseEntity<MainCategoryResponseDTO> createCategory(@RequestBody CreateMainCategoryRequest request) {
         try{
-            System.out.println("request = " + request);
+            //todo 관리자 이메일 체크해야함.
+            //SecurityUtil.getUserEmail();
+
             MainCategoryResponseDTO category = mainCategoryService.createCategory(request);
             return new ResponseEntity<>(category, HttpStatus.CREATED);
         } catch (IllegalStateException ex) {
             //이미 동일한 이름이 존재할 경우 발생되는 상황
-            System.out.println("exception error 발생 = " + ex);
             return new ResponseEntity<>(null, HttpStatus.CONFLICT);
         } catch (Exception ex) {
             System.out.println("ex = " + ex);
@@ -83,6 +90,9 @@ public class MainCategoryControllerV1 {
     @DeleteMapping("/{mainCategoryId}")
     public ResponseEntity removeCategory(@PathVariable ("mainCategoryId") long mainCategoryId) {
         try {
+            //todo 관리자 이메일 체크해야함.
+            //SecurityUtil.getUserEmail();
+
             mainCategoryService.removeCategory(mainCategoryId);
             return (ResponseEntity) ResponseEntity.ok();
         } catch(Exception ex) {

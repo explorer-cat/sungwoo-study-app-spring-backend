@@ -3,6 +3,7 @@ package testapp.demo.member.entity;
 import lombok.*;
 import testapp.demo.board.entity.BoardLike;
 import testapp.demo.bookmark.entity.MainCategoryBookMark;
+import testapp.demo.bookmark.entity.SubCategoryBookMark;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -25,6 +26,8 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<MainCategoryBookMark> mainCategoryBookMark = new ArrayList<>();
     @OneToMany(mappedBy = "member")
+    private List<SubCategoryBookMark> subCategoryBookMark = new ArrayList<>();
+    @OneToMany(mappedBy = "member")
     private List<BoardLike> boardLikes = new ArrayList<>();
     private String refreshToken; //리프레쉬 토큰
     private boolean ban; //계정 정지 여부
@@ -43,4 +46,5 @@ public class Member {
         this.social_type = social_type;
         this.createDate = createDate;
     }
+
 }

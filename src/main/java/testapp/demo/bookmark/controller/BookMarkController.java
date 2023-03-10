@@ -7,13 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import testapp.demo.auth.SecurityUtil;
+import testapp.demo.board.entity.Board;
 import testapp.demo.bookmark.dto.UserMainBookMarkDto;
-import testapp.demo.bookmark.service.MainBookMarkService;
-import testapp.demo.member.dto.TokenResponseNoData;
+import testapp.demo.bookmark.dto.UserSubBookMarkDto;
+import testapp.demo.bookmark.entity.SubCategoryBookMark;
+import testapp.demo.bookmark.service.BookMarkService;
 import testapp.demo.member.service.MemberServiceImpl;
 
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -23,38 +26,26 @@ import java.util.stream.Collectors;
 public class BookMarkController {
 
     @Autowired
-    private MainBookMarkService mainBookMarkService;
-
-    @Autowired
-    private MemberServiceImpl memberService;
-
+    private BookMarkService bookMarkService;
 
 
 
     /**
-     * @title 사용자가 북마크하고있는 메인카테고리 조회
      * @param jwt
      * @return
+     * @title 사용자가 북마크하고있는 메인카테고리 조회
      */
     @GetMapping("/main/bookmark")
-    public ResponseEntity<List<UserMainBookMarkDto>> getMainBookMark(@RequestHeader(value = "Authorization") String jwt) {
+    public ResponseEntity<List<UserMainBookMarkDto>> getMainBookMark() {
         //dto로 변환
         try {
-            TokenResponseNoData tokenResponseNoData = memberService.checkToken(jwt);
-
-            //사용자 토큰 검증에 성공했을 경우 사용자 정보를 반환합니다.
-            if (tokenResponseNoData.getCode() == "200") {
-                List<UserMainBookMarkDto> bookmarkList = mainBookMarkService.getMainBookMark("sqlstyle@kakao.com").stream()
-                        .map(m -> new UserMainBookMarkDto(
-                                m.getMainCategory().getId(),
-                                m.getMainCategory().getName(),
-                                m.getMainCategory().getCreateDate()))
-                        .collect(Collectors.toList());
-                return ResponseEntity.ok().body(bookmarkList);
-            } else {
-                //사용자 토큰기간이 만료됐거나 토큰이 변조되었을 경우
-                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-            }
+            List<UserMainBookMarkDto> bookmarkList = bookMarkService.getMainBookMark(SecurityUtil.getUserEmail()).stream()
+                    .map(m -> new UserMainBookMarkDto(
+                            m.getMainCategory().getId(),
+                            m.getMainCategory().getName(),
+                            m.getMainCategory().getCreateDate()))
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok().body(bookmarkList);
         } catch (MalformedJwtException ex) {
             //사용자 토큰기간이 만료됐거나 토큰이 변조되었을 경우
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
@@ -65,60 +56,61 @@ public class BookMarkController {
     }
 
     /**
-     * @title 메인카테고리 북마크 하기.
-     * @param jwt
      * @param mainCategoryId
      * @return
      * @throws NotFound
+     * @title 메인카테고리 북마크 하기.
      */
     @PostMapping("/main/bookmark/{mainCategoryId}")
-    public ResponseEntity addMainBookMark(@RequestHeader(value = "Authorization") String jwt, @PathVariable("mainCategoryId") long mainCategoryId) throws NotFound {
+    public ResponseEntity addMainBookMark(@PathVariable("mainCategoryId") long mainCategoryId) {
         //토큰 검증.
         try {
-            TokenResponseNoData tokenResponseNoData = memberService.checkToken(jwt);
-
             //사용자 토큰 검증에 성공했을 경우 사용자 정보를 반환합니다.
-            if (tokenResponseNoData.getCode() == "200") {
-                mainBookMarkService.addBookMark(tokenResponseNoData.getUserEmail(), mainCategoryId);
-                return ResponseEntity.ok().build();
-            } else {
-                //사용자 토큰기간이 만료됐거나 토큰이 변조되었을 경우
-                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-            }
+            bookMarkService.addBookMark(SecurityUtil.getUserEmail(), mainCategoryId);
+            return ResponseEntity.ok().build();
         } catch (Exception ex) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     /**
-     * @title 북마크 메인카테고리 해제
-     * @param jwt
      * @param mainCategoryId
      * @return
      * @throws NoSuchElementException
+     * @title 북마크 메인카테고리 해제
      */
     @DeleteMapping("/main/bookmark/{mainCategoryId}")
-    public ResponseEntity removeMainBookMark(@RequestHeader(value = "Authorization") String jwt, @PathVariable("mainCategoryId") long mainCategoryId) throws NoSuchElementException {
+    public ResponseEntity removeMainBookMark(@PathVariable("mainCategoryId") long mainCategoryId) throws NoSuchElementException {
         //토큰 검증.
         try {
-            TokenResponseNoData tokenResponseNoData = memberService.checkToken(jwt);
-
-            //사용자 토큰 검증에 성공했을 경우 사용자 정보를 반환합니다.
-            if (tokenResponseNoData.getCode() == "200") {
-                mainBookMarkService.removeBookMark(tokenResponseNoData.getUserEmail(), mainCategoryId);
-                return ResponseEntity.ok().build();
-            } else {
-                //사용자 토큰기간이 만료됐거나 토큰이 변조되었을 경우
-                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-            }
+            bookMarkService.removeBookMark(SecurityUtil.getUserEmail(), mainCategoryId);
+            return ResponseEntity.ok().build();
         } catch (NoSuchElementException ex) {
             System.err.println(ex);
-            return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
         } catch (Exception ex) {
             System.err.println(ex);
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    @GetMapping("/sub/bookmark")
+    public ResponseEntity<List<UserSubBookMarkDto>>getSubBookMark(@RequestParam(name ="option", required = true) String option) {
+        try {
+            String userEmail = SecurityUtil.getUserEmail();
 
+            System.out.println("option = " + option);
+            if(option.equals("all")) {
+                return new ResponseEntity<>(bookMarkService.getAllSubBookMark(userEmail),HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(bookMarkService.getSelctedSubBookMark(userEmail),HttpStatus.OK);
+            }
+        } catch (MalformedJwtException ex) {
+            //사용자 토큰기간이 만료됐거나 토큰이 변조되었을 경우
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        } catch (Exception ex) {
+            System.err.println(ex);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 }

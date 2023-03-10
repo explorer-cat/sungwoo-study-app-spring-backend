@@ -16,6 +16,9 @@ public class LoginTokenResponseDto {
     private TokenResponse token;
 
     public LoginTokenResponseDto(int code, JSONObject data, TokenResponse token) {
+        System.out.println("code23 = " + code);
+        System.out.println("data44 = " + data);
+        System.out.println("TokenResponse = " + token);
         this.code = code;
         this.data = data;
         this.token = token;

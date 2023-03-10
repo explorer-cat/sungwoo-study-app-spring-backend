@@ -51,6 +51,10 @@ public class SubCategoryControllerV1 {
             @PathVariable("mainCategoryId") long mainCategoryId,
             @RequestBody CreateSubCategoryRequest request) {
         try {
+            //todo 관리자 이메일 체크해야함.
+            //SecurityUtil.getUserEmail();
+
+
             return new ResponseEntity<>(subCategoryService.createCategory(mainCategoryId, request),HttpStatus.CREATED);
         } catch (IllegalStateException e) {
             if(e.getMessage().equals("exist")) {
