@@ -8,14 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import testapp.demo.auth.SecurityUtil;
-import testapp.demo.board.entity.Board;
 import testapp.demo.bookmark.dto.UserMainBookMarkDto;
 import testapp.demo.bookmark.dto.UserSubBookMarkDto;
-import testapp.demo.bookmark.entity.SubCategoryBookMark;
 import testapp.demo.bookmark.service.BookMarkService;
-import testapp.demo.member.service.MemberServiceImpl;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -113,4 +109,43 @@ public class BookMarkController {
             return ResponseEntity.internalServerError().build();
         }
     }
+
+    /**
+     * @param subCategoryId
+     * @return
+     * @throws NotFound
+     * @title 서브카테고리 북마크 하기.
+     */
+    @PostMapping("/sub/bookmark/{subCategoryId}")
+    public ResponseEntity addSubBookMark(@PathVariable("subCategoryId") long subCategoryId) {
+        //토큰 검증.
+        try {
+            //사용자 토큰 검증에 성공했을 경우 사용자 정보를 반환합니다.
+            bookMarkService.addSubCategoryBookMark(SecurityUtil.getUserEmail(), subCategoryId);
+            return ResponseEntity.ok().build();
+        } catch (Exception ex) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @return
+     * @throws NoSuchElementException
+     * @title 북마크 메인카테고리 해제
+     */
+    @DeleteMapping("/sub/bookmark/{subCategoryId}")
+    public ResponseEntity removeSubBookMark(@PathVariable("subCategoryId") long subCategoryId) throws NoSuchElementException {
+        //토큰 검증.
+        try {
+            bookMarkService.removeSubBookMark(SecurityUtil.getUserEmail(), subCategoryId);
+            return ResponseEntity.ok().build();
+        } catch (NoSuchElementException ex) {
+            System.err.println(ex);
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        } catch (Exception ex) {
+            System.err.println(ex);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

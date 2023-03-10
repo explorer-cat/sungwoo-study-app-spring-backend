@@ -47,5 +47,32 @@ public class SubCategoryBookMark {
                 '}';
     }
 
+    private void setMember(Member member) {
+        this.member = member;
+        member.getSubCategoryBookMark().add(this);
+    }
+
+    public List<SubCategoryBookMark> getMember(Member member) {
+        this.member = member;
+        return member.getSubCategoryBookMark();
+    }
+
+    private void setSubCategory(SubCategory subCategory) {
+        this.subCategory = subCategory;
+        subCategory.getSubCategoryBookMarkList().add(this);
+    }
+
+
+    //북마크 생성
+    public static SubCategoryBookMark createSubCategory(Member member, SubCategory subCategory,MainCategory mainCategory) {
+        SubCategoryBookMark subCategoryBookMark = new SubCategoryBookMark();
+        subCategoryBookMark.setMember(member);
+        subCategoryBookMark.setSubCategory(subCategory);
+        subCategoryBookMark.setMainCategory(mainCategory);
+        subCategoryBookMark.setCreateDate(LocalDateTime.now());
+        return subCategoryBookMark;
+    }
+
+
     //북마크 취소
 }

@@ -10,12 +10,18 @@ import java.util.List;
 
 public interface BookMarkService {
 
-    void addBookMark(String userEmail,Long mainCategoryId) throws NotFound;
+    void addBookMark(String userEmail,long mainCategoryId) throws NotFound;
 
-    void removeBookMark(String userEmail,Long mainCategoryId) throws NotFound;
+    void removeBookMark(String userEmail,long mainCategoryId) throws NotFound;
 
     List<MainCategoryBookMark> getMainBookMark(String userEmail) throws NotFound;
 
+
+    void addSubCategoryBookMark(String userEmail,long subCatergoryId);
+
+    void removeSubBookMark(String userEmail,long subCategoryId) throws NotFound;
+
     List<UserSubBookMarkDto>  getAllSubBookMark(String userEmail);
+
     List<UserSubBookMarkDto>  getSelctedSubBookMark(String userEmail);
 }
