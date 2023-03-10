@@ -9,6 +9,9 @@ import testapp.demo.category.entity.MainCategory;
 import testapp.demo.category.entity.SubCategory;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 //@Getter
 //@Setter
@@ -19,9 +22,9 @@ import java.time.LocalDateTime;
 @Builder
 @Data
 public class SubCategoryResponseDTO {
-    private long categoryId;
-    private MainCategory mainCategory;
-    private String name;
+    private long sub_category_id;
+    private String sub_category_name;
+    private Map<String, Object> parent_category_info;
     private String tag;
     private String description;
     private Boolean approval;
@@ -30,14 +33,21 @@ public class SubCategoryResponseDTO {
 
 
     public SubCategoryResponseDTO fromEntity(SubCategory subCategory){
-        return SubCategoryResponseDTO.builder()
-                .categoryId(subCategory.getId())
-                .mainCategory(subCategory.getMainCategory())
-                .name(subCategory.getName())
+
+        Map<String, Object> parent_category = new HashMap<>();
+        parent_category.put("main_category_id", subCategory.getMainCategory().getId());
+        parent_category.put("main_category_name",subCategory.getMainCategory().getName());
+
+        SubCategoryResponseDTO build = SubCategoryResponseDTO.builder()
+                .sub_category_id(subCategory.getId())
+                .parent_category_info(parent_category)
+                .sub_category_name(subCategory.getName())
                 .description(subCategory.getDescription())
                 .approval(subCategory.getApproval())
                 .createDateTime(subCategory.getCreateDate())
                 .updatedDatedTime(subCategory.getUpdatedDate()).build();
+
+        return build;
     }
 
 

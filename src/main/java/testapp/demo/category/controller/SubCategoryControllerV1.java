@@ -22,11 +22,9 @@ import java.util.List;
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class SubCategoryControllerV1 {
-//
-//
+
     @Autowired
     private SubCategoryService subCategoryService;
-    private final SubCategoryRepository subCategoryRepository;
 
     @GetMapping("/{mainCategoryId}")
     public ResponseEntity<List<SubCategoryResponseDTO>> getAllSubCategory(@PathVariable("mainCategoryId") long mainCategoryId) {

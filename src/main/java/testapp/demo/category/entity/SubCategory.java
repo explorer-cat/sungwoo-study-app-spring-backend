@@ -29,7 +29,7 @@ public class SubCategory {
     @GeneratedValue
     @Column(name = "sub_category_ID ")
     private Long id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "main_category_ID")
     private MainCategory mainCategory;
     private String name;

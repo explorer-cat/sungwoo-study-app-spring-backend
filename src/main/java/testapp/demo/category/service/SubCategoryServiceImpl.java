@@ -65,11 +65,12 @@ public class SubCategoryServiceImpl implements SubCategoryService {
         //1번 서브카테고리 정보를 요청
         List<SubCategory> categories = subCategoryRepository.findByMainCategoryId(mainCategoryId);
 
+        System.out.println("categories = " + categories);
         for (SubCategory v : categories) {
+            System.out.println("v = " + v);
             SubCategoryResponseDTO dto = new SubCategoryResponseDTO();
             result.add(dto.fromEntity(v));
         }
-
         if (result.isEmpty()) {
             throw new IllegalStateException("Empty");
         } else {
