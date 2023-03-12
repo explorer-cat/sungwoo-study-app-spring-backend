@@ -6,8 +6,9 @@
 ## 팀원 구성 
 > 백엔드 1명, 프론트엔드 1명, 디자이너 1명
 
-## 프로젝트 Skill Set
-> Spring boot 2.x, JPA Data, MariaDB
+## 기술스택
+<img src = "https://camo.githubusercontent.com/ab4c3c731a174a63df861f7b118d6c8a6c52040a021a552628db877bd518fe84/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f72656163742d2532333230323332612e7376673f7374796c653d666f722d7468652d6261646765266c6f676f3d7265616374266c6f676f436f6c6f723d253233363144414642"/>
+<img alt="Spring" src = "https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=Spring&logoColor=white"/>
 
 ## 프로젝트 개요
 > 취업 준비 과정 중 CS 지식과 면접을 위한 암기용 어플리케이션을 직접 만들면 어떨까 하는 생각에서 시작했던 프로젝트.
