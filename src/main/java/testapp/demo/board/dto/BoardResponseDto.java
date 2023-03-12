@@ -19,8 +19,8 @@ public class BoardResponseDto {
     private long id;
     private String title;
     private String content;
-//    private Map<String, Object> mainCategory;
-//    private Map<String, Object> subCategory;
+    private Map<String, Object> mainCategory;
+    private Map<String, Object> subCategory;
     private Map<String, Object> board_like;
     private Map<String, Object> member_info;
     private Map<String, Object> bookmark_info;

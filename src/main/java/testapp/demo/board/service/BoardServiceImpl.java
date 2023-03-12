@@ -80,6 +80,8 @@ public class BoardServiceImpl implements BoardService {
                 .id(board.getId())
                 .title(board.getTitle())
                 .content(board.getContent())
+                .mainCategory(getMainCategoryInfo(board))
+                .subCategory(getSubCategoryInfo(board))
                 .createTime(board.getCreateTime())
                 .member_info(setUserInfo(board))
                 .board_like(setUserLikePost(board, board_like_list))
@@ -105,6 +107,8 @@ public class BoardServiceImpl implements BoardService {
                     .title(v.getTitle())
                     .content(v.getContent())
                     .createTime(v.getCreateTime())
+                    .mainCategory(getMainCategoryInfo(v))
+                    .subCategory(getSubCategoryInfo(v))
                     .member_info(setUserInfo(v))
                     .board_like(setUserLikePost(v, board_like_list))
                     .bookmark_info(setUserBookmarkPost(v, board_bookmark_list))
@@ -232,6 +236,24 @@ public class BoardServiceImpl implements BoardService {
                 SecurityUtil.getUserEmail().equals("anonymousUser") ? false : board_bookmark_list.contains(board.getId()));
         System.out.println("board_bookmark_info = " + board_bookmark_info);
         return board_bookmark_info;
+    }
+
+    public Map<String,Object> getMainCategoryInfo(Board board) {
+        Map<String, Object> main_category_info = new HashMap<>();
+
+        main_category_info.put("main_category_id", board.getMainCategory().getId());
+        main_category_info.put("main_category_name", board.getMainCategory().getName());
+
+        return main_category_info;
+    }
+
+    public Map<String,Object> getSubCategoryInfo(Board board) {
+        Map<String, Object> sub_category_info = new HashMap<>();
+
+        sub_category_info.put("sub_category_id", board.getSubCategory().getId());
+        sub_category_info.put("sub_category_name", board.getSubCategory().getName());
+
+        return sub_category_info;
     }
 }
 
