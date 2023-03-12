@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface BoardRepository extends JpaRepository<Board,Long> {
     List<Board> findBySubCategoryId(long subCategoryId);
 
-    Optional<Board> findBySubCategoryIdAndId(long subCategoryId, long postId);
+    Board findBySubCategoryIdAndId(long subCategoryId, long postId);
 
 
 }

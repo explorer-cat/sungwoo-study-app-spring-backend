@@ -30,6 +30,8 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.GET, "/api/v1/category/main/**").permitAll()
                 //서브 카테고리 조회
                 .antMatchers(HttpMethod.GET, "/api/v1/category/sub").permitAll()
+                //게시글 조회
+                .antMatchers(HttpMethod.GET, "/api/v1/post/**").permitAll()
                 //로그인 토큰 생성
                 .antMatchers(HttpMethod.GET, "/api/v1/users/login/kakao/**").permitAll()
 

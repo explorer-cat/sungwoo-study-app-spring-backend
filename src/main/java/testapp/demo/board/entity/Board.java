@@ -2,6 +2,7 @@ package testapp.demo.board.entity;
 
 import lombok.*;
 import org.jboss.jandex.Main;
+import testapp.demo.board.dto.BoardResponseDto;
 import testapp.demo.category.dto.mainCategory.MainCategoryResponseDTO;
 import testapp.demo.category.dto.subCategory.SubCategoryResponseDTO;
 import testapp.demo.category.entity.MainCategory;
@@ -15,6 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor    //첫번째 방법
+@AllArgsConstructor
 @Entity
 @Builder
 public class Board {
@@ -39,22 +41,31 @@ public class Board {
     @OneToMany(mappedBy = "board")
     private List<BoardLike> boardLike;
 
+    @OneToMany(mappedBy = "board")
+    private List<BoardBookmark> boardBookmarks;
+
     private String title;
     private String content;
     private boolean approval;
     private LocalDateTime createTime;
 
-    public Board(long id, MainCategory mainCategory, SubCategory subCategory, Member member, List<BoardLike> boardLike, String title, String content, boolean approval, LocalDateTime createTime) {
-        this.id = id;
-        this.mainCategory = mainCategory;
-        this.subCategory = subCategory;
-        this.member = member;
-        this.boardLike = boardLike;
-        this.title = title;
-        this.content = content;
-        this.approval = approval;
-        this.createTime = createTime;
+
+    public Board toEntity(Board board) {
+        Board build = Board.builder()
+                .id(board.getId())
+                .title(board.getTitle())
+                .content(board.getContent())
+                .member(board.getMember())
+                .boardLike(board.getBoardLike())
+                .boardBookmarks(board.getBoardBookmarks())
+                .build();
+        System.out.println("build = " + build);
+        return null;
+//        return Board.
+//
+//                builder().build();
     }
+
 
     @Override
     public String toString() {
