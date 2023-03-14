@@ -1,3 +1,9 @@
+//buildscript {
+//	ext {
+//		queryDslVersion = "4.4.0"
+//	}
+//}
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.8'
@@ -30,6 +36,9 @@ dependencies {
 	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+//	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+//	implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
 }
 
 tasks.named('test') {

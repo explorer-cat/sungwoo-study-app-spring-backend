@@ -25,6 +25,8 @@ public interface BoardService {
     void addPostBookmark(long postId);
     void cancelPostBookmark(long postId);
 
+    List<BoardResponseDto> getSearchPostList(String search_keyword);
+
 //    Set<Long> getUserLikesPostList();
 
 //    ResponseEntity<List<BoardResponseDto>> getCategoryPostList(int categoryId);

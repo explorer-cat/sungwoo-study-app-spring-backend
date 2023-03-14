@@ -3,6 +3,7 @@ package testapp.demo.board.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -104,6 +105,9 @@ public class BoardControllerV1 {
         return ResponseEntity.ok().build();
     }
 
-
+    @GetMapping("/search")
+    public ResponseEntity<List<BoardResponseDto>> getSearchPost(@RequestParam(name = "keyword", required = true) String keyword) {
+        return new ResponseEntity<>(boardService.getSearchPostList(keyword),HttpStatus.OK);
+    }
 
 }

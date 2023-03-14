@@ -11,7 +11,9 @@ import testapp.demo.member.entity.Member;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -66,6 +68,31 @@ public class Board {
 //                builder().build();
     }
 
+    public Map<String, Object> setUserInfo(Board board) {
+        Map<String, Object> memberInfo = new HashMap<>();
+        memberInfo.put("nickname", board.getMember().getNickname());
+        memberInfo.put("profile_img", board.getMember().getThumbnailImage());
+        return memberInfo;
+    }
+
+    public Map<String,Object> getMainCategoryInfo(Board board) {
+        Map<String, Object> main_category_info = new HashMap<>();
+
+        main_category_info.put("main_category_id", board.getMainCategory().getId());
+        main_category_info.put("main_category_name", board.getMainCategory().getName());
+
+        return main_category_info;
+    }
+
+
+    public Map<String,Object> getSubCategoryInfo(Board board) {
+        Map<String, Object> sub_category_info = new HashMap<>();
+
+        sub_category_info.put("sub_category_id", board.getSubCategory().getId());
+        sub_category_info.put("sub_category_name", board.getSubCategory().getName());
+
+        return sub_category_info;
+    }
 
     @Override
     public String toString() {

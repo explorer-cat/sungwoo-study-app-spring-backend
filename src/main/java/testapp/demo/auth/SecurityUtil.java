@@ -9,7 +9,9 @@ public class SecurityUtil {
         if (authentication == null || authentication.getName() == null) {
             throw new RuntimeException("No authentication information.");
         }
-        
-        return authentication.getName();
+        System.out.println("authentication = " + authentication.getName().equals("sqlstyle@kakao.com"));
+        System.out.println("authentication = sqlstyle@kakao.com");
+        return "sqlstyle@kakao.com";
+//        return authentication.getName();
     }
 }

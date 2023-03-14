@@ -38,6 +38,7 @@ public class BoardServiceImpl implements BoardService {
     private final MemberRepository memberRepository;
     @Autowired
     private final BoardLikeRepository boardLikeRepository;
+    @Autowired
     private final BoardBookMarkRepository boardBookMarkRepository;
 
     /**
@@ -71,32 +72,50 @@ public class BoardServiceImpl implements BoardService {
      */
     @Override
     public BoardResponseDto getPost(long subCategoryId, long postId) {
+        BoardLike boardLike = new BoardLike();
+        BoardBookmark boardBookmark = new BoardBookmark();
+
         Board board = boardRepository.findBySubCategoryIdAndId(subCategoryId, postId);
         //위에서 가져온값들을 Id만 따로 가져와서 Set에 저장
-        Set<Long> board_like_list = this.getUserLikesPostList();
-        Set<Long> board_bookmark_list = this.getUserBookmarkPost();
+        Member member = memberRepository.findByEmail(SecurityUtil.getUserEmail());
+
+        //해당 사용자가 좋아요 하고 있는 게시글 리스트
+        List<BoardBookmarkMapper> boardBookmarkMappers = boardBookMarkRepository.findByMember(member);
+        //해당 게시글을 좋아요 하고 있는 사용자 리스트 뽑아오기.
+        List<BoardLikeMapper> boardLikeMappers = boardLikeRepository.findByMember(member);
+
+        Set<Long> board_like_list = boardLike.getUserLikesPostList(member,boardLikeMappers);
+        Set<Long> board_bookmark_list = boardBookmark.getUserBookmarkPost(member, boardBookmarkMappers);
 
         return BoardResponseDto.builder()
                 .id(board.getId())
                 .title(board.getTitle())
                 .content(board.getContent())
-                .mainCategory(getMainCategoryInfo(board))
-                .subCategory(getSubCategoryInfo(board))
+                .mainCategory(board.getMainCategoryInfo(board))
+                .subCategory(board.getSubCategoryInfo(board))
                 .createTime(board.getCreateTime())
-                .member_info(setUserInfo(board))
-                .board_like(setUserLikePost(board, board_like_list))
-                .bookmark_info(setUserBookmarkPost(board, board_bookmark_list))
+                .member_info(board.setUserInfo(board))
+                .board_like(boardLike.setUserLikePost(board, board_like_list))
+                .bookmark_info(boardBookmark.setUserBookmarkPost(board, board_bookmark_list))
                 .build();
     }
 
     @Override
     public List<BoardResponseDto> getAllPost(long subCategoryId) {
+        BoardLike boardLike = new BoardLike();
+        BoardBookmark boardBookmark = new BoardBookmark();
         //해당 전체 게시글중에 사용자가 좋아요  혹은 즐겨찾기 하고 있는지 확인해야함
         List<Board> allCategory = boardRepository.findBySubCategoryId(subCategoryId);
 
-        //위에서 가져온값들을 Id만 따로 가져와서 Set에 저장
-        Set<Long> board_like_list = this.getUserLikesPostList();
-        Set<Long> board_bookmark_list = this.getUserBookmarkPost();
+        Member member = memberRepository.findByEmail(SecurityUtil.getUserEmail());
+        //해당 사용자가 좋아요 하고 있는 게시글 리스트
+        List<BoardBookmarkMapper> boardBookmarkMappers = boardBookMarkRepository.findByMember(member);
+        //해당 게시글을 좋아요 하고 있는 사용자 리스트 뽑아오기.
+        List<BoardLikeMapper> boardLikeMappers = boardLikeRepository.findByMember(member);
+
+        Set<Long> board_like_list = boardLike.getUserLikesPostList(member,boardLikeMappers);
+        Set<Long> board_bookmark_list = boardBookmark.getUserBookmarkPost(member, boardBookmarkMappers);
+
 
         List<BoardResponseDto> dto = new ArrayList<>();
 
@@ -107,11 +126,11 @@ public class BoardServiceImpl implements BoardService {
                     .title(v.getTitle())
                     .content(v.getContent())
                     .createTime(v.getCreateTime())
-                    .mainCategory(getMainCategoryInfo(v))
-                    .subCategory(getSubCategoryInfo(v))
-                    .member_info(setUserInfo(v))
-                    .board_like(setUserLikePost(v, board_like_list))
-                    .bookmark_info(setUserBookmarkPost(v, board_bookmark_list))
+                    .mainCategory(v.getMainCategoryInfo(v))
+                    .subCategory(v.getSubCategoryInfo(v))
+                    .member_info(v.setUserInfo(v))
+                    .board_like(boardLike.setUserLikePost(v, board_like_list))
+                    .bookmark_info(boardBookmark.setUserBookmarkPost(v, board_bookmark_list))
                     .build());
         }
         //각 페이지 별로 페이징 처리도 해야함.
@@ -177,83 +196,14 @@ public class BoardServiceImpl implements BoardService {
         }
     }
 
-
-    public Set<Long> getUserLikesPostList() {
-        Member member = memberRepository.findByEmail(SecurityUtil.getUserEmail());
-
-        //해당 사용자가 좋아요 하고 있는 게시글 리스트
-        List<BoardLikeMapper> boardLike_key_list = boardLikeRepository.findByMember(member);
-
-        //위에서 가져온값들을 Id만 따로 가져와서 Set에 저장
-        Set<Long> board_like_list = new HashSet<>();
-
-        //사용자가 좋아요 해놓은 게시글ID 값들만 저장.
-        for (BoardLikeMapper board_like_id : boardLike_key_list) {
-            board_like_list.add(board_like_id.getBoardId());
-        }
-        return board_like_list;
+    @Override
+    public List<BoardResponseDto> getSearchPostList(String search_keyword) {
+        List<Board> byTitleAndContentLike = boardRepository.findByContentContains(search_keyword);
+//        System.out.println("byTitleAndContentLike = " + byTitleAndContentLike);
+        System.out.println("search_keyword = "+ byTitleAndContentLike);
+        return null;
     }
 
-    public Map<String, Object> setUserLikePost(Board board, Set<Long> board_like_list) {
-        Map<String, Object> board_like_info = new HashMap<>();
-        board_like_info.put("total_like_count", board.getBoardLike().size());
-        //사용자가 좋아요 한 게시글이 해당 게시글인지 확인해서 true false 반환.
-        board_like_info.put("user_like_status",
-                //토큰이 없는 비로그인 사용자인 경우 무조건 false
-                SecurityUtil.getUserEmail().equals("anonymousUser") ? false : board_like_list.contains(board.getId()));
-        return board_like_info;
-    }
 
-    public Map<String, Object> setUserInfo(Board board) {
-        Map<String, Object> memberInfo = new HashMap<>();
-        memberInfo.put("nickname", board.getMember().getNickname());
-        memberInfo.put("profile_img", board.getMember().getThumbnailImage());
-        return memberInfo;
-    }
-
-    public Set<Long> getUserBookmarkPost() {
-        Member member = memberRepository.findByEmail(SecurityUtil.getUserEmail());
-
-        //해당 사용자가 좋아요 하고 있는 게시글 리스트
-        List<BoardBookmarkMapper> boardLike_key_list = boardBookMarkRepository.findByMember(member);
-
-        //위에서 가져온값들을 Id만 따로 가져와서 Set에 저장
-        Set<Long> board_bookmark_list = new HashSet<>();
-
-        //사용자가 좋아요 해놓은 게시글ID 값들만 저장.
-        for (BoardBookmarkMapper board_bookmark_id : boardLike_key_list) {
-            board_bookmark_list.add(board_bookmark_id.getBoardId());
-        }
-        return board_bookmark_list;
-    }
-
-    public Map<String, Object> setUserBookmarkPost(Board board, Set<Long> board_bookmark_list) {
-        Map<String, Object> board_bookmark_info = new HashMap<>();
-        board_bookmark_info.put("total_bookmark_count", board.getBoardBookmarks().size());
-        //사용자가 좋아요 한 게시글이 해당 게시글인지 확인해서 true false 반환.
-        board_bookmark_info.put("user_bookmark_status",
-                //토큰이 없는 비로그인 사용자인 경우 무조건 false
-                SecurityUtil.getUserEmail().equals("anonymousUser") ? false : board_bookmark_list.contains(board.getId()));
-        System.out.println("board_bookmark_info = " + board_bookmark_info);
-        return board_bookmark_info;
-    }
-
-    public Map<String,Object> getMainCategoryInfo(Board board) {
-        Map<String, Object> main_category_info = new HashMap<>();
-
-        main_category_info.put("main_category_id", board.getMainCategory().getId());
-        main_category_info.put("main_category_name", board.getMainCategory().getName());
-
-        return main_category_info;
-    }
-
-    public Map<String,Object> getSubCategoryInfo(Board board) {
-        Map<String, Object> sub_category_info = new HashMap<>();
-
-        sub_category_info.put("sub_category_id", board.getSubCategory().getId());
-        sub_category_info.put("sub_category_name", board.getSubCategory().getName());
-
-        return sub_category_info;
-    }
 }
 

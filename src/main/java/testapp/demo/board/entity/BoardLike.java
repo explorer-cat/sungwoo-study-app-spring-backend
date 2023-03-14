@@ -5,10 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.tomcat.jni.Local;
+import testapp.demo.auth.SecurityUtil;
+import testapp.demo.board.mapper.BoardLikeMapper;
 import testapp.demo.member.entity.Member;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.*;
 
 @Getter
 @Setter
@@ -50,19 +53,26 @@ public class BoardLike {
         return boardLike;
     }
 
-    @Override
-    public String toString() {
-        return "BoardLike{" +
-                "id=" + id +
-                ", member=" + member +
-//                ", board=" + board +
-                ", createdDate=" + createdDate +
-                '}';
+    public Set<Long> getUserLikesPostList(Member member, List<BoardLikeMapper> board_like_list) {
+        //위에서 가져온값들을 Id만 따로 가져와서 Set에 저장
+        Set<Long> result = new HashSet<>();
+        List<BoardLikeMapper> boardLikeList = board_like_list;
+
+        for (BoardLikeMapper boardLikeMapper : boardLikeList) {
+            result.add(boardLikeMapper.getBoardId());
+        }
+        return result;
     }
 
-    //    private void cacelBoardLike(Board board) {
-//        this.board = board;
-//        board.getBoardLike().remove(this);
-//    }
+    public Map<String, Object> setUserLikePost(Board board, Set<Long> board_like_list) {
+        Map<String, Object> board_like_info = new HashMap<>();
+        board_like_info.put("total_like_count", board.getBoardLike().size());
+        //사용자가 좋아요 한 게시글이 해당 게시글인지 확인해서 true false 반환.
+        board_like_info.put("user_like_status",
+                //토큰이 없는 비로그인 사용자인 경우 무조건 false
+                SecurityUtil.getUserEmail().equals("anonymousUser") ? false : board_like_list.contains(board.getId()));
+        return board_like_info;
+    }
+
 
 }

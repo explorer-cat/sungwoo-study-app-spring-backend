@@ -1,6 +1,7 @@
 package testapp.demo.member.entity;
 
 import lombok.*;
+import testapp.demo.board.entity.Board;
 import testapp.demo.board.entity.BoardBookmark;
 import testapp.demo.board.entity.BoardLike;
 import testapp.demo.bookmark.entity.MainCategoryBookMark;
@@ -9,7 +10,9 @@ import testapp.demo.bookmark.entity.SubCategoryBookMark;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 //@Getter
 //@Setter
@@ -39,6 +42,7 @@ public class Member {
     private byte level; //관리자 여부
     private String social_type;
     private LocalDateTime createDate;
+
 
 
 }
