@@ -15,7 +15,7 @@ public interface BoardService {
     Board createPost(long subCategoryId, CreatePostRequest data) throws Exception;
     BoardResponseDto getPost(long subCategoryId, long postId);
 
-    List<BoardResponseDto> getAllPost(long subCategoryId);
+    List<BoardResponseDto> getAllPost(List<Long> subCategories,String keyword);
 
     void addPostLike(long postId);
 
@@ -25,7 +25,7 @@ public interface BoardService {
     void addPostBookmark(long postId);
     void cancelPostBookmark(long postId);
 
-    List<BoardResponseDto> getSearchPostList(String search_keyword);
+//    List<BoardResponseDto> getSearchPostList(String search_keyword);
 
 //    Set<Long> getUserLikesPostList();
 

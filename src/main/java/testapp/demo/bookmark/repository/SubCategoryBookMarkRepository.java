@@ -24,6 +24,8 @@ public interface SubCategoryBookMarkRepository extends JpaRepository<SubCategory
 
     void deleteByMemberAndSubCategory(Member member, SubCategory subCategory);
 
+    void deleteByMember(Member member);
+
 
 
 //    Optional<MainCategoryBookMark> findByMemberAndMainCategory(Member member,MainCategory mainCategory);

@@ -84,7 +84,7 @@ public class BoardServiceImpl implements BoardService {
         //해당 게시글을 좋아요 하고 있는 사용자 리스트 뽑아오기.
         List<BoardLikeMapper> boardLikeMappers = boardLikeRepository.findByMember(member);
 
-        Set<Long> board_like_list = boardLike.getUserLikesPostList(member,boardLikeMappers);
+        Set<Long> board_like_list = boardLike.getUserLikesPostList(member, boardLikeMappers);
         Set<Long> board_bookmark_list = boardBookmark.getUserBookmarkPost(member, boardBookmarkMappers);
 
         return BoardResponseDto.builder()
@@ -101,11 +101,28 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardResponseDto> getAllPost(long subCategoryId) {
+    public List<BoardResponseDto> getAllPost(List<Long> subCategories, String keyword) {
         BoardLike boardLike = new BoardLike();
         BoardBookmark boardBookmark = new BoardBookmark();
         //해당 전체 게시글중에 사용자가 좋아요  혹은 즐겨찾기 하고 있는지 확인해야함
-        List<Board> allCategory = boardRepository.findBySubCategoryId(subCategoryId);
+
+        List<List<Board>> allCategory = new ArrayList<>();
+
+        if(keyword != null && subCategories.size() > 0) {
+            for (Object a : subCategories) {
+                List<Board> bySubCategoryId = boardRepository.findByContentContainsAndSubCategoryId(keyword, Long.parseLong(a.toString()));
+                allCategory.add(bySubCategoryId);
+            }
+        } else if (keyword == null || keyword.isEmpty()) {
+            for (Object a : subCategories) {
+                List<Board> bySubCategoryId = boardRepository.findBySubCategoryId(Long.parseLong(a.toString()));
+                allCategory.add(bySubCategoryId);
+            }
+        } else {
+            allCategory.add(boardRepository.findByContentContains(keyword));
+        }
+
+
 
         Member member = memberRepository.findByEmail(SecurityUtil.getUserEmail());
         //해당 사용자가 좋아요 하고 있는 게시글 리스트
@@ -113,25 +130,28 @@ public class BoardServiceImpl implements BoardService {
         //해당 게시글을 좋아요 하고 있는 사용자 리스트 뽑아오기.
         List<BoardLikeMapper> boardLikeMappers = boardLikeRepository.findByMember(member);
 
-        Set<Long> board_like_list = boardLike.getUserLikesPostList(member,boardLikeMappers);
+        Set<Long> board_like_list = boardLike.getUserLikesPostList(member, boardLikeMappers);
         Set<Long> board_bookmark_list = boardBookmark.getUserBookmarkPost(member, boardBookmarkMappers);
 
 
         List<BoardResponseDto> dto = new ArrayList<>();
 
-        for (Board v : allCategory) {
-            //사용자 정보
-            dto.add(BoardResponseDto.builder()
-                    .id(v.getId())
-                    .title(v.getTitle())
-                    .content(v.getContent())
-                    .createTime(v.getCreateTime())
-                    .mainCategory(v.getMainCategoryInfo(v))
-                    .subCategory(v.getSubCategoryInfo(v))
-                    .member_info(v.setUserInfo(v))
-                    .board_like(boardLike.setUserLikePost(v, board_like_list))
-                    .bookmark_info(boardBookmark.setUserBookmarkPost(v, board_bookmark_list))
-                    .build());
+        for (List<Board> x : allCategory) {
+            if (x.size() > 0) {
+                for (Board v : x) {
+                    dto.add(BoardResponseDto.builder()
+                            .id(v.getId())
+                            .title(v.getTitle())
+                            .content(v.getContent())
+                            .createTime(v.getCreateTime())
+                            .mainCategory(v.getMainCategoryInfo(v))
+                            .subCategory(v.getSubCategoryInfo(v))
+                            .member_info(v.setUserInfo(v))
+                            .board_like(boardLike.setUserLikePost(v, board_like_list))
+                            .bookmark_info(boardBookmark.setUserBookmarkPost(v, board_bookmark_list))
+                            .build());
+                }
+            }
         }
         //각 페이지 별로 페이징 처리도 해야함.
         return dto;
@@ -147,7 +167,7 @@ public class BoardServiceImpl implements BoardService {
         Optional<BoardLike> existLike = boardLikeRepository.findByBoardAndMember(board.get(), member);
 
         //사용자가 해당 게시글을 좋아요 하고 있지 않는 경우에만 새로 추가.
-        if(!existLike.isPresent()) {
+        if (!existLike.isPresent()) {
             BoardLike boardLike = BoardLike.addBoardLike(board.get(), member);
             boardLikeRepository.save(boardLike);
         }
@@ -162,7 +182,7 @@ public class BoardServiceImpl implements BoardService {
 
         Optional<BoardLike> existLike = boardLikeRepository.findByBoardAndMember(board.get(), member);
 
-        if(existLike.isPresent()) {
+        if (existLike.isPresent()) {
             boardLikeRepository.deleteByMemberAndBoard(member, board.get());
         }
     }
@@ -177,7 +197,7 @@ public class BoardServiceImpl implements BoardService {
         Optional<BoardBookmark> existBookmark = boardBookMarkRepository.findByBoardAndMember(board.get(), member);
 
         //사용자가 해당 게시글을 북마크 하고 있지 않는 경우에만 새로 디비에 추가
-        if(!existBookmark.isPresent()) {
+        if (!existBookmark.isPresent()) {
             BoardBookmark boardBookmark = BoardBookmark.addBoardBookmark(board.get(), member);
             boardBookMarkRepository.save(boardBookmark);
         }
@@ -191,18 +211,42 @@ public class BoardServiceImpl implements BoardService {
 
         Optional<BoardBookmark> existBookmark = boardBookMarkRepository.findByBoardAndMember(board.get(), member);
 
-        if(existBookmark.isPresent()) {
+        if (existBookmark.isPresent()) {
             boardBookMarkRepository.deleteByMemberAndBoard(member, board.get());
         }
     }
 
-    @Override
-    public List<BoardResponseDto> getSearchPostList(String search_keyword) {
-        List<Board> byTitleAndContentLike = boardRepository.findByContentContains(search_keyword);
-//        System.out.println("byTitleAndContentLike = " + byTitleAndContentLike);
-        System.out.println("search_keyword = "+ byTitleAndContentLike);
-        return null;
-    }
+//    @Override
+//    public List<BoardResponseDto> getSearchPostList(String search_keyword) {
+//        List<Board> searchPostList = boardRepository.findByContentContains(search_keyword);
+//
+//        List<BoardResponseDto> result = new ArrayList<>();
+//
+//        Member member = memberRepository.findByEmail(SecurityUtil.getUserEmail());
+//        //해당 사용자가 좋아요 하고 있는 게시글 리스트
+//        List<BoardBookmarkMapper> boardBookmarkMappers = boardBookMarkRepository.findByMember(member);
+//        //해당 게시글을 좋아요 하고 있는 사용자 리스트 뽑아오기.
+//        List<BoardLikeMapper> boardLikeMappers = boardLikeRepository.findByMember(member);
+//
+//        Set<Long> board_like_list = boardLike.getUserLikesPostList(member,boardLikeMappers);
+//        Set<Long> board_bookmark_list = boardBookmark.getUserBookmarkPost(member, boardBookmarkMappers);
+//
+//
+//        for (Board v : searchPostList) {
+//            result.add(BoardResponseDto.builder()
+//                    .id(v.getId())
+//                    .title(v.getTitle())
+//                    .content(v.getContent())
+//                    .createTime(v.getCreateTime())
+//                    .mainCategory(v.getMainCategoryInfo(v))
+//                    .subCategory(v.getSubCategoryInfo(v))
+//                    .member_info(v.setUserInfo(v))
+//                    .board_like(boardLike.setUserLikePost(v, board_like_list))
+//                    .bookmark_info(boardBookmark.setUserBookmarkPost(v, board_bookmark_list))
+//                    .build());
+//        }
+//        return result;
+//    }
 
 
 }

@@ -116,13 +116,15 @@ public class BookMarkController {
      * @throws NotFound
      * @title 서브카테고리 북마크 하기.
      */
-    @PostMapping("/sub/bookmark/{subCategoryId}")
-    public ResponseEntity addSubBookMark(@PathVariable("subCategoryId") long subCategoryId) {
+    @PostMapping("/sub/bookmark")
+    public ResponseEntity addSubBookMark(@RequestBody Map<String,List> bookmark_info) {
         //토큰 검증.
         try {
             //사용자 토큰 검증에 성공했을 경우 사용자 정보를 반환합니다.
-            bookMarkService.addSubCategoryBookMark(SecurityUtil.getUserEmail(), subCategoryId);
+            bookMarkService.addSubCategoryBookMark(SecurityUtil.getUserEmail(), bookmark_info);
             return ResponseEntity.ok().build();
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
         } catch (Exception ex) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

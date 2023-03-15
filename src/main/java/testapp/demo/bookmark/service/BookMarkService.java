@@ -7,6 +7,7 @@ import testapp.demo.bookmark.entity.SubCategoryBookMark;
 import testapp.demo.category.dto.subCategory.SubCategoryResponseDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface BookMarkService {
 
@@ -17,7 +18,7 @@ public interface BookMarkService {
     List<MainCategoryBookMark> getMainBookMark(String userEmail) throws NotFound;
 
 
-    void addSubCategoryBookMark(String userEmail,long subCatergoryId);
+    void addSubCategoryBookMark(String userEmail, Map<String, List> bookmark_info);
 
     void removeSubBookMark(String userEmail,long subCategoryId) throws NotFound;
 

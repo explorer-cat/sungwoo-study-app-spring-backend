@@ -76,17 +76,27 @@ public class BookMarkServiceImpl implements BookMarkService {
 
     @Override
     @Transactional
-    public void addSubCategoryBookMark(String userEmail, long subCategoryId) {
+    public void addSubCategoryBookMark(String userEmail, Map<String, List> bookmark_info) {
         Member member = memberRepository.findByEmail(userEmail);
-        SubCategory subCategory = subCategoryRepository.findById(subCategoryId).get();
 
-        Optional<SubCategoryBookMark> has_bookmark = subCategoryBookMarkRepository.findByMemberAndSubCategory(member, subCategory);
+        //현재 북마크 되어있는 전체 서브카테고리를 다 지우고 요청이 들어온걸 새로 세이브함
+        subCategoryBookMarkRepository.deleteByMember(member);
 
-        //데이터베이스에 없는 경우에만 새로 추가함.
-        if (!has_bookmark.isPresent()) {
-            SubCategoryBookMark subCategoryBookMark = SubCategoryBookMark.createSubCategory(member, subCategory,subCategory.getMainCategory());
-            subCategoryBookMarkRepository.save(subCategoryBookMark);
+        List id = bookmark_info.get("id");
+
+        for (Object o : id) {
+            Optional<SubCategory> subCategory = subCategoryRepository.findById(Long.valueOf(o.toString()));
+
+            if(subCategory.isPresent()) {
+                SubCategoryBookMark subCategoryBookMark = SubCategoryBookMark.createSubCategory(member, subCategory.get(), subCategory.get().getMainCategory());
+                subCategoryBookMarkRepository.save(subCategoryBookMark);
+            }
+            else {
+                //서브 카테고리가 존재하지 않는 경우
+                throw new IllegalStateException();
+            }
         }
+
     }
 
     @Override
