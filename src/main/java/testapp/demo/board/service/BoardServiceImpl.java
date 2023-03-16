@@ -108,16 +108,19 @@ public class BoardServiceImpl implements BoardService {
 
         List<List<Board>> allCategory = new ArrayList<>();
 
+        System.out.println("allCategory = " +subCategories.size());
         if(keyword != null && subCategories.size() > 0) {
             for (Object a : subCategories) {
                 List<Board> bySubCategoryId = boardRepository.findByContentContainsAndSubCategoryId(keyword, Long.parseLong(a.toString()));
                 allCategory.add(bySubCategoryId);
             }
-        } else if (keyword == null || keyword.isEmpty()) {
+        } else if ((keyword == null || keyword.isEmpty()) && subCategories.size() > 0) {
             for (Object a : subCategories) {
                 List<Board> bySubCategoryId = boardRepository.findBySubCategoryId(Long.parseLong(a.toString()));
                 allCategory.add(bySubCategoryId);
             }
+        } else if(subCategories.size() == 0) {
+            allCategory.add(boardRepository.findAll());
         } else {
             allCategory.add(boardRepository.findByContentContains(keyword));
         }
