@@ -37,6 +37,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.GET,"/api/v1/**").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/v1/**").permitAll()
                 .antMatchers(HttpMethod.DELETE,"/api/v1/**").permitAll()
+                .antMatchers(HttpMethod.OPTIONS,"/api/v1/**").permitAll()
 //                .antMatchers(HttpMethod.GET,"/api/v1/**").permitAll()
 
                 //위 허용사항 외에 모든 API 는 인증을 거친다.

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import testapp.demo.auth.JwtProvider;
+import testapp.demo.auth.SecurityUtil;
 import testapp.demo.member.dto.*;
 import testapp.demo.member.service.MemberService;
 
@@ -39,16 +40,8 @@ public class MemberControllerV1 {
     }
 
     @GetMapping
-    public ResponseEntity<UserInfoResponseDto> findUserEmail(@RequestHeader(value = "Authorization") String jwt) {
-//        TokenResponseNoData tokenResponseNoData = memberService.checkToken(jwt);
-//        //사용자 토큰 검증에 성공했을 경우 사용자 정보를 반환합니다.
-//        if(tokenResponseNoData.getCode() == "200") {
-//            return new ResponseEntity<>(memberService.getUserEmail(tokenResponseNoData.getUserEmail()),HttpStatus.OK);
-//        } else {
-//            //사용자 토큰기간이 만료됐거나 토큰이 변조되었을 경우
-//            return new ResponseEntity<>(null,HttpStatus.UNAUTHORIZED);
-//        }
-        return null;
+    public ResponseEntity<UserInfoResponseDto> findUserEmail() {
+        return new ResponseEntity<>(memberService.getUserEmail(SecurityUtil.getUserEmail()),HttpStatus.OK);
     }
 
     @PatchMapping("/{userId}")
@@ -74,6 +67,7 @@ public class MemberControllerV1 {
             accessTokenJsonData = memberService.getAccessTokenJsonData(code);
         }
 
+        System.out.println("accessTokenJsonData = " + accessTokenJsonData);
 
         if (accessTokenJsonData == null) {
             return new ResponseEntity<>(new ErrorResponse(500, "Failed to retrieve access token data"), HttpStatus.INTERNAL_SERVER_ERROR);

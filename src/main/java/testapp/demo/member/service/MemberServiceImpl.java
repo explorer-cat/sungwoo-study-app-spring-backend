@@ -32,8 +32,6 @@ public class MemberServiceImpl implements MemberService {
     private MemberRepository memberRepository;
     @Autowired
     private JwtProvider jwtProvider;
-
-
     private final String HTTP_REQUEST = "https://kapi.kakao.com/v2/user/me";
     private final String GRANT_TYPE= "authorization_code";
     private final String REDIRECT_URI= "http://sungwoo-net.p-e.kr:3000/login/auth/code";
