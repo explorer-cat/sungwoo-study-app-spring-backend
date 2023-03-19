@@ -119,7 +119,7 @@ public class BoardServiceImpl implements BoardService {
                 List<Board> bySubCategoryId = boardRepository.findBySubCategoryId(Long.parseLong(a.toString()));
                 allCategory.add(bySubCategoryId);
             }
-        } else if(subCategories.size() == 0) {
+        } else if(subCategories.size() == 0 && keyword.isEmpty()) {
             allCategory.add(boardRepository.findAll());
         } else {
             allCategory.add(boardRepository.findByContentContains(keyword));
