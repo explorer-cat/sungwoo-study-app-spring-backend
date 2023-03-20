@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import testapp.demo.auth.SecurityUtil;
 import testapp.demo.board.dto.BoardResponseDto;
@@ -105,40 +106,48 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardResponseDto> getAllPost(List<Long> subCategories, String keyword) {
+    public List<BoardResponseDto> getAllPost(List<Long> subCategories, String keyword, String sortTarget, String sortType) {
         BoardLike boardLike = new BoardLike();
         BoardBookmark boardBookmark = new BoardBookmark();
         //해당 전체 게시글중에 사용자가 좋아요  혹은 즐겨찾기 하고 있는지 확인해야함
-        List<List<Board>> allCategory = new ArrayList<>();
-
+        List<Board> allCategory = new ArrayList<>();
         String userEmail = SecurityUtil.getUserEmail();
 
-        System.out.println("getAllPost Name = " + SecurityUtil.getUserEmail());
 
-        System.out.println("subCategories = " + subCategories);
-        System.out.println("keyword = " + keyword.isEmpty());
-        System.out.println("keyword = " + keyword.length());
-        //검색어도 있고 , 서브카테고리도 있을 경우
-        if (!keyword.isEmpty() || subCategories.size() > 0) {
-            for (Object a : subCategories) {
-                List<Board> bySubCategoryId = boardRepository.searchByPostSubCategory(keyword, Long.parseLong(a.toString()));
-                allCategory.add(bySubCategoryId);
-            }
-            //해당 서브카테고리의 전체 게시글 조회
-        } else if(keyword.length() == 0 && subCategories.size() > 0) {
-            allCategory.add(boardRepository.searchByContentOrTitle(keyword));
-            //해당 서브 카테고리에서 전체 검색어 조회
-        } else if (keyword.length() > 0 && subCategories.size() <= 0) {
-            System.out.println("222");
-            for (Object a : subCategories) {
-                List<Board> bySubCategoryId = boardRepository.findBySubCategoryId(Long.parseLong(a.toString()));
-                allCategory.add(bySubCategoryId);
+        sortType = sortType.toLowerCase();
+        sortTarget = sortTarget.toLowerCase();
+
+        if (subCategories.size() > 0) {
+            switch (sortTarget) {
+                case "createtime":
+                    allCategory = sortType.equals("asc") ?
+                            boardRepository.findByKeywordAndSubCategoryIdsCreateASC(keyword,subCategories) :
+                            boardRepository.findByKeywordAndSubCategoryIdsCreateDESC(keyword,subCategories);
+                    break;
+                case "like":
+                    allCategory = sortType.equals("asc") ?
+                            boardRepository.findByKeywordAndSubCategoryIdsLikeASC(keyword, subCategories) :
+                            boardRepository.findByKeywordAndSubCategoryIdsLikeDESC(keyword, subCategories);
+                    break;
             }
         } else {
-            System.out.println("111");
-            allCategory.add(boardRepository.findAll());
+            switch (sortTarget) {
+                case "createtime":
+                    System.out.println("zzzzzzz ");
+                    allCategory = sortType.equals("asc") ?
+                            boardRepository.findAllByCreateSortASC(keyword) :
+                            boardRepository.findAllByCreateSortDESC(keyword);
+                    break;
+                case "like":
+                    System.out.println("22222 " + sortType.equals("asc"));
+                    allCategory = sortType.equals("asc") ?
+                            boardRepository.findAllByLikeSortASC(keyword) :
+                            boardRepository.findAllByLikeSortDESC(keyword);
+                    break;
+            }
         }
 
+//        System.out.println("x = " +);x/
 
         Member member = memberRepository.findByEmail(SecurityUtil.getUserEmail());
         //해당 사용자가 좋아요 하고 있는 게시글 리스트
@@ -152,24 +161,20 @@ public class BoardServiceImpl implements BoardService {
 
         List<BoardResponseDto> dto = new ArrayList<>();
 
-        for (List<Board> x : allCategory) {
-            if (x.size() > 0) {
-                for (Board v : x) {
-                    dto.add(BoardResponseDto.builder()
-                            .id(v.getId())
-                            .title(v.getTitle())
-                            .content(v.getContent())
-                            .createTime(v.getCreateTime())
-                            //토큰에 있는 이메일이 해당 게시글 작성자와 동일하다면 권한 true, false;
-                            .isAuthor(userEmail.equals(v.getMember().getEmail()) ? true : false)
-                            .mainCategory(v.getMainCategoryInfo(v))
-                            .subCategory(v.getSubCategoryInfo(v))
-                            .member_info(v.setUserInfo(v))
-                            .board_like(boardLike.setUserLikePost(v, board_like_list))
-                            .bookmark_info(boardBookmark.setUserBookmarkPost(v, board_bookmark_list))
-                            .build());
-                }
-            }
+        for (Board v : allCategory) {
+            dto.add(BoardResponseDto.builder()
+                    .id(v.getId())
+                    .title(v.getTitle())
+                    .content(v.getContent())
+                    .createTime(v.getCreateTime())
+                    //토큰에 있는 이메일이 해당 게시글 작성자와 동일하다면 권한 true, false;
+                    .isAuthor(userEmail.equals(v.getMember().getEmail()) ? true : false)
+                    .mainCategory(v.getMainCategoryInfo(v))
+                    .subCategory(v.getSubCategoryInfo(v))
+                    .member_info(v.setUserInfo(v))
+                    .board_like(boardLike.setUserLikePost(v, board_like_list))
+                    .bookmark_info(boardBookmark.setUserBookmarkPost(v, board_bookmark_list))
+                    .build());
         }
         //각 페이지 별로 페이징 처리도 해야함.
         return dto;

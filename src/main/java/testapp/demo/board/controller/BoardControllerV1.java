@@ -32,10 +32,13 @@ public class BoardControllerV1 {
      * @title 해당 전체 카테고리 게시글 모두 조회
      */
     @GetMapping
-    public ResponseEntity<List<BoardResponseDto>> getAllPostList(@RequestParam("sub_id") List<Long> subCategories, @RequestParam(name = "search",required = false) String keyword) {
+    public ResponseEntity<List<BoardResponseDto>> getAllPostList(
+            @RequestParam("sub_id") List<Long> subCategories,
+            @RequestParam(name = "search",defaultValue = "" ,required = false) String keyword,
+            @RequestParam(name ="sortTarget", defaultValue = "createtime", required = false) String sortTarget,
+            @RequestParam(name ="sortType", defaultValue = "desc", required = false) String sortType) {
         try {
-            BoardResponseDto dto = new BoardResponseDto();
-            List<BoardResponseDto> allPost = boardService.getAllPost(subCategories,keyword);
+            List<BoardResponseDto> allPost = boardService.getAllPost(subCategories,keyword,sortTarget,sortType);
             //게시글이 하나도 없는 경우:
             if (allPost == null) {
                 return ResponseEntity.notFound().build();
@@ -47,9 +50,6 @@ public class BoardControllerV1 {
             return ResponseEntity.internalServerError().build();
         }
     }
-
-
-
 
     /**
      * @param subCategoryId

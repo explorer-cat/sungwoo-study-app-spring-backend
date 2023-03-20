@@ -15,7 +15,7 @@ public interface BoardService {
     Board createPost(long subCategoryId, CreatePostRequest data) throws Exception;
     BoardResponseDto getPost(long subCategoryId, long postId);
 
-    List<BoardResponseDto> getAllPost(List<Long> subCategories,String keyword);
+    List<BoardResponseDto> getAllPost(List<Long> subCategories,String keyword,String sortTarget,String sortType);
 
     void addPostLike(long postId);
 
