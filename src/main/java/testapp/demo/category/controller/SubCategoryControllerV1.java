@@ -51,9 +51,8 @@ public class SubCategoryControllerV1 {
         try {
             //todo 관리자 이메일 체크해야함.
             //SecurityUtil.getUserEmail();
-
-
-            return new ResponseEntity<>(subCategoryService.createCategory(mainCategoryId, request),HttpStatus.CREATED);
+            subCategoryService.createCategory(mainCategoryId, request);
+            return ResponseEntity.created(null).build();
         } catch (IllegalStateException e) {
             if(e.getMessage().equals("exist")) {
                 System.err.println(e);

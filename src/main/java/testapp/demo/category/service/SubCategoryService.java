@@ -12,7 +12,7 @@ public interface SubCategoryService {
 
 
     //카테고리 생성
-    SubCategoryResponseDTO createCategory(long mainCategoryId, CreateSubCategoryRequest request);
+    void createCategory(long mainCategoryId, CreateSubCategoryRequest request);
 
     SubCategoryResponseDTO removeCategory(long mainCategoryId);
 

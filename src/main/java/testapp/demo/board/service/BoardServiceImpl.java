@@ -115,21 +115,30 @@ public class BoardServiceImpl implements BoardService {
 
         System.out.println("getAllPost Name = " + SecurityUtil.getUserEmail());
 
-        if (keyword != null || subCategories.size() > 0) {
+        System.out.println("subCategories = " + subCategories);
+        System.out.println("keyword = " + keyword.isEmpty());
+        System.out.println("keyword = " + keyword.length());
+        //검색어도 있고 , 서브카테고리도 있을 경우
+        if (!keyword.isEmpty() || subCategories.size() > 0) {
             for (Object a : subCategories) {
                 List<Board> bySubCategoryId = boardRepository.searchByPostSubCategory(keyword, Long.parseLong(a.toString()));
                 allCategory.add(bySubCategoryId);
             }
-        } else if ((keyword == null || keyword.isEmpty()) && subCategories.size() > 0) {
+            //해당 서브카테고리의 전체 게시글 조회
+        } else if(keyword.length() == 0 && subCategories.size() > 0) {
+            allCategory.add(boardRepository.searchByContentOrTitle(keyword));
+            //해당 서브 카테고리에서 전체 검색어 조회
+        } else if (keyword.length() > 0 && subCategories.size() <= 0) {
+            System.out.println("222");
             for (Object a : subCategories) {
                 List<Board> bySubCategoryId = boardRepository.findBySubCategoryId(Long.parseLong(a.toString()));
                 allCategory.add(bySubCategoryId);
             }
-        } else if (subCategories.size() <= 0 && (keyword.isEmpty() || keyword == null)) {
-            allCategory.add(boardRepository.findAll());
         } else {
-            allCategory.add(boardRepository.searchByContentOrTitle(keyword));
+            System.out.println("111");
+            allCategory.add(boardRepository.findAll());
         }
+
 
         Member member = memberRepository.findByEmail(SecurityUtil.getUserEmail());
         //해당 사용자가 좋아요 하고 있는 게시글 리스트

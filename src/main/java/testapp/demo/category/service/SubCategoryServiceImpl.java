@@ -24,9 +24,7 @@ public class SubCategoryServiceImpl implements SubCategoryService {
     }
 
     @Override
-    public SubCategoryResponseDTO createCategory(long mainCategoryId, CreateSubCategoryRequest request) {
-        SubCategoryResponseDTO response = new SubCategoryResponseDTO();
-
+    public void createCategory(long mainCategoryId, CreateSubCategoryRequest request) {
         //서브카테고리를 생성할 메인카테고리가 존재 하는지 확인
         Optional<MainCategory> existMainCategory = mainCategoryRepository.findById(mainCategoryId);
 
@@ -49,8 +47,6 @@ public class SubCategoryServiceImpl implements SubCategoryService {
         } else {
             //존재하지 않는 경우 데이터베이스 저장 시작
             SubCategory save = subCategoryRepository.save(subCategory);
-            return null;
-//            return response.fromEntity(save);
         }
     }
 

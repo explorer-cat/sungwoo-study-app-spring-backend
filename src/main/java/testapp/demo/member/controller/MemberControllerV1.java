@@ -105,6 +105,7 @@ public class MemberControllerV1 {
         }
         //토큰 발급
         System.out.println("userResponse = " + userResponse);
+        System.out.println("this is your token = " + memberService.createToken(users_kakao_data.get("email").toString()));
         return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 }
