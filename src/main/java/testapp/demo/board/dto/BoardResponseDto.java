@@ -19,6 +19,7 @@ public class BoardResponseDto {
     private long id;
     private String title;
     private String content;
+    private boolean isAuthor; //해당 게시글의 작성자 인가?
     private Map<String, Object> mainCategory;
     private Map<String, Object> subCategory;
     private Map<String, Object> board_like;

@@ -21,6 +21,7 @@ import testapp.demo.category.repository.SubCategoryRepository;
 import testapp.demo.member.entity.Member;
 import testapp.demo.member.repository.MemberRepository;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -75,6 +76,8 @@ public class BoardServiceImpl implements BoardService {
         BoardLike boardLike = new BoardLike();
         BoardBookmark boardBookmark = new BoardBookmark();
 
+        String userEmail = SecurityUtil.getUserEmail();
+
         Board board = boardRepository.findBySubCategoryIdAndId(subCategoryId, postId);
         //위에서 가져온값들을 Id만 따로 가져와서 Set에 저장
         Member member = memberRepository.findByEmail(SecurityUtil.getUserEmail());
@@ -91,6 +94,7 @@ public class BoardServiceImpl implements BoardService {
                 .id(board.getId())
                 .title(board.getTitle())
                 .content(board.getContent())
+                .isAuthor(userEmail.equals(board.getMember().getEmail()))
                 .mainCategory(board.getMainCategoryInfo(board))
                 .subCategory(board.getSubCategoryInfo(board))
                 .createTime(board.getCreateTime())
@@ -105,13 +109,15 @@ public class BoardServiceImpl implements BoardService {
         BoardLike boardLike = new BoardLike();
         BoardBookmark boardBookmark = new BoardBookmark();
         //해당 전체 게시글중에 사용자가 좋아요  혹은 즐겨찾기 하고 있는지 확인해야함
-
         List<List<Board>> allCategory = new ArrayList<>();
 
-        System.out.println("allCategory = " +subCategories.size());
-        if(keyword != null && subCategories.size() > 0) {
+        String userEmail = SecurityUtil.getUserEmail();
+
+        System.out.println("getAllPost Name = " + SecurityUtil.getUserEmail());
+
+        if (keyword != null || subCategories.size() > 0) {
             for (Object a : subCategories) {
-                List<Board> bySubCategoryId = boardRepository.findByContentContainsAndSubCategoryId(keyword, Long.parseLong(a.toString()));
+                List<Board> bySubCategoryId = boardRepository.searchByPostSubCategory(keyword, Long.parseLong(a.toString()));
                 allCategory.add(bySubCategoryId);
             }
         } else if ((keyword == null || keyword.isEmpty()) && subCategories.size() > 0) {
@@ -119,13 +125,11 @@ public class BoardServiceImpl implements BoardService {
                 List<Board> bySubCategoryId = boardRepository.findBySubCategoryId(Long.parseLong(a.toString()));
                 allCategory.add(bySubCategoryId);
             }
-        } else if(subCategories.size() == 0 && keyword.isEmpty()) {
+        } else if (subCategories.size() <= 0 && (keyword.isEmpty() || keyword == null)) {
             allCategory.add(boardRepository.findAll());
         } else {
-            allCategory.add(boardRepository.findByContentContains(keyword));
+            allCategory.add(boardRepository.searchByContentOrTitle(keyword));
         }
-
-
 
         Member member = memberRepository.findByEmail(SecurityUtil.getUserEmail());
         //해당 사용자가 좋아요 하고 있는 게시글 리스트
@@ -147,6 +151,8 @@ public class BoardServiceImpl implements BoardService {
                             .title(v.getTitle())
                             .content(v.getContent())
                             .createTime(v.getCreateTime())
+                            //토큰에 있는 이메일이 해당 게시글 작성자와 동일하다면 권한 true, false;
+                            .isAuthor(userEmail.equals(v.getMember().getEmail()) ? true : false)
                             .mainCategory(v.getMainCategoryInfo(v))
                             .subCategory(v.getSubCategoryInfo(v))
                             .member_info(v.setUserInfo(v))

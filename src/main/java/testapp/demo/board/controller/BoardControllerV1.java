@@ -32,7 +32,7 @@ public class BoardControllerV1 {
      * @title 해당 전체 카테고리 게시글 모두 조회
      */
     @GetMapping
-    public ResponseEntity<List<BoardResponseDto>> getAllPostList(@RequestParam("id") List<Long> subCategories, @RequestParam(name = "search",required = false) String keyword) {
+    public ResponseEntity<List<BoardResponseDto>> getAllPostList(@RequestParam("sub_id") List<Long> subCategories, @RequestParam(name = "search",required = false) String keyword) {
         try {
             BoardResponseDto dto = new BoardResponseDto();
             List<BoardResponseDto> allPost = boardService.getAllPost(subCategories,keyword);
@@ -50,22 +50,6 @@ public class BoardControllerV1 {
 
 
 
-
-//    @GetMapping
-//    public ResponseEntity<List<BoardResponseDto>> getSearchAllPost(@RequestParam(name = "search") String keyword) {
-//        try {
-//            List<BoardResponseDto> allPost = boardService.getAllPost(null,keyword);
-//            //게시글이 하나도 없는 경우:
-//            if (allPost == null) {
-//                return ResponseEntity.notFound().build();
-//            }
-//            //로그인 되어있는 사용자라면 게시글의 좋아요 여부를 체크해야하기 때문에 아래 DTO 반환
-//            return new ResponseEntity<>(allPost, HttpStatus.OK);
-//        } catch (Exception e) {
-//            System.err.println(e);
-//            return ResponseEntity.internalServerError().build();
-//        }
-//    }
 
     /**
      * @param subCategoryId
