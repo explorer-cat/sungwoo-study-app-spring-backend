@@ -59,7 +59,7 @@ public class BoardServiceImpl implements BoardService {
                     .subCategory(subCategory)
                     .member(member)
                     .content(data.getContent())
-                    .approval(true) //게시글 승인 여부.
+                    .approval(1) //게시글 승인 여부.
                     .createTime(LocalDateTime.now()).build();
             Board save = boardRepository.save(board);
             return save;
@@ -95,6 +95,7 @@ public class BoardServiceImpl implements BoardService {
                 .id(board.getId())
                 .title(board.getTitle())
                 .content(board.getContent())
+                .approval(board.getApproval())
                 .isAuthor(userEmail.equals(board.getMember().getEmail()))
                 .mainCategory(board.getMainCategoryInfo(board))
                 .subCategory(board.getSubCategoryInfo(board))
@@ -103,6 +104,35 @@ public class BoardServiceImpl implements BoardService {
                 .board_like(boardLike.setUserLikePost(board, board_like_list))
                 .bookmark_info(boardBookmark.setUserBookmarkPost(board, board_bookmark_list))
                 .build();
+    }
+
+    @Override
+    public List<BoardResponseDto> getMyPost() throws Exception {
+        List<BoardResponseDto> result = null;
+
+        try {
+            Member findMember = memberRepository.findByEmail(SecurityUtil.getUserEmail());
+            List<Board> boards = findMember.getBoards();
+
+            result = new ArrayList<>();
+            for (Board v : boards) {
+                result.add(BoardResponseDto.builder()
+                        .id(v.getId())
+                        .title(v.getTitle())
+                        .content(v.getContent())
+                        .createTime(v.getCreateTime())
+                        .approval(v.getApproval())
+                        .mainCategory(v.getMainCategoryInfo(v))
+                        .subCategory(v.getSubCategoryInfo(v))
+                        .build());
+            }
+            return result;
+        } catch (NullPointerException ex) {
+            return result;
+        } catch (Exception ex) {
+            System.err.println("getMyPost() - " + ex);
+            throw new Exception("error");
+        }
     }
 
     @Override
@@ -121,8 +151,8 @@ public class BoardServiceImpl implements BoardService {
             switch (sortTarget) {
                 case "createtime":
                     allCategory = sortType.equals("asc") ?
-                            boardRepository.findByKeywordAndSubCategoryIdsCreateASC(keyword,subCategories) :
-                            boardRepository.findByKeywordAndSubCategoryIdsCreateDESC(keyword,subCategories);
+                            boardRepository.findByKeywordAndSubCategoryIdsCreateASC(keyword, subCategories) :
+                            boardRepository.findByKeywordAndSubCategoryIdsCreateDESC(keyword, subCategories);
                     break;
                 case "like":
                     allCategory = sortType.equals("asc") ?
@@ -167,7 +197,7 @@ public class BoardServiceImpl implements BoardService {
                     .title(v.getTitle())
                     .content(v.getContent())
                     .createTime(v.getCreateTime())
-                    //토큰에 있는 이메일이 해당 게시글 작성자와 동일하다면 권한 true, false;
+                    .approval(v.getApproval())
                     .isAuthor(userEmail.equals(v.getMember().getEmail()) ? true : false)
                     .mainCategory(v.getMainCategoryInfo(v))
                     .subCategory(v.getSubCategoryInfo(v))

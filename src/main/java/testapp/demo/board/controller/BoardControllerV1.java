@@ -73,6 +73,15 @@ public class BoardControllerV1 {
         }
     }
 
+    //내가 작성한 게시글 보기
+    @GetMapping("/my")
+    public ResponseEntity<List<BoardResponseDto>> getMyPost() throws Exception {
+        try{
+            return new ResponseEntity<>(boardService.getMyPost(), HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
     @PostMapping("{subCategoryId}")
     public ResponseEntity createPost(@PathVariable("subCategoryId") long subCagtegoryId,
                                      @RequestBody CreatePostRequest request) {

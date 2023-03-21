@@ -37,6 +37,8 @@ public class Member {
     private List<BoardLike> boardLikes = new ArrayList<>();
     @OneToMany(mappedBy = "member")
     private List<BoardBookmark> boardBookmarks = new ArrayList<>();
+    @OneToMany(mappedBy = "member")
+    private List<Board> boards = new ArrayList<>();
     private String refreshToken; //리프레쉬 토큰
     private boolean ban; //계정 정지 여부
     private byte level; //관리자 여부

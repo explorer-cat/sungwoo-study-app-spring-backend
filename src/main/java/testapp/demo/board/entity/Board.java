@@ -39,6 +39,7 @@ public class Board {
     @JoinColumn(name = "user_email")
     private Member member;
 
+
     //해당 게시글 좋아요 개수 조회를 위한 조인 컬럼.
     @OneToMany(mappedBy = "board")
     private List<BoardLike> boardLike;
@@ -48,7 +49,7 @@ public class Board {
 
     private String title;
     private String content;
-    private boolean approval;
+    private int approval;
     private LocalDateTime createTime;
 
 
