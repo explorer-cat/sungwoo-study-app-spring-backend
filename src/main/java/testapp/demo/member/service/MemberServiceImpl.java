@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import testapp.demo.auth.JwtProvider;
+import testapp.demo.auth.SecurityUtil;
 import testapp.demo.member.dto.*;
 import testapp.demo.member.entity.Member;
 import testapp.demo.member.repository.MemberRepository;
@@ -115,7 +116,26 @@ public class MemberServiceImpl implements MemberService {
         return dto;
     }
 
-//    @Override
+    @Override
+    public void updateUserInfo(UpdateUserRequestDto request) {
+        Member findMember = memberRepository.findByEmail(SecurityUtil.getUserEmail());
+
+        //변경 시도 닉네임과 현재 닉네임이 동일한 경우
+        if(findMember.getNickname().equals(request.getNickname())) {
+            throw new IllegalArgumentException("현재 닉네임과 동일한 닉네임이 존재합니다.");
+        }
+
+        Optional<Member> checkNickName = memberRepository.findByNickname(request.getNickname());
+        if(checkNickName.isPresent()) {
+            throw new IllegalArgumentException("이미 사용하고 있는 닉네임 입니다.");
+        }
+
+        //닉네임 변경
+        findMember.setNickname(request.getNickname());
+        memberRepository.save(findMember);
+    }
+
+    //    @Override
 //    public ResponseEntity<UserInfoResponseDto> deleteUserById(String email) {
 //        UserInfoResponseDto userOptional = memberRepository.findByEmail(email);
 //

@@ -44,14 +44,21 @@ public class MemberControllerV1 {
         return new ResponseEntity<>(memberService.getUserEmail(SecurityUtil.getUserEmail()),HttpStatus.OK);
     }
 
-    @PatchMapping("/{userId}")
-    public String updateUser(@PathVariable String email) {
-        return null;
+    @PostMapping("/profile")
+    public ResponseEntity updateUser(@RequestBody UpdateUserRequestDto data) {
+        try {
+            memberService.updateUserInfo(data);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException ex) {
+            return new ResponseEntity<>(ex,HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(ex,HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @PostMapping("/delete")
-    public ResponseEntity<UserInfoResponseDto> deleteUser(@RequestBody Map<String, String> deleteUserData) {
-        return memberService.deleteUserById(deleteUserData.get("email"));
+    @DeleteMapping
+    public ResponseEntity<UserInfoResponseDto> deleteUser() {
+        return memberService.deleteUserById(SecurityUtil.getUserEmail());
     }
 
     //로그인 시도.

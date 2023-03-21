@@ -3,10 +3,7 @@ package testapp.demo.member.service;
 import org.json.simple.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import testapp.demo.member.dto.SignUpRequestDto;
-import testapp.demo.member.dto.TokenResponse;
-import testapp.demo.member.dto.TokenResponseNoData;
-import testapp.demo.member.dto.UserInfoResponseDto;
+import testapp.demo.member.dto.*;
 
 @Service
 public interface MemberService {
@@ -15,6 +12,8 @@ public interface MemberService {
     JSONObject getKakaoUserInfo(String accessToken);
 
     UserInfoResponseDto getUserEmail(String email);
+
+    void updateUserInfo(UpdateUserRequestDto request);
 
     Boolean isMember(String email);
 
