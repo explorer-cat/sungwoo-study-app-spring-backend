@@ -82,6 +82,15 @@ public class BoardControllerV1 {
             return ResponseEntity.internalServerError().build();
         }
     }
+
+    @GetMapping("/bookmark/my")
+    public ResponseEntity<List<BoardResponseDto>> getMyBookMarkPost() throws Exception {
+        try{
+            return new ResponseEntity<>(boardService.getMyBookMarkPost(), HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
     @PostMapping("{subCategoryId}")
     public ResponseEntity createPost(@PathVariable("subCategoryId") long subCagtegoryId,
                                      @RequestBody CreatePostRequest request) {

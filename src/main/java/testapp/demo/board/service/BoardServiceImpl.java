@@ -108,13 +108,12 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public List<BoardResponseDto> getMyPost() throws Exception {
-        List<BoardResponseDto> result = null;
+        List<BoardResponseDto> result = new ArrayList<>();
 
         try {
             Member findMember = memberRepository.findByEmail(SecurityUtil.getUserEmail());
             List<Board> boards = findMember.getBoards();
 
-            result = new ArrayList<>();
             for (Board v : boards) {
                 result.add(BoardResponseDto.builder()
                         .id(v.getId())
@@ -131,6 +130,33 @@ public class BoardServiceImpl implements BoardService {
             return result;
         } catch (Exception ex) {
             System.err.println("getMyPost() - " + ex);
+            throw new Exception("error");
+        }
+    }
+
+    @Override
+    public List<BoardResponseDto> getMyBookMarkPost() throws Exception {
+        List<BoardResponseDto> result = new ArrayList<>();
+        try {
+            Member findMember = memberRepository.findByEmail(SecurityUtil.getUserEmail());
+            List<BoardBookmark> boards = findMember.getBoardBookmarks();
+
+            for (BoardBookmark v : boards) {
+                result.add(BoardResponseDto.builder()
+                        .id(v.getBoard().getId())
+                        .title(v.getBoard().getTitle())
+                        .content(v.getBoard().getContent())
+                        .createTime(v.getBoard().getCreateTime())
+                        .approval(v.getBoard().getApproval())
+                        .mainCategory(v.getBoard().getMainCategoryInfo(v.getBoard()))
+                        .subCategory(v.getBoard().getMainCategoryInfo(v.getBoard()))
+                        .build());
+            }
+            return result;
+        } catch (NullPointerException ex) {
+            return result;
+        } catch (Exception ex) {
+            System.err.println("getMyBookMarkPost() - " + ex);
             throw new Exception("error");
         }
     }
