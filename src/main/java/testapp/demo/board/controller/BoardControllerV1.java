@@ -36,9 +36,11 @@ public class BoardControllerV1 {
             @RequestParam("sub_id") List<Long> subCategories,
             @RequestParam(name = "search",defaultValue = "" ,required = false) String keyword,
             @RequestParam(name ="sortTarget", defaultValue = "createtime", required = false) String sortTarget,
-            @RequestParam(name ="sortType", defaultValue = "desc", required = false) String sortType) {
+            @RequestParam(name ="sortType", defaultValue = "desc", required = false) String sortType,
+            @RequestParam(name ="paging_num", defaultValue = "0", required = false) int paging_num,
+            @RequestParam(name ="paging_count", defaultValue = "1000", required = false) int paging_count) {
         try {
-            List<BoardResponseDto> allPost = boardService.getAllPost(subCategories,keyword,sortTarget,sortType);
+            List<BoardResponseDto> allPost = boardService.getAllPost(subCategories,keyword,sortTarget,sortType,paging_num,paging_count);
             //게시글이 하나도 없는 경우:
             if (allPost == null) {
                 return ResponseEntity.notFound().build();

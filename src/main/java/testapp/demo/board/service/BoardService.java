@@ -19,7 +19,7 @@ public interface BoardService {
 
     List<BoardResponseDto> getMyBookMarkPost() throws Exception;
 
-    List<BoardResponseDto> getAllPost(List<Long> subCategories,String keyword,String sortTarget,String sortType);
+    List<BoardResponseDto> getAllPost(List<Long> subCategories,String keyword,String sortTarget,String sortType,int paging_num,int paging_count);
 
     void addPostLike(long postId);
 

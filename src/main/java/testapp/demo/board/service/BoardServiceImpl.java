@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import testapp.demo.auth.SecurityUtil;
@@ -162,13 +164,16 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardResponseDto> getAllPost(List<Long> subCategories, String keyword, String sortTarget, String sortType) {
+    public List<BoardResponseDto> getAllPost(List<Long> subCategories, String keyword, String sortTarget, String sortType, int paging_num,int paging_count) {
         BoardLike boardLike = new BoardLike();
         BoardBookmark boardBookmark = new BoardBookmark();
         //해당 전체 게시글중에 사용자가 좋아요  혹은 즐겨찾기 하고 있는지 확인해야함
         List<Board> allCategory = new ArrayList<>();
         String userEmail = SecurityUtil.getUserEmail();
 
+        System.out.println("paging_num = " + paging_num);
+        System.out.println("paging_count = " + paging_count);
+        Pageable pageable = PageRequest.of(paging_num, paging_count);
 
         sortType = sortType.toLowerCase();
         sortTarget = sortTarget.toLowerCase();
@@ -177,13 +182,13 @@ public class BoardServiceImpl implements BoardService {
             switch (sortTarget) {
                 case "createtime":
                     allCategory = sortType.equals("asc") ?
-                            boardRepository.findByKeywordAndSubCategoryIdsCreateASC(keyword, subCategories) :
-                            boardRepository.findByKeywordAndSubCategoryIdsCreateDESC(keyword, subCategories);
+                            boardRepository.findByKeywordAndSubCategoryIdsCreateASC(keyword, subCategories ,pageable) :
+                            boardRepository.findByKeywordAndSubCategoryIdsCreateDESC(keyword, subCategories ,pageable);
                     break;
                 case "like":
                     allCategory = sortType.equals("asc") ?
-                            boardRepository.findByKeywordAndSubCategoryIdsLikeASC(keyword, subCategories) :
-                            boardRepository.findByKeywordAndSubCategoryIdsLikeDESC(keyword, subCategories);
+                            boardRepository.findByKeywordAndSubCategoryIdsLikeASC(keyword, subCategories,pageable) :
+                            boardRepository.findByKeywordAndSubCategoryIdsLikeDESC(keyword, subCategories,pageable);
                     break;
             }
         } else {
@@ -191,14 +196,14 @@ public class BoardServiceImpl implements BoardService {
                 case "createtime":
                     System.out.println("zzzzzzz ");
                     allCategory = sortType.equals("asc") ?
-                            boardRepository.findAllByCreateSortASC(keyword) :
-                            boardRepository.findAllByCreateSortDESC(keyword);
+                            boardRepository.findAllByCreateSortASC(keyword,pageable) :
+                            boardRepository.findAllByCreateSortDESC(keyword,pageable);
                     break;
                 case "like":
                     System.out.println("22222 " + sortType.equals("asc"));
                     allCategory = sortType.equals("asc") ?
-                            boardRepository.findAllByLikeSortASC(keyword) :
-                            boardRepository.findAllByLikeSortDESC(keyword);
+                            boardRepository.findAllByLikeSortASC(keyword,pageable) :
+                            boardRepository.findAllByLikeSortDESC(keyword,pageable);
                     break;
             }
         }

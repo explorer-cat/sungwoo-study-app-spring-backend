@@ -1,5 +1,6 @@
 package testapp.demo.board.repository;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -26,22 +27,22 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     //:#{#sort.direction}
 
     @Query("SELECT b FROM Board b WHERE (b.title LIKE %:keyword% OR b.content LIKE %:keyword%) AND b.subCategory.id IN :subCategoryIds ORDER BY b.createTime ASC")
-    List<Board> findByKeywordAndSubCategoryIdsCreateASC(@Param("keyword") String keyword, @Param("subCategoryIds") List<Long> subCategoryIds);
+    List<Board> findByKeywordAndSubCategoryIdsCreateASC(@Param("keyword") String keyword, @Param("subCategoryIds") List<Long> subCategoryIds, Pageable pageable);
     @Query("SELECT b FROM Board b WHERE (b.title LIKE %:keyword% OR b.content LIKE %:keyword%) AND b.subCategory.id IN :subCategoryIds ORDER BY b.createTime DESC")
-    List<Board> findByKeywordAndSubCategoryIdsCreateDESC(@Param("keyword") String keyword, @Param("subCategoryIds") List<Long> subCategoryIds);
+    List<Board> findByKeywordAndSubCategoryIdsCreateDESC(@Param("keyword") String keyword, @Param("subCategoryIds") List<Long> subCategoryIds, Pageable pageable);
     @Query("SELECT b FROM Board b LEFT JOIN b.boardLike o WHERE (b.title LIKE %:keyword% OR b.content LIKE %:keyword%) AND b.subCategory.id IN :subCategoryIds GROUP BY b ORDER BY COUNT(o) ASC")
-    List<Board> findByKeywordAndSubCategoryIdsLikeASC(@Param("keyword") String keyword, @Param("subCategoryIds") List<Long> subCategoryIds);
+    List<Board> findByKeywordAndSubCategoryIdsLikeASC(@Param("keyword") String keyword, @Param("subCategoryIds") List<Long> subCategoryIds, Pageable pageable);
     @Query("SELECT b FROM Board b LEFT JOIN b.boardLike o WHERE (b.title LIKE %:keyword% OR b.content LIKE %:keyword%) AND b.subCategory.id IN :subCategoryIds GROUP BY b ORDER BY COUNT(o) DESC")
-    List<Board> findByKeywordAndSubCategoryIdsLikeDESC(@Param("keyword") String keyword, @Param("subCategoryIds") List<Long> subCategoryIds);
+    List<Board> findByKeywordAndSubCategoryIdsLikeDESC(@Param("keyword") String keyword, @Param("subCategoryIds") List<Long> subCategoryIds, Pageable pageable);
 
     @Query("SELECT b FROM Board b WHERE (b.title LIKE %:keyword%  OR b.content LIKE %:keyword%) ORDER BY b.createTime ASC")
-    List<Board> findAllByCreateSortASC(@Param("keyword") String keyword);
+    List<Board> findAllByCreateSortASC(@Param("keyword") String keyword, Pageable pageable);
     @Query("SELECT b FROM Board b WHERE (b.title LIKE %:keyword%  OR b.content LIKE %:keyword% ) ORDER BY b.createTime DESC")
-    List<Board> findAllByCreateSortDESC(@Param("keyword") String keyword);
+    List<Board> findAllByCreateSortDESC(@Param("keyword") String keyword, Pageable pageable);
     @Query("SELECT b FROM Board b LEFT JOIN b.boardLike o WHERE (b.title LIKE %:keyword% OR b.content LIKE %:keyword% ) GROUP BY b ORDER BY COUNT(o) DESC")
-    List<Board> findAllByLikeSortDESC(@Param("keyword") String keyword);
+    List<Board> findAllByLikeSortDESC(@Param("keyword") String keyword, Pageable pageable);
     @Query("SELECT b FROM Board b LEFT JOIN b.boardLike o WHERE (b.title LIKE %:keyword% OR b.content LIKE %:keyword% ) GROUP BY b ORDER BY COUNT(o) ASC")
-    List<Board> findAllByLikeSortASC(@Param("keyword") String keyword);
+    List<Board> findAllByLikeSortASC(@Param("keyword") String keyword, Pageable pageable);
 
     // 일반 SQL쿼리findAllByLikeSortASC
 
