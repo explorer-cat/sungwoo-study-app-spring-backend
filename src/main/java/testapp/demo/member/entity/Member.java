@@ -43,8 +43,9 @@ public class Member {
     private boolean ban; //계정 정지 여부
     private byte level; //관리자 여부
     private String social_type;
+    private boolean isWithdrawal; //탈퇴 여부
+    private String withdrawal_reason; //탈퇴 사유
+    private LocalDateTime withdrawal_date; //탈퇴일
     private LocalDateTime createDate;
-
-
 
 }

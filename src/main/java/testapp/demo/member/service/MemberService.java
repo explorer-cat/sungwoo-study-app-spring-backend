@@ -19,7 +19,7 @@ public interface MemberService {
 
     ResponseEntity<UserInfoResponseDto> signUpUser(SignUpRequestDto data);
 
-    ResponseEntity<UserInfoResponseDto> deleteUserById(String email);
+    void withdrawalUser(WithDrawalRequestDto request);
 
     TokenResponse createToken(String userEmail);
 

@@ -24,6 +24,7 @@ import javax.servlet.ServletResponse;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -135,24 +136,6 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(findMember);
     }
 
-    //    @Override
-//    public ResponseEntity<UserInfoResponseDto> deleteUserById(String email) {
-//        UserInfoResponseDto userOptional = memberRepository.findByEmail(email);
-//
-//        if(userOptional == null) {
-//            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-//        }
-//
-//        UserInfoResponseDto user = memberRepository.findByEmail(userOptional.getEmail());
-//
-//        if(user.isPresent()){
-//            memberRepository.delete(user.get());
-//            UserInfoResponseDto deletedUser = new UserInfoResponseDto(user.get());
-//            return new ResponseEntity<>(deletedUser, HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-//        }
-//    }
     @Override
     public Boolean isMember(String email) {
         Member member = memberRepository.findByEmail(email.toString());
@@ -185,8 +168,21 @@ public class MemberServiceImpl implements MemberService {
         return new ResponseEntity<>(new UserInfoResponseDto(member), HttpStatus.OK);
     }
 
+    /**
+     * @title 사용자 탈퇴
+     * @param request
+     */
     @Override
-    public ResponseEntity<UserInfoResponseDto> deleteUserById(String email) {
-        return null;
+    public void withdrawalUser(WithDrawalRequestDto request) {
+        //탈퇴사유는 무조건 존재해야함.
+        if(!request.getReason().equals("")) {
+            Member findMember = memberRepository.findByEmail(SecurityUtil.getUserEmail());
+            findMember.setWithdrawal(true);
+            findMember.setWithdrawal_reason(request.getReason());
+            findMember.setWithdrawal_date(LocalDateTime.now());
+            memberRepository.save(findMember);
+        } else {
+            throw new IllegalArgumentException("비정상적인 탈퇴 시도입니다.");
+        }
     }
 }

@@ -57,8 +57,15 @@ public class MemberControllerV1 {
     }
 
     @DeleteMapping
-    public ResponseEntity<UserInfoResponseDto> deleteUser() {
-        return memberService.deleteUserById(SecurityUtil.getUserEmail());
+    public ResponseEntity withDrawalUser(@RequestBody WithDrawalRequestDto request) {
+        try {
+            memberService.withdrawalUser(request);
+            return ResponseEntity.ok().build();
+        } catch(IllegalStateException ex) {
+            return new ResponseEntity(ex,HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     //로그인 시도.
