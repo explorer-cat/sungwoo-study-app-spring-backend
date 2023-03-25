@@ -55,14 +55,16 @@ public class BoardServiceImpl implements BoardService {
         try {
             SubCategory subCategory = subCategoryRepository.findById(subCategoryId).get();
             Member member = memberRepository.findByEmail(SecurityUtil.getUserEmail());
+
             Board board = Board.builder()
                     .title(data.getTitle())
                     .mainCategory(subCategory.getMainCategory())
                     .subCategory(subCategory)
                     .member(member)
                     .content(data.getContent())
-                    .approval(1) //게시글 승인 여부.
+                    .approval(0) //게시글 승인 여부.
                     .createTime(LocalDateTime.now()).build();
+
             Board save = boardRepository.save(board);
             return save;
         } catch (Exception ex) {
@@ -151,7 +153,7 @@ public class BoardServiceImpl implements BoardService {
                         .createTime(v.getBoard().getCreateTime())
                         .approval(v.getBoard().getApproval())
                         .mainCategory(v.getBoard().getMainCategoryInfo(v.getBoard()))
-                        .subCategory(v.getBoard().getMainCategoryInfo(v.getBoard()))
+                        .subCategory(v.getBoard().getSubCategoryInfo(v.getBoard()))
                         .build());
             }
             return result;
@@ -194,13 +196,11 @@ public class BoardServiceImpl implements BoardService {
         } else {
             switch (sortTarget) {
                 case "createtime":
-                    System.out.println("zzzzzzz ");
                     allCategory = sortType.equals("asc") ?
                             boardRepository.findAllByCreateSortASC(keyword,pageable) :
                             boardRepository.findAllByCreateSortDESC(keyword,pageable);
                     break;
                 case "like":
-                    System.out.println("22222 " + sortType.equals("asc"));
                     allCategory = sortType.equals("asc") ?
                             boardRepository.findAllByLikeSortASC(keyword,pageable) :
                             boardRepository.findAllByLikeSortDESC(keyword,pageable);
@@ -208,7 +208,6 @@ public class BoardServiceImpl implements BoardService {
             }
         }
 
-//        System.out.println("x = " +);x/
 
         Member member = memberRepository.findByEmail(SecurityUtil.getUserEmail());
         //해당 사용자가 좋아요 하고 있는 게시글 리스트
@@ -299,39 +298,5 @@ public class BoardServiceImpl implements BoardService {
             boardBookMarkRepository.deleteByMemberAndBoard(member, board.get());
         }
     }
-
-//    @Override
-//    public List<BoardResponseDto> getSearchPostList(String search_keyword) {
-//        List<Board> searchPostList = boardRepository.findByContentContains(search_keyword);
-//
-//        List<BoardResponseDto> result = new ArrayList<>();
-//
-//        Member member = memberRepository.findByEmail(SecurityUtil.getUserEmail());
-//        //해당 사용자가 좋아요 하고 있는 게시글 리스트
-//        List<BoardBookmarkMapper> boardBookmarkMappers = boardBookMarkRepository.findByMember(member);
-//        //해당 게시글을 좋아요 하고 있는 사용자 리스트 뽑아오기.
-//        List<BoardLikeMapper> boardLikeMappers = boardLikeRepository.findByMember(member);
-//
-//        Set<Long> board_like_list = boardLike.getUserLikesPostList(member,boardLikeMappers);
-//        Set<Long> board_bookmark_list = boardBookmark.getUserBookmarkPost(member, boardBookmarkMappers);
-//
-//
-//        for (Board v : searchPostList) {
-//            result.add(BoardResponseDto.builder()
-//                    .id(v.getId())
-//                    .title(v.getTitle())
-//                    .content(v.getContent())
-//                    .createTime(v.getCreateTime())
-//                    .mainCategory(v.getMainCategoryInfo(v))
-//                    .subCategory(v.getSubCategoryInfo(v))
-//                    .member_info(v.setUserInfo(v))
-//                    .board_like(boardLike.setUserLikePost(v, board_like_list))
-//                    .bookmark_info(boardBookmark.setUserBookmarkPost(v, board_bookmark_list))
-//                    .build());
-//        }
-//        return result;
-//    }
-
-
 }
 
