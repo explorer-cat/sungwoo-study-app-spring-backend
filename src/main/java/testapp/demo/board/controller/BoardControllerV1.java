@@ -77,18 +77,24 @@ public class BoardControllerV1 {
 
     //내가 작성한 게시글 보기
     @GetMapping("/my")
-    public ResponseEntity<List<BoardResponseDto>> getMyPost() throws Exception {
+    public ResponseEntity<List<BoardResponseDto>> getMyPost(
+            @RequestParam(name ="sortType", defaultValue = "desc", required = false) String sortType,
+            @RequestParam(name ="paging_num", defaultValue = "0", required = false) int paging_num,
+            @RequestParam(name ="paging_count", defaultValue = "1000", required = false) int paging_count) throws Exception {
         try{
-            return new ResponseEntity<>(boardService.getMyPost(), HttpStatus.OK);
+            return new ResponseEntity<>(boardService.getMyPost(sortType, paging_num, paging_count), HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }
     }
 
     @GetMapping("/bookmark/my")
-    public ResponseEntity<List<BoardResponseDto>> getMyBookMarkPost() throws Exception {
+    public ResponseEntity<List<BoardResponseDto>> getMyBookMarkPost(
+            @RequestParam(name ="sortType", defaultValue = "desc", required = false) String sortType,
+            @RequestParam(name ="paging_num", defaultValue = "0", required = false) int paging_num,
+            @RequestParam(name ="paging_count", defaultValue = "1000", required = false) int paging_count) throws Exception {
         try{
-            return new ResponseEntity<>(boardService.getMyBookMarkPost(), HttpStatus.OK);
+            return new ResponseEntity<>(boardService.getMyBookMarkPost(sortType, paging_num, paging_count), HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }

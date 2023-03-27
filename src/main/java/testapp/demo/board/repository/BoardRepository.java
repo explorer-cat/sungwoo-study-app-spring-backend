@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import testapp.demo.board.dto.BoardResponseDto;
 import testapp.demo.board.entity.Board;
+import testapp.demo.board.entity.BoardBookmark;
 import testapp.demo.category.entity.SubCategory;
 import testapp.demo.member.entity.Member;
 
@@ -44,11 +45,16 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query("SELECT b FROM Board b LEFT JOIN b.boardLike o WHERE (b.title LIKE %:keyword% OR b.content LIKE %:keyword% ) GROUP BY b ORDER BY COUNT(o) ASC")
     List<Board> findAllByLikeSortASC(@Param("keyword") String keyword, Pageable pageable);
 
-    // 일반 SQL쿼리findAllByLikeSortASC
+
+    @Query("SELECT b FROM Board b LEFT JOIN b.boardBookmarks o WHERE b.member.email = :email ORDER BY b.createTime ASC")
+    List<Board> findAllMyBookMarkPostASC(String email, Pageable pageable);
+    @Query("SELECT b FROM Board b LEFT JOIN b.boardBookmarks o WHERE b.member.email = :email ORDER BY b.createTime DESC")
+    List<Board> findAllMyBookMarkPostDESC(String email, Pageable pageable);
 
 
-//    @Query(value = "select snack_id, name, price from snack", nativeQuery = true)
-//    public List<Board> selectAllSQL();
-
+    @Query("SELECT b FROM Board b WHERE b.member.email = :email ORDER BY b.createTime ASC")
+    List<Board> findAllMyPostASC(String email, Pageable pageable);
+    @Query("SELECT b FROM Board b WHERE b.member.email = :email ORDER BY b.createTime DESC")
+    List<Board> findAllMyPostDESC(String email, Pageable pageable);
 
 }

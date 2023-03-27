@@ -15,9 +15,9 @@ public interface BoardService {
     Board createPost(long subCategoryId, CreatePostRequest data) throws Exception;
     BoardResponseDto getPost(long subCategoryId, long postId);
 
-    List<BoardResponseDto> getMyPost() throws Exception;
+    List<BoardResponseDto> getMyPost(String sortType, int paging_num,int paging_count) throws Exception;
 
-    List<BoardResponseDto> getMyBookMarkPost() throws Exception;
+    List<BoardResponseDto> getMyBookMarkPost(String sortType, int paging_num,int paging_count) throws Exception;
 
     List<BoardResponseDto> getAllPost(List<Long> subCategories,String keyword,String sortTarget,String sortType,int paging_num,int paging_count);
 

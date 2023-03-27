@@ -111,12 +111,19 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardResponseDto> getMyPost() throws Exception {
+    public List<BoardResponseDto> getMyPost(String sortType, int paging_num, int paging_count) throws Exception {
         List<BoardResponseDto> result = new ArrayList<>();
 
         try {
             Member findMember = memberRepository.findByEmail(SecurityUtil.getUserEmail());
-            List<Board> boards = findMember.getBoards();
+
+            Pageable pageable = PageRequest.of(paging_num, paging_count);
+
+            sortType = sortType.toLowerCase();
+
+            List<Board> boards = sortType.equals("asc") ?
+                    boardRepository.findAllMyPostASC(findMember.getEmail(), pageable) :
+                    boardRepository.findAllMyPostDESC(findMember.getEmail(), pageable);
 
             for (Board v : boards) {
                 result.add(BoardResponseDto.builder()
@@ -125,8 +132,10 @@ public class BoardServiceImpl implements BoardService {
                         .content(v.getContent())
                         .createTime(v.getCreateTime())
                         .approval(v.getApproval())
+                        .isAuthor(true)
                         .mainCategory(v.getMainCategoryInfo(v))
                         .subCategory(v.getSubCategoryInfo(v))
+                        .member_info(v.setUserInfo(v))
                         .build());
             }
             return result;
@@ -139,21 +148,33 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardResponseDto> getMyBookMarkPost() throws Exception {
+    public List<BoardResponseDto> getMyBookMarkPost(String sortType, int paging_num, int paging_count) throws Exception {
         List<BoardResponseDto> result = new ArrayList<>();
         try {
             Member findMember = memberRepository.findByEmail(SecurityUtil.getUserEmail());
-            List<BoardBookmark> boards = findMember.getBoardBookmarks();
+//            List<BoardBookmark> boards = findMember.getBoardBookmarks();
 
-            for (BoardBookmark v : boards) {
+            Pageable pageable = PageRequest.of(paging_num, paging_count);
+
+            sortType = sortType.toLowerCase();
+
+            List<Board> boards = sortType.equals("asc") ?
+                    boardRepository.findAllMyBookMarkPostASC(findMember.getEmail(), pageable) :
+                    boardRepository.findAllMyBookMarkPostDESC(findMember.getEmail(), pageable);
+
+            System.out.println("boards = " + boards);
+
+            for (Board v : boards) {
                 result.add(BoardResponseDto.builder()
-                        .id(v.getBoard().getId())
-                        .title(v.getBoard().getTitle())
-                        .content(v.getBoard().getContent())
-                        .createTime(v.getBoard().getCreateTime())
-                        .approval(v.getBoard().getApproval())
-                        .mainCategory(v.getBoard().getMainCategoryInfo(v.getBoard()))
-                        .subCategory(v.getBoard().getSubCategoryInfo(v.getBoard()))
+                        .id(v.getId())
+                        .title(v.getTitle())
+                        .content(v.getContent())
+                        .createTime(v.getCreateTime())
+                        .approval(v.getApproval())
+                        .isAuthor(true)
+                        .mainCategory(v.getMainCategoryInfo(v))
+                        .subCategory(v.getSubCategoryInfo(v))
+                        .member_info(v.setUserInfo(v))
                         .build());
             }
             return result;
@@ -166,15 +187,12 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardResponseDto> getAllPost(List<Long> subCategories, String keyword, String sortTarget, String sortType, int paging_num,int paging_count) {
+    public List<BoardResponseDto> getAllPost(List<Long> subCategories, String keyword, String sortTarget, String sortType, int paging_num, int paging_count) {
         BoardLike boardLike = new BoardLike();
         BoardBookmark boardBookmark = new BoardBookmark();
         //해당 전체 게시글중에 사용자가 좋아요  혹은 즐겨찾기 하고 있는지 확인해야함
         List<Board> allCategory = new ArrayList<>();
         String userEmail = SecurityUtil.getUserEmail();
-
-        System.out.println("paging_num = " + paging_num);
-        System.out.println("paging_count = " + paging_count);
         Pageable pageable = PageRequest.of(paging_num, paging_count);
 
         sortType = sortType.toLowerCase();
@@ -184,26 +202,26 @@ public class BoardServiceImpl implements BoardService {
             switch (sortTarget) {
                 case "createtime":
                     allCategory = sortType.equals("asc") ?
-                            boardRepository.findByKeywordAndSubCategoryIdsCreateASC(keyword, subCategories ,pageable) :
-                            boardRepository.findByKeywordAndSubCategoryIdsCreateDESC(keyword, subCategories ,pageable);
+                            boardRepository.findByKeywordAndSubCategoryIdsCreateASC(keyword, subCategories, pageable) :
+                            boardRepository.findByKeywordAndSubCategoryIdsCreateDESC(keyword, subCategories, pageable);
                     break;
                 case "like":
                     allCategory = sortType.equals("asc") ?
-                            boardRepository.findByKeywordAndSubCategoryIdsLikeASC(keyword, subCategories,pageable) :
-                            boardRepository.findByKeywordAndSubCategoryIdsLikeDESC(keyword, subCategories,pageable);
+                            boardRepository.findByKeywordAndSubCategoryIdsLikeASC(keyword, subCategories, pageable) :
+                            boardRepository.findByKeywordAndSubCategoryIdsLikeDESC(keyword, subCategories, pageable);
                     break;
             }
         } else {
             switch (sortTarget) {
                 case "createtime":
                     allCategory = sortType.equals("asc") ?
-                            boardRepository.findAllByCreateSortASC(keyword,pageable) :
-                            boardRepository.findAllByCreateSortDESC(keyword,pageable);
+                            boardRepository.findAllByCreateSortASC(keyword, pageable) :
+                            boardRepository.findAllByCreateSortDESC(keyword, pageable);
                     break;
                 case "like":
                     allCategory = sortType.equals("asc") ?
-                            boardRepository.findAllByLikeSortASC(keyword,pageable) :
-                            boardRepository.findAllByLikeSortDESC(keyword,pageable);
+                            boardRepository.findAllByLikeSortASC(keyword, pageable) :
+                            boardRepository.findAllByLikeSortDESC(keyword, pageable);
                     break;
             }
         }
