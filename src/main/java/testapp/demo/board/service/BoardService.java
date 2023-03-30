@@ -3,6 +3,7 @@ package testapp.demo.board.service;
 import org.springframework.http.ResponseEntity;
 import testapp.demo.board.dto.BoardResponseDto;
 import testapp.demo.board.dto.CreatePostRequest;
+import testapp.demo.board.dto.reportPostRequest;
 import testapp.demo.board.entity.Board;
 
 import java.util.List;
@@ -17,6 +18,8 @@ public interface BoardService {
 
     List<BoardResponseDto> getMyPost(String sortType, int paging_num,int paging_count) throws Exception;
 
+    void removePost(long postId);
+
     List<BoardResponseDto> getMyBookMarkPost(String sortType, int paging_num,int paging_count) throws Exception;
 
     List<BoardResponseDto> getAllPost(List<Long> subCategories,String keyword,String sortTarget,String sortType,int paging_num,int paging_count);
@@ -28,6 +31,9 @@ public interface BoardService {
 
     void addPostBookmark(long postId);
     void cancelPostBookmark(long postId);
+
+
+    void reportPost(reportPostRequest request);
 
 //    List<BoardResponseDto> getSearchPostList(String search_keyword);
 

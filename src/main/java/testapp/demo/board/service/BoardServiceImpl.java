@@ -11,13 +11,16 @@ import org.springframework.stereotype.Service;
 import testapp.demo.auth.SecurityUtil;
 import testapp.demo.board.dto.BoardResponseDto;
 import testapp.demo.board.dto.CreatePostRequest;
+import testapp.demo.board.dto.reportPostRequest;
 import testapp.demo.board.entity.Board;
 import testapp.demo.board.entity.BoardBookmark;
 import testapp.demo.board.entity.BoardLike;
+import testapp.demo.board.entity.BoardReport;
 import testapp.demo.board.mapper.BoardBookmarkMapper;
 import testapp.demo.board.mapper.BoardLikeMapper;
 import testapp.demo.board.repository.BoardBookMarkRepository;
 import testapp.demo.board.repository.BoardLikeRepository;
+import testapp.demo.board.repository.BoardReportRepository;
 import testapp.demo.board.repository.BoardRepository;
 import testapp.demo.category.entity.SubCategory;
 import testapp.demo.category.repository.SubCategoryRepository;
@@ -44,6 +47,8 @@ public class BoardServiceImpl implements BoardService {
     private final BoardLikeRepository boardLikeRepository;
     @Autowired
     private final BoardBookMarkRepository boardBookMarkRepository;
+    @Autowired
+    private final BoardReportRepository boardReportRepository;
 
     /**
      * @param data
@@ -144,6 +149,18 @@ public class BoardServiceImpl implements BoardService {
         } catch (Exception ex) {
             System.err.println("getMyPost() - " + ex);
             throw new Exception("error");
+        }
+    }
+
+    @Override
+    @Transactional
+    public void removePost(long postId) {
+        Board targetBoard = boardRepository.findById(postId).get();
+
+        if(targetBoard.getMember().getEmail().equals(SecurityUtil.getUserEmail())) {
+            boardRepository.deleteById(postId);
+        } else {
+            throw new IllegalArgumentException("AUTH");
         }
     }
 
@@ -315,6 +332,18 @@ public class BoardServiceImpl implements BoardService {
         if (existBookmark.isPresent()) {
             boardBookMarkRepository.deleteByMemberAndBoard(member, board.get());
         }
+    }
+
+    @Override
+    public void reportPost(reportPostRequest request) {
+        Member member = memberRepository.findByEmail(SecurityUtil.getUserEmail());
+
+        boardReportRepository.save(BoardReport.builder()
+                .board(boardRepository.findById(request.getBoard_id()).get())
+                .member(member)
+                .reason(request.getReport_reason())
+                .createTime(LocalDateTime.now())
+                .build());
     }
 }
 

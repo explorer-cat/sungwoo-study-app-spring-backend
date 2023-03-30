@@ -3,6 +3,7 @@ package testapp.demo.board.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import testapp.demo.auth.SecurityUtil;
 import testapp.demo.board.dto.BoardResponseDto;
 import testapp.demo.board.dto.CreatePostRequest;
+import testapp.demo.board.dto.reportPostRequest;
 import testapp.demo.board.entity.Board;
 import testapp.demo.board.service.BoardService;
 import testapp.demo.member.dto.TokenResponseNoData;
@@ -75,6 +77,20 @@ public class BoardControllerV1 {
         }
     }
 
+    @DeleteMapping("/{postId}")
+    public ResponseEntity removePost(@PathVariable("postId") long postId) {
+        try {
+            boardService.removePost(postId);
+            return ResponseEntity.ok().build();
+        }catch (IllegalStateException ex) {
+            System.err.println("해당 게시글의 주인이 아닌데 삭제 요청함 : " + ex);
+            return ResponseEntity.internalServerError().build();
+        } catch (Exception ex) {
+            System.err.println("error: " + ex);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
     //내가 작성한 게시글 보기
     @GetMapping("/my")
     public ResponseEntity<List<BoardResponseDto>> getMyPost(
@@ -131,6 +147,12 @@ public class BoardControllerV1 {
     @DeleteMapping("/bookmark/{postId}")
     public ResponseEntity cancelPostBookmark(@PathVariable("postId") long postId) {
         boardService.cancelPostBookmark(postId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/report")
+    public ResponseEntity reportPost(@RequestBody reportPostRequest request) {
+        boardService.reportPost(request);
         return ResponseEntity.ok().build();
     }
 
