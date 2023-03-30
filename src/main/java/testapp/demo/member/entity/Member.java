@@ -39,6 +39,7 @@ public class Member {
     private List<BoardBookmark> boardBookmarks = new ArrayList<>();
     @OneToMany(mappedBy = "member")
     private List<Board> boards = new ArrayList<>();
+    private long q_drop_token_points = 100;
     private String refreshToken; //리프레쉬 토큰
     private boolean ban; //계정 정지 여부
     private byte level; //관리자 여부
@@ -48,4 +49,12 @@ public class Member {
     private LocalDateTime withdrawal_date; //탈퇴일
     private LocalDateTime createDate;
 
+
+    public void addQDropTokenPoint(long point) {
+        this.q_drop_token_points += point;
+    }
+
+    public void removeQDropTokenPoint(long point) {
+        this.q_drop_token_points -= point;
+    }
 }

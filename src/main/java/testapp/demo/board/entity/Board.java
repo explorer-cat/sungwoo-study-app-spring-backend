@@ -49,6 +49,7 @@ public class Board {
 
     private String title;
     private String content;
+    private boolean isRemove;
     private int approval;
     private LocalDateTime createTime;
 

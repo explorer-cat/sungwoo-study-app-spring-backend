@@ -156,9 +156,9 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     public void removePost(long postId) {
         Board targetBoard = boardRepository.findById(postId).get();
-
         if(targetBoard.getMember().getEmail().equals(SecurityUtil.getUserEmail())) {
-            boardRepository.deleteById(postId);
+            targetBoard.setRemove(true);
+            boardRepository.save(targetBoard);
         } else {
             throw new IllegalArgumentException("AUTH");
         }
