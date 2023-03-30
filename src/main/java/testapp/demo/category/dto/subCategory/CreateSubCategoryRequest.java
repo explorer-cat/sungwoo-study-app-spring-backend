@@ -12,12 +12,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class CreateSubCategoryRequest {
 
+    private Long id;
     private String name;
     private MainCategory mainCategory;
     private String description;
 
     public SubCategory toEntity() {
         return SubCategory.builder()
+                .id(id)
                 .name(name)
                 .mainCategory(mainCategory)
                 .description(description)

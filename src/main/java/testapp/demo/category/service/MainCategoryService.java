@@ -17,6 +17,9 @@ public interface MainCategoryService {
     //카테고리 생성
     MainCategoryResponseDTO createCategory(CreateMainCategoryRequest request);
 
+
+    void modifyCategory(long mainCategoryId, CreateMainCategoryRequest request);
+
     //카테고리 삭제
     void removeCategory(long mainCategoryId) throws Exception;
 
@@ -26,6 +29,8 @@ public interface MainCategoryService {
     MainCategoryResponseDTO findCategory(long categoryId);
 
     List<Map<String,Object>> getSubCategories(long mainCategoryId);
+
+
 
 
 //    ResponseEntity addBookMark(String userEmail, long mainCategory);

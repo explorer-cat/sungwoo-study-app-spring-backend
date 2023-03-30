@@ -29,10 +29,14 @@ public class MainCategoryServiceImpl implements MainCategoryService {
      */
     @Override
     public MainCategoryResponseDTO createCategory(CreateMainCategoryRequest request) {
+
+        Optional<MainCategory> byId = mainCategoryRepository.findById(request.getId());
+        if(byId.isPresent()) {
+            throw new IllegalStateException("exist category: " + request.getName());
+        }
+
         //CreateMainCategoryRequest DTO를 엔티티객체로 변환
         MainCategory mainCategory = request.toEntity();
-        MainCategoryResponseDTO response = new MainCategoryResponseDTO();
-
         //동일한 메인 카테고리 이름이 존재하는지 확인
         Optional<MainCategory> existMainCategory = mainCategoryRepository.findByName(request.getName());
 
@@ -45,6 +49,18 @@ public class MainCategoryServiceImpl implements MainCategoryService {
             MainCategory save = mainCategoryRepository.save(mainCategory);
 //                return response.fromEntity(save);
             return null;
+        }
+    }
+
+    @Override
+    public void modifyCategory(long mainCategoryId, CreateMainCategoryRequest request) {
+        Optional<MainCategory> findCategory = mainCategoryRepository.findById(mainCategoryId);
+
+        if(findCategory.isPresent()) {
+            findCategory.get().setName(request.getName());
+            findCategory.get().setDescription(request.getDescription());
+
+            mainCategoryRepository.save(findCategory.get());
         }
     }
 

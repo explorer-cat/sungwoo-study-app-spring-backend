@@ -27,6 +27,8 @@ public class SubCategoryServiceImpl implements SubCategoryService {
     public void createCategory(long mainCategoryId, CreateSubCategoryRequest request) {
         //서브카테고리를 생성할 메인카테고리가 존재 하는지 확인
         Optional<MainCategory> existMainCategory = mainCategoryRepository.findById(mainCategoryId);
+        Optional<SubCategory> existSubCategoryId = subCategoryRepository.findById(request.getId());
+
 
         if(existMainCategory.isPresent()) {
             //생성 request dto에 해당 메인카테고리 아이디 정보 세팅
@@ -39,7 +41,7 @@ public class SubCategoryServiceImpl implements SubCategoryService {
         //메게변수로 받은 생성 DTO를 Entity객체로 변환함.
         SubCategory subCategory = request.toEntity();
         //동일한 메인 카테고리 이름이 존재하는지 확인
-        Optional<SubCategory> existSubCategory = subCategoryRepository.findByName(request.getName());
+        Optional<SubCategory> existSubCategory = subCategoryRepository.findByNameOrId(request.getName(), request.getId());
         //이미 동일한 카테고리 이름이 존재 할 경우
         if (existSubCategory.isPresent()) {
             //예외 발생
@@ -51,8 +53,12 @@ public class SubCategoryServiceImpl implements SubCategoryService {
     }
 
     @Override
-    public SubCategoryResponseDTO removeCategory(long mainCategoryId) {
-        return null;
+    public void removeCategory(long subCategoryId) throws Exception {
+        try {
+            subCategoryRepository.deleteById(subCategoryId);
+        } catch (Exception ex) {
+            throw new Exception("error");
+        }
     }
 
     @Override

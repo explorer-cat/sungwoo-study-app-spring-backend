@@ -32,7 +32,7 @@ public class SubCategoryControllerV1 {
             //tjdrhd
             return new ResponseEntity<>(subCategoryService.getAllSubCategory(mainCategoryId), HttpStatus.OK);
         } catch (IllegalStateException e) {
-            if(e.getMessage().equals("Empty")) {
+            if (e.getMessage().equals("Empty")) {
                 return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
             } else {
                 return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -54,18 +54,33 @@ public class SubCategoryControllerV1 {
             subCategoryService.createCategory(mainCategoryId, request);
             return ResponseEntity.created(null).build();
         } catch (IllegalStateException e) {
-            if(e.getMessage().equals("exist")) {
-                System.err.println(e);
+            if (e.getMessage().equals("exist")) {
                 return new ResponseEntity<>(null, HttpStatus.CONFLICT);
             } else if (e.getMessage().equals("notFound_Category")) {
                 return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
             } else {
-                return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         } catch (Exception e) {
-            return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @DeleteMapping("/{subCategoryId}")
+    public ResponseEntity deleteSubCategory(
+            @PathVariable("subCategoryId") long subCategoryId) {
+        try {
+            subCategoryService.removeCategory(subCategoryId);
+            return ResponseEntity.ok().build();
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+}
+
+
 
 
 
@@ -94,4 +109,4 @@ public class SubCategoryControllerV1 {
 //        System.out.println("data" + data.getCategoryName());
 //        return subCategoryService.updateByCategory(id, data.getCategoryName());
 //    }
-}
+

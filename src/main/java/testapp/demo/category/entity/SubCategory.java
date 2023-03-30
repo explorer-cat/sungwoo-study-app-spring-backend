@@ -26,7 +26,7 @@ import java.util.List;
 //@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "key")
 public class SubCategory {
     @Id
-    @GeneratedValue
+//    @GeneratedValue
     @Column(name = "sub_category_ID ")
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)

@@ -14,7 +14,7 @@ public interface SubCategoryService {
     //카테고리 생성
     void createCategory(long mainCategoryId, CreateSubCategoryRequest request);
 
-    SubCategoryResponseDTO removeCategory(long mainCategoryId);
+    void removeCategory(long subCategoryId) throws Exception;
 
     //카테고리 모두 찾기
     List<SubCategoryResponseDTO> getAllSubCategory(long mainCategoryId);

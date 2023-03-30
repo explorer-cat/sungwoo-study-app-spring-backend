@@ -14,11 +14,13 @@ import java.time.LocalDateTime;
 @Builder
 public class CreateMainCategoryRequest {
 
+    private Long id;
     private String name;
     private String description;
 
     public MainCategory toEntity() {
         return MainCategory.builder()
+                .id(id)
                 .name(name)
                 .description(description)
                 .approval(true)
