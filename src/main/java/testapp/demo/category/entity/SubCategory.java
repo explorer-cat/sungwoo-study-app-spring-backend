@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import testapp.demo.board.entity.Board;
 import testapp.demo.bookmark.entity.MainCategoryBookMark;
 import testapp.demo.bookmark.entity.SubCategoryBookMark;
 import testapp.demo.category.dto.mainCategory.MainCategoryResponseDTO;
@@ -34,7 +35,11 @@ public class SubCategory {
     private MainCategory mainCategory;
     private String name;
     private String description;
-    @OneToMany(mappedBy = "subCategory", fetch = FetchType.LAZY)
+
+    @OneToMany(mappedBy = "subCategory", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Board> boards = new ArrayList<>();
+
+    @OneToMany(mappedBy = "subCategory", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<SubCategoryBookMark> subCategoryBookMarkList = new ArrayList<>();
     private Boolean approval;
     private Boolean isRemove;

@@ -66,11 +66,12 @@ public class SubCategoryControllerV1 {
         }
     }
 
-    @DeleteMapping("/{subCategoryId}")
+    @DeleteMapping("")
     public ResponseEntity deleteSubCategory(
-            @PathVariable("subCategoryId") long subCategoryId) {
+            @RequestParam("sub_id") List<Long> subCategories) {
         try {
-            subCategoryService.removeCategory(subCategoryId);
+            System.out.println("subCategories = " + subCategories);
+            subCategoryService.removeCategory(subCategories);
             return ResponseEntity.ok().build();
         } catch (IllegalStateException e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -78,7 +79,28 @@ public class SubCategoryControllerV1 {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PatchMapping("/{subCategoryId}")
+    public ResponseEntity modifyCategory(@PathVariable("subCategoryId") long subCategoryId, @RequestBody CreateSubCategoryRequest request) {
+        try{
+            //todo 관리자 이메일 체크해야함.
+            //SecurityUtil.getUserEmail();
+
+            subCategoryService.modifyCategory(subCategoryId,request);
+            return ResponseEntity.ok().build();
+        } catch (IllegalStateException ex) {
+            //이미 동일한 이름이 존재할 경우 발생되는 상황
+            return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+        } catch (Exception ex) {
+            System.out.println("ex = " + ex);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+
 }
+
+
 
 
 

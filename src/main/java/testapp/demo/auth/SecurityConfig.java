@@ -40,6 +40,7 @@ public class SecurityConfig {
 
                 .antMatchers(HttpMethod.POST, "/api/v1/**").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/api/v1/**").permitAll()
+                .antMatchers(HttpMethod.PATCH, "/api/v1/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/api/v1/**").permitAll()
                 .antMatchers(HttpMethod.GET,"/api/v1/**").permitAll()
 

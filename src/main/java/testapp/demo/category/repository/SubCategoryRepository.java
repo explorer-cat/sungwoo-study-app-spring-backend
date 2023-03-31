@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import testapp.demo.category.entity.SubCategory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,5 +14,7 @@ public interface SubCategoryRepository extends JpaRepository<SubCategory,Long> {
 
     Optional<SubCategory> findByNameOrId(String name,long subCategoryId);
 
+
+    Optional<SubCategory> findByName(String name);
 
 }

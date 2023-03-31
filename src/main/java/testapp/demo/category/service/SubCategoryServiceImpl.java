@@ -53,11 +53,31 @@ public class SubCategoryServiceImpl implements SubCategoryService {
     }
 
     @Override
-    public void removeCategory(long subCategoryId) throws Exception {
+    public void removeCategory(List<Long> removeList) throws Exception {
         try {
-            subCategoryRepository.deleteById(subCategoryId);
+            for (Long aLong : removeList) {
+                subCategoryRepository.deleteById(aLong);
+            }
         } catch (Exception ex) {
             throw new Exception("error");
+        }
+    }
+
+    @Override
+    public void modifyCategory(long subCategoryId, CreateSubCategoryRequest request) {
+        Optional<SubCategory> findCategory = subCategoryRepository.findById(subCategoryId);
+
+        Optional<SubCategory> byName = subCategoryRepository.findByName(request.getName());
+
+        if(byName.isPresent()) {
+            throw new IllegalStateException();
+        }
+
+        if(findCategory.isPresent()) {
+            findCategory.get().setName(request.getName());
+            findCategory.get().setDescription(request.getDescription());
+
+            subCategoryRepository.save(findCategory.get());
         }
     }
 
@@ -79,4 +99,6 @@ public class SubCategoryServiceImpl implements SubCategoryService {
             return result;
         }
     }
+
+
 }

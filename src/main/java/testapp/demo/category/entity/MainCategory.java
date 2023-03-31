@@ -32,9 +32,9 @@ public class MainCategory {
     private String name;
     private String description;
     private Boolean approval;
-    @OneToMany(mappedBy = "mainCategory", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "mainCategory", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<SubCategory> subCategories = new ArrayList<>();
-    @OneToMany(mappedBy = "mainCategory", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "mainCategory", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<MainCategoryBookMark> mainCategoryBookMarkList = new ArrayList<>();
     private Boolean isRemove;
     @CreatedDate

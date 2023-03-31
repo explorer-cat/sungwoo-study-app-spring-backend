@@ -56,6 +56,12 @@ public class MainCategoryServiceImpl implements MainCategoryService {
     public void modifyCategory(long mainCategoryId, CreateMainCategoryRequest request) {
         Optional<MainCategory> findCategory = mainCategoryRepository.findById(mainCategoryId);
 
+        Optional<MainCategory> byName = mainCategoryRepository.findByName(request.getName());
+
+        if(byName.isPresent()) {
+            throw new IllegalStateException();
+        }
+
         if(findCategory.isPresent()) {
             findCategory.get().setName(request.getName());
             findCategory.get().setDescription(request.getDescription());

@@ -88,17 +88,20 @@ public class MainCategoryControllerV1 {
     }
 
 
+
     /**
-     * @title 메인 카테고리 생성
+     * @title 메인 카테고리 수정
      * @param request
      * @return
      */
-    @PostMapping("/{mainCategoryId}")
-    public ResponseEntity modifyCategory(@PathVariable ("mainCategoryId") long mainCategoryId, @RequestBody CreateMainCategoryRequest request) {
+    @PatchMapping("/{mainCategoryId}")
+    public ResponseEntity modifyCategory(@PathVariable("mainCategoryId") long mainCategoryId, @RequestBody CreateMainCategoryRequest request) {
         try{
+            //todo 관리자 이메일 체크해야함.
+            //SecurityUtil.getUserEmail();
 
-            mainCategoryService.modifyCategory(mainCategoryId,request);
-            return ResponseEntity.created(null).build();
+             mainCategoryService.modifyCategory(mainCategoryId,request);
+            return ResponseEntity.ok().build();
         } catch (IllegalStateException ex) {
             //이미 동일한 이름이 존재할 경우 발생되는 상황
             return new ResponseEntity<>(null, HttpStatus.CONFLICT);
@@ -107,6 +110,27 @@ public class MainCategoryControllerV1 {
             return ResponseEntity.internalServerError().build();
         }
     }
+
+
+    /**
+     * @title 메인 카테고리 생성
+     * @param request
+     * @return
+     */
+//    @PostMapping("/{mainCategoryId}")
+//    public ResponseEntity modifyCategory(@PathVariable ("mainCategoryId") long mainCategoryId, @RequestBody CreateMainCategoryRequest request) {
+//        try{
+//
+//            mainCategoryService.modifyCategory(mainCategoryId,request);
+//            return ResponseEntity.created(null).build();
+//        } catch (IllegalStateException ex) {
+//            //이미 동일한 이름이 존재할 경우 발생되는 상황
+//            return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+//        } catch (Exception ex) {
+//            System.out.println("ex = " + ex);
+//            return ResponseEntity.internalServerError().build();
+//        }
+//    }
 
 
 

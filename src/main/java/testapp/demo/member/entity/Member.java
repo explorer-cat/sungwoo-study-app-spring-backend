@@ -29,15 +29,15 @@ public class Member {
     private String email; //
     private String nickname; //사용자 닉네임
     private String thumbnailImage; //카카오톡 프로필 이미지
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
     private List<MainCategoryBookMark> mainCategoryBookMark = new ArrayList<>();
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
     private List<SubCategoryBookMark> subCategoryBookMark = new ArrayList<>();
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
     private List<BoardLike> boardLikes = new ArrayList<>();
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
     private List<BoardBookmark> boardBookmarks = new ArrayList<>();
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
     private List<Board> boards = new ArrayList<>();
     private long q_drop_token_points = 100;
     private String refreshToken; //리프레쉬 토큰

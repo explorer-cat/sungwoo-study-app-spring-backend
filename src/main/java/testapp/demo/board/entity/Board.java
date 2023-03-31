@@ -41,12 +41,15 @@ public class Board {
 
 
     //해당 게시글 좋아요 개수 조회를 위한 조인 컬럼.
-    @OneToMany(mappedBy = "board")
+    @OneToMany(mappedBy = "board",cascade = CascadeType.ALL)
     private List<BoardLike> boardLike;
 
-    @OneToMany(mappedBy = "board")
+    @OneToMany(mappedBy = "board",cascade = CascadeType.ALL)
     private List<BoardBookmark> boardBookmarks;
 
+
+    @OneToMany(mappedBy = "board",cascade = CascadeType.ALL)
+    private List<BoardReport> boardReportList;
     private String title;
     private String content;
     private boolean isRemove;
