@@ -182,7 +182,6 @@ public class BoardServiceImpl implements BoardService {
         List<BoardResponseDto> result = new ArrayList<>();
         try {
             Member findMember = memberRepository.findByEmail(SecurityUtil.getUserEmail());
-//            List<BoardBookmark> boards = findMember.getBoardBookmarks();
 
             Pageable pageable = PageRequest.of(paging_num, paging_count);
 

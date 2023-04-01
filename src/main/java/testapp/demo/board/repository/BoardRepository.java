@@ -46,9 +46,27 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Board> findAllByLikeSortASC(@Param("keyword") String keyword, Pageable pageable);
 
 
-    @Query("SELECT b FROM Board b LEFT JOIN b.boardBookmarks o WHERE b.member.email = :email ORDER BY b.createTime ASC")
+    /**
+     * SELECT *
+     * FROM board b
+     *          INNER JOIN board_bookmark bb ON b.board_id = bb.board_id
+     * WHERE b.board_id IN (
+     *     SELECT b.board_id
+     *     FROM board b
+     *              INNER JOIN board_bookmark bb ON b.board_id = bb.board_id
+     *     WHERE b.user_email = 'rl0425@naver.com'
+     * )
+     *   AND bb.user_email = 'rl0425@naver.com'
+     * @param email
+     * @param pageable
+     * @return
+     */
+//    @Query("SELECT b FROM Board b INNER JOIN b.boardBookmarks o WHERE b.member.email = :email ORDER BY b.createTime ASC")
+
+    // SELECT * FROM board b INNER JOIN board_bookmark bb ON b.board_id = bb.board_id AND bb.user_email = 'rl0425@naver.com'
+    @Query("SELECT b FROM Board b INNER JOIN b.boardBookmarks bb ON b.id = bb.board.id AND bb.member.email = :email ORDER BY b.createTime DESC")
     List<Board> findAllMyBookMarkPostASC(String email, Pageable pageable);
-    @Query("SELECT b FROM Board b LEFT JOIN b.boardBookmarks o WHERE b.member.email = :email ORDER BY b.createTime DESC")
+    @Query("SELECT b FROM Board b INNER JOIN b.boardBookmarks bb ON b.id = bb.board.id AND bb.member.email = :email ORDER BY b.createTime ASC")
     List<Board> findAllMyBookMarkPostDESC(String email, Pageable pageable);
 
 
