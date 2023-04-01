@@ -77,6 +77,19 @@ public class BoardServiceImpl implements BoardService {
         }
     }
 
+    @Override
+    public void modifyPost(long postId, CreatePostRequest data) throws Exception {
+        try {
+            Board board = boardRepository.findById(postId).get();
+
+            board.setTitle(data.getTitle());
+            board.setContent(data.getContent());
+            boardRepository.save(board);
+        } catch (Exception ex) {
+            throw new Exception(ex);
+        }
+    }
+
     /**
      * @return List<Board>
      * @Title : 카테고리 단건 게시글 조회.
@@ -178,8 +191,6 @@ public class BoardServiceImpl implements BoardService {
             List<Board> boards = sortType.equals("asc") ?
                     boardRepository.findAllMyBookMarkPostASC(findMember.getEmail(), pageable) :
                     boardRepository.findAllMyBookMarkPostDESC(findMember.getEmail(), pageable);
-
-            System.out.println("boards = " + boards);
 
             for (Board v : boards) {
                 result.add(BoardResponseDto.builder()

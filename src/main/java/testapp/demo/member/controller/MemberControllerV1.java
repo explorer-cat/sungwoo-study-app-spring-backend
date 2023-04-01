@@ -56,6 +56,7 @@ public class MemberControllerV1 {
         }
     }
 
+
     @DeleteMapping
     public ResponseEntity withDrawalUser(@RequestBody WithDrawalRequestDto request) {
         try {

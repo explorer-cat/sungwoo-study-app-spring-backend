@@ -28,11 +28,7 @@ public class BoardControllerV1 {
     private BoardService boardService;
 
 
-    /**
-     * @param subCategoryId
-     * @return
-     * @title 해당 전체 카테고리 게시글 모두 조회
-     */
+
     @GetMapping
     public ResponseEntity<List<BoardResponseDto>> getAllPostList(
             @RequestParam("sub_id") List<Long> subCategories,
@@ -120,6 +116,18 @@ public class BoardControllerV1 {
                                      @RequestBody CreatePostRequest request) {
         try {
             boardService.createPost(subCagtegoryId, request);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+
+    @PatchMapping("/{postId}")
+    public ResponseEntity modidfyPost(@PathVariable("postId") long postId,
+                                     @RequestBody CreatePostRequest request) {
+        try {
+            boardService.modifyPost(postId, request);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();

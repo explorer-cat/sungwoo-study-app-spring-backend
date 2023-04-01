@@ -14,11 +14,15 @@ public interface BoardService {
 //    ResponseEntity<BoardResponseDto> createPost(Map<String, Object> data);
 
     Board createPost(long subCategoryId, CreatePostRequest data) throws Exception;
+
+    void modifyPost(long postId, CreatePostRequest data) throws Exception;
+
     BoardResponseDto getPost(long subCategoryId, long postId);
 
     List<BoardResponseDto> getMyPost(String sortType, int paging_num,int paging_count) throws Exception;
 
     void removePost(long postId);
+
 
     List<BoardResponseDto> getMyBookMarkPost(String sortType, int paging_num,int paging_count) throws Exception;
 
