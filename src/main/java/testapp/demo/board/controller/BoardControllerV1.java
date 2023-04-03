@@ -123,7 +123,7 @@ public class BoardControllerV1 {
     }
 
 
-    @PatchMapping("/{postId}")
+    @PostMapping("/update/{postId}")
     public ResponseEntity modidfyPost(@PathVariable("postId") long postId,
                                      @RequestBody CreatePostRequest request) {
         try {
