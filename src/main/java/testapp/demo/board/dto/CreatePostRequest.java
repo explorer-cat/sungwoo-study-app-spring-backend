@@ -14,6 +14,7 @@ import testapp.demo.board.entity.Board;
 public class CreatePostRequest {
     private String title;
     private String content;
+    private Long subcategory_id;
 
 //    public Board toEntity(){
 //        return Board.builder()

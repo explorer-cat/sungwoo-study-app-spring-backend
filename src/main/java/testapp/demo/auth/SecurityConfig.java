@@ -35,7 +35,6 @@ public class SecurityConfig {
 //                .antMatchers(HttpMethod.GET, "/api/v1/users/login/kakao/**").permitAll()
 //                //사용자 북마크 조회
 //                .antMatchers(HttpMethod.GET, "/api/v1/category/sub/bookmark").permitAll()
-//
 //                .antMatchers(HttpMethod.GET, "/api/v1/category/sub/bookmark").permitAll()
 
                 .antMatchers(HttpMethod.POST, "/api/v1/**").permitAll()

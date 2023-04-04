@@ -81,9 +81,12 @@ public class BoardServiceImpl implements BoardService {
     public void modifyPost(long postId, CreatePostRequest data) throws Exception {
         try {
             Board board = boardRepository.findById(postId).get();
+            SubCategory subCategory = subCategoryRepository.findById(data.getSubcategory_id()).get();
 
             board.setTitle(data.getTitle());
             board.setContent(data.getContent());
+            board.setSubCategory(subCategory);
+
             boardRepository.save(board);
         } catch (Exception ex) {
             throw new Exception(ex);
