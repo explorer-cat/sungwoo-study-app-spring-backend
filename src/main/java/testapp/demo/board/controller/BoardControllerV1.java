@@ -165,5 +165,24 @@ public class BoardControllerV1 {
     }
 
 
+    @GetMapping("/search/rank")
+    public ResponseEntity<Map<String,Object>> reportPost() {
+        Map<String,Object> rank = new HashMap<>();
+        List rankList = new ArrayList();
+        rankList.add("프론트엔드1");
+        rankList.add("프론트엔드2");
+        rankList.add("프론트엔드3");
+        rankList.add("프론트엔드4");
+        rankList.add("프론트엔드5");
+        rankList.add("프론트엔드6");
+        rankList.add("프론트엔드7");
+        rankList.add("프론트엔드8");
+        rankList.add("프론트엔드9");
+        rankList.add("프론트엔드10");
+        rank.put("rank",rankList);
+        return new ResponseEntity<>(rank,HttpStatus.OK);
+    }
+
+
 
 }
