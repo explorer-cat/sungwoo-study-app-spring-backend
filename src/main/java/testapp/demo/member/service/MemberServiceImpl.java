@@ -36,7 +36,7 @@ public class MemberServiceImpl implements MemberService {
     private JwtProvider jwtProvider;
     private final String HTTP_REQUEST = "https://kapi.kakao.com/v2/user/me";
     private final String GRANT_TYPE= "authorization_code";
-    private final String REDIRECT_URI= "http://sungwoo-net.p-e.kr:3000/login/auth/code";
+    private final String REDIRECT_URI= "http://explorer-cat-api.p-e.kr:3000/login/auth/code";
     private final String TOKEN_URL = "https://kauth.kakao.com/oauth/token";
     private final String CLIENT_ID = "ad874f9a277a8d0b35591cbf40f5bd82";
     private final String CLIENT_SECRET= "L9M7Xxh5XayyOM22BcMlllmzVe61wPzw";
