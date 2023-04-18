@@ -14,12 +14,14 @@ public class UserInfoResponseDto {
     private String thumbnailImage;
     private byte admin_level;
     private long q_drop_token_points;
+    TokenResponse token;
 
-    public UserInfoResponseDto(Member member) {
+    public UserInfoResponseDto(Member member,TokenResponse token) {
         this.email = member.getEmail();
         this.admin_level = member.getLevel();
         this.nickname = member.getNickname();
         this.thumbnailImage = member.getThumbnailImage();
         this.q_drop_token_points = member.getQ_drop_token_points();
+        this.token = token;
     }
 }

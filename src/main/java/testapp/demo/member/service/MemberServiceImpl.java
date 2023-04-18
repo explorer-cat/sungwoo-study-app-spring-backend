@@ -36,7 +36,7 @@ public class MemberServiceImpl implements MemberService {
     private JwtProvider jwtProvider;
     private final String HTTP_REQUEST = "https://kapi.kakao.com/v2/user/me";
     private final String GRANT_TYPE= "authorization_code";
-    private final String REDIRECT_URI= "http://explorer-cat-api.p-e.kr:3000/login/auth/code";
+    private final String REDIRECT_URI= "http://sungwoo-net.p-e.kr:3000/login/auth/code";
     private final String TOKEN_URL = "https://kauth.kakao.com/oauth/token";
     private final String CLIENT_ID = "ad874f9a277a8d0b35591cbf40f5bd82";
     private final String CLIENT_SECRET= "L9M7Xxh5XayyOM22BcMlllmzVe61wPzw";
@@ -101,7 +101,6 @@ public class MemberServiceImpl implements MemberService {
 
     public TokenResponse createToken(String userEmail)  {
         String token = jwtProvider.createToken(userEmail); // 토큰 생성
-        System.out.println("tokenzzz = " + token);
         Claims claims = jwtProvider.parseJwtToken(token); // 토큰 검증
 
         TokenDataResponse tokenDataResponse = new TokenDataResponse(token, claims.getSubject(), claims.getIssuedAt().toString(), claims.getExpiration().toString());
@@ -113,7 +112,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public UserInfoResponseDto getUserEmail(String email) {
         Member userInfo = memberRepository.findByEmail(email.toString());
-        UserInfoResponseDto dto = new UserInfoResponseDto(userInfo);
+        UserInfoResponseDto dto = new UserInfoResponseDto(userInfo,null);
         return dto;
     }
 
@@ -153,7 +152,7 @@ public class MemberServiceImpl implements MemberService {
 
         //해당 이메일은 이미 가입되어있음.
         if(existingUser != null) {
-            return new ResponseEntity<>(new UserInfoResponseDto(null), HttpStatus.CONFLICT);
+            return new ResponseEntity<>(new UserInfoResponseDto(null,null), HttpStatus.CONFLICT);
         }
 
         // Create a new user
@@ -165,7 +164,9 @@ public class MemberServiceImpl implements MemberService {
         member.setLevel((byte) 0);
         memberRepository.save(member);
 
-        return new ResponseEntity<>(new UserInfoResponseDto(member), HttpStatus.OK);
+        TokenResponse token = createToken(req.getEmail().toString());
+
+        return new ResponseEntity<>(new UserInfoResponseDto(member,token), HttpStatus.OK);
     }
 
     /**
