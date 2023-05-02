@@ -19,7 +19,7 @@
 
 
 ## LOGO
-![playstore](https://user-images.githubusercontent.com/55500077/235608952-8e8085e8-b21b-47d4-9a95-5c9d3757b584.png)
+<img src = "https://user-images.githubusercontent.com/55500077/235608952-8e8085e8-b21b-47d4-9a95-5c9d3757b584.png" style = "width:250px; height:250px; margin-right:4px">
 
 ## IMG
 <img src = "https://user-images.githubusercontent.com/55500077/235606930-b2ff505e-853b-479c-b913-3c9cff2cf9cd.png" style = "width:190px; height:390px; margin-right:4px">.  <img src = "https://user-images.githubusercontent.com/55500077/235606979-2b40944e-1a73-4c66-8105-b4ec7d4d45ff.png" style = "width:190px; height:390px; ">.  <img src = "https://user-images.githubusercontent.com/55500077/235606989-85ad8dd2-c29d-4e68-8798-35751cbe11f1.png" style = "width:190px; height:390px; ">.  <img src = "https://user-images.githubusercontent.com/55500077/235607018-d156ea28-957a-4ec0-af28-7c5beeaca2d6.png" style = "width:190px; height:390px; "> <img src = "https://user-images.githubusercontent.com/55500077/235607001-fb8149f9-5edc-4639-a432-c82b8a7064be.png" style = "width:190px; height:390px; ">
