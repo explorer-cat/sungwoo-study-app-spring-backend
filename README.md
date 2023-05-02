@@ -1,4 +1,5 @@
-# sungwoo-study-app-spring-backend
+
+<img src = "https://user-images.githubusercontent.com/55500077/235608952-8e8085e8-b21b-47d4-9a95-5c9d3757b584.png" style = "width:250px; height:250px; margin-right:4px"> # Q'drop 큐드랍
 
 ## 프로젝트 기간 
 > 2023년 2월 ~ 4월 31일 
