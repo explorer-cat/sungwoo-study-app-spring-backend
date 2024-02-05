@@ -30,7 +30,7 @@ drop은 면접과 기술 질문 대비에 필요한 다양한 리소스와 도�
 
 
 ## 앱 둘러보기
-> <a href="explorer-cat-api.p-e.kr:3000">explorer-cat-api.p-e.kr:3000</a>
+> <a href="explorer-cat-api.p-e.kr:3000">http://explorer-cat-api.p-e.kr:3000</a>
 > <a href="https://play.google.com/store/apps/details?id=com.gichan.footballScore">PlayStore</a>
 
 ## 사용한 스택 목록
