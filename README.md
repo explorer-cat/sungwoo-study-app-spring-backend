@@ -28,13 +28,12 @@ drop은 면접과 기술 질문 대비에 필요한 다양한 리소스와 도�
 <img src = "https://user-images.githubusercontent.com/55500077/235608952-8e8085e8-b21b-47d4-9a95-5c9d3757b584.png" style = "width:250px; height:250px; margin-right:4px">
 
 ## IMG
-
 <img width="559" alt="251391666-edefa2b9-0102-4b81-a6f0-218ced36a62a" src="https://github.com/explorer-cat/sungwoo-study-app-spring-backend/assets/55500077/5059d9cb-4584-4218-802b-d7333b9f6f47">
 
 
 # ERD
 > ![스크린샷 2023-03-07 오후 5 35 26](https://user-images.githubusercontent.com/55500077/223367907-0a5e057f-0fbf-4a87-9818-7cf1fa70ab0b.png)>
-<img width="559" alt="251391666-edefa2b9-0102-4b81-a6f0-218ced36a62a (1)" src="https://github.com/explorer-cat/sungwoo-study-app-spring-backend/assets/55500077/55b005fb-97f0-422a-a0b0-2ca0869eac13">
+
 
 
 배포링크
